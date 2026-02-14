@@ -1,0 +1,32 @@
+name: Update Rates
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # هر ۱۰ دقیقه اجرا شود
+  workflow_dispatch: # برای اجرای دستی
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run bot
+        run: python main.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add last_rates.json
+          git commit -m "Update rates" || exit 0
+          git push
