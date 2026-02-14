@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نرخ لحظه‌ای صرافی</title>
+    <style>
+        :root { --primary: #1a2a6c; --secondary: #b21f1f; --success: #27ae60; }
+        body { font-family: sans-serif; background: #f4f7f6; margin: 0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 480px; background: white; min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d); color: white; padding: 30px 20px; text-align: center; border-radius: 0 0 25px 25px; }
+        .header h1 { margin: 0; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .status-bar { background: rgba(255,255,255,0.2); margin-top: 15px; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; display: inline-block; }
+        .rates-list { padding: 20px; }
+        .rate-card { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #eee; transition: 0.3s; }
+        .rate-card:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .currency-info { display: flex; align-items: center; gap: 12px; }
+        .icon { font-size: 1.5rem; }
+        .name { font-weight: bold; color: #333; }
+        .price { font-size: 1.3rem; font-weight: 900; color: var(--success); }
+        .footer { text-align: center; padding: 20px; color: #888; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>صرافی آنلاین بهادر</h1>
+            <div class="status-bar" id="update-time">در حال دریافت قیمت‌ها...</div>
+        </div>
+        <div class="rates-list" id="rates-list">
+            </div>
+        <div class="footer">
+            بروزرسانی خودکار هر ۱۰ دقیقه <br> طراحی شده برای اپلیکیشن صرافی
+        </div>
+    </div>
+
+    <script>
+        const icons = { "دالر هرات": "🇺🇸", "تومان بانکی": "🇮🇷", "یورو هرات": "🇪🇺", "کلدار (پاکستان)": "🇵🇰", "تومان چک": "💳" };
+        async function loadRates() {
+            try {
+                const res = await fetch('last_rates.json?v=' + Date.now());
+                const data = await res.json();
+                const list = document.getElementById('rates-list');
+                list.innerHTML = '';
+                for (const [name, price] of Object.entries(data.rates)) {
+                    list.innerHTML += `
+                        <div class="rate-card">
+                            <div class="currency-info">
+                                <span class="icon">${icons[name] || '💰'}</span>
+                                <span class="name">${name}</span>
+                            </div>
+                            <div class="price">${price}</div>
+                        </div>`;
+                }
+                document.getElementById('update-time').innerText = 'آخرین بروزرسانی: ' + data.last_update;
+            } catch (e) { document.getElementById('update-time').innerText = 'خطا در اتصال به سرور'; }
+        }
+        loadRates();
+        setInterval(loadRates, 60000);
+    </script>
+</body>
+          </html>
