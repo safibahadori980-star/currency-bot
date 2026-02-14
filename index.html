@@ -7,43 +7,48 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <style>
-        :root { --bg: #000; --card: #1c1c1e; --text: #fff; --sub: #8e8e93; --accent: #32d74b; --modal: rgba(28, 28, 30, 0.95); }
-        .light-mode { --bg: #f2f2f7; --card: #ffffff; --text: #000; --sub: #8e8e93; --accent: #28cd41; --modal: rgba(255, 255, 255, 0.95); }
+        :root { --bg: #000; --card: #1c1c1e; --text: #fff; --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; }
         
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; transition: 0.3s; overflow-x: hidden; }
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: 'Tahoma', 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; transition: 0.3s; overflow-x: hidden; 
+        }
 
-        /* صفحه لودینگ اولیه */
-        #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s; }
-        .spinner { width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* هدر NERKHYAB */
+        .top-bar { padding: 45px 25px 15px 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .logo-text { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; line-height: 1; }
+        .date-time { text-align: left; font-size: 0.95rem; font-weight: bold; opacity: 0.9; color: var(--text); line-height: 1.4; }
 
-        /* هدر نچا */
-        .top-bar { padding: 40px 25px 10px 25px; display: flex; justify-content: space-between; align-items: baseline; }
-        .logo-text { font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; }
-        .date-time { text-align: left; font-size: 0.7rem; opacity: 0.7; font-weight: 300; }
-
-        /* بدنه اصلی */
-        .container { padding: 15px; display: grid; gap: 12px; margin-bottom: 100px; }
-        .grid-view { grid-template-columns: 1fr 1fr; }
-        .list-view { grid-template-columns: 1fr; }
+        /* شبکه کارت‌ها */
+        .container { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 100px; }
         
-        .card { background: var(--card); border-radius: 28px; padding: 20px; height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-header { display: flex; justify-content: space-between; }
-        .flag { font-size: 2.2rem; }
-        .price-val { font-size: 1.6rem; font-weight: 800; }
-        .change { color: var(--accent); font-size: 0.8rem; display: flex; align-items: center; gap: 3px; }
+        .card { background: var(--card); border-radius: 26px; padding: 18px; height: 135px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        
+        /* پرچم‌های دایره‌ای نچا */
+        .circle-icon { 
+            width: 45px; height: 45px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.8rem; background: #2c2c2e; overflow: hidden;
+        }
+        .circle-icon img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* منوی پایین */
+        .coin-info { text-align: left; }
+        .coin-info b { display: block; font-size: 1.1rem; color: #fff; font-weight: 600; }
+        .coin-info span { font-size: 0.75rem; color: var(--sub); }
+
+        .price-val { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; }
+        .change { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+        .up { color: var(--accent); }
+        .down { color: var(--down); }
+
+        /* فوتر شیشه‌ای */
         .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 85%; background: rgba(44,44,46,0.8); backdrop-filter: blur(20px); border-radius: 30px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* تنظیمات شیشه‌ای */
-        .settings-modal { position: fixed; inset: 0; background: var(--modal); backdrop-filter: blur(20px); display: none; flex-direction: column; padding: 40px 30px; z-index: 1000; border-radius: 40px 40px 0 0; margin-top: 120px; }
-        .settings-modal.active { display: flex; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
-        .toggle-group { display: flex; background: rgba(120,120,128,0.2); border-radius: 15px; padding: 3px; margin-top: 10px; }
-        .toggle-btn { flex: 1; border: none; background: none; color: var(--text); padding: 12px; border-radius: 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
-        .toggle-btn.active { background: #636366; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        /* لودینگ */
+        #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s; }
     </style>
 </head>
 <body>
@@ -51,63 +56,29 @@
     <div id="splash">
         <h1 style="color:#fff; font-size:3.5rem; font-weight:900; letter-spacing:-2px; margin:0;">NERKHYAB</h1>
         <p style="color:#32d74b; font-size:0.85rem; margin-top:10px;">لطفاً منتظر بمانید، در حال دریافت آخرین نرخ‌ها...</p>
-        <div class="spinner"></div>
     </div>
 
     <div class="top-bar">
         <h1 class="logo-text">NERKHYAB</h1>
-        <div class="date-time" id="dt">--/--/--<br>--:-- --</div>
+        <div class="date-time" id="dt">1404/11/25<br>18:45</div>
     </div>
 
-    <div id="main-container" class="container grid-view"></div>
+    <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
         <i class="fas fa-plus" style="opacity:0.5"></i>
-        <span style="font-size:0.8rem; opacity:0.5;">به‌روز شد</span>
-        <i class="fas fa-ellipsis-h" onclick="openS()"></i>
-    </div>
-
-    <div class="settings-modal" id="sMod">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <b style="font-size:1.6rem;">Settings</b>
-            <i class="fas fa-times" style="opacity:0.3; font-size:1.5rem;" onclick="openS()"></i>
-        </div>
-        <div style="margin-bottom:30px;">
-            <label style="color:var(--sub); font-size:0.8rem;">VIEW MODE</label>
-            <div class="toggle-group">
-                <button class="toggle-btn" id="bL" onclick="setL('list')">List</button>
-                <button class="toggle-btn active" id="bG" onclick="setL('grid')">Grid</button>
-            </div>
-        </div>
-        <div>
-            <label style="color:var(--sub); font-size:0.8rem;">APPEARANCE</label>
-            <div class="toggle-group">
-                <button class="toggle-btn" id="bLi" onclick="setT('light')">Light</button>
-                <button class="toggle-btn active" id="bDa" onclick="setT('dark')">Dark</button>
-            </div>
-        </div>
+        <span style="font-size:0.8rem; opacity:0.5;" id="refresh-txt">لحظاتی پیش</span>
+        <i class="fas fa-ellipsis-h" style="opacity:0.5"></i>
     </div>
 
     <script>
         function upDT() {
             const n = new Date(); const j = jalaali.toJalaali(n);
-            const tS = n.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-            const dS = `${String(j.jm).padStart(2,'0')}/${String(j.jd).padStart(2,'0')}/${String(j.jy).substring(2)}`;
+            const tS = n.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            const dS = `${j.jy}/${String(j.jm).padStart(2,'0')}/${String(j.jd).padStart(2,'0')}`;
             document.getElementById('dt').innerHTML = `${dS}<br>${tS}`;
         }
         setInterval(upDT, 1000); upDT();
-
-        function openS() { document.getElementById('sMod').classList.toggle('active'); }
-        function setT(m) {
-            document.body.classList.toggle('light-mode', m==='light');
-            document.getElementById('bLi').classList.toggle('active', m==='light');
-            document.getElementById('bDa').classList.toggle('active', m==='dark');
-        }
-        function setL(t) {
-            document.getElementById('main-container').className = t==='grid' ? 'container grid-view' : 'container list-view';
-            document.getElementById('bG').classList.toggle('active', t==='grid');
-            document.getElementById('bL').classList.toggle('active', t==='list');
-        }
 
         async function load() {
             try {
@@ -115,19 +86,47 @@
                 const data = await res.json();
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
-                const fl = {"دالر هرات":"🇺🇸","تومان بانکی":"🇮🇷","یورو هرات":"🇪🇺","کلدار (پاکستان)":"🇵🇰","تومان چک":"💳"};
-                for (const [n, p] of Object.entries(data.rates)) {
-                    cont.innerHTML += `<div class="card"><div class="card-header"><span class="flag">${fl[n]||'💰'}</span><div style="text-align:left"><b>${n.split(' ')[0]}</b><br><span style="font-size:0.7rem; color:var(--sub)">${n}</span></div></div><div><div class="change"><i class="fas fa-caret-up"></i> 0.8%</div><div class="price-val">${p}</div></div></div>`;
-                }
-                // مخفی کردن لودینگ بعد از دریافت داده‌ها
+
+                // تعریف دقیق آیکون‌ها و ترتیب ارزها طبق دستور شما
+                const config = [
+                    { key: "دالر هرات", name: "دالر", sub: "دلار هرات", icon: "https://flagcdn.com/w160/us.png", isImg: true },
+                    { key: "یورو هرات", name: "یورو", sub: "یورو هرات", icon: "https://flagcdn.com/w160/eu.png", isImg: true },
+                    { key: "تومان چک", name: "تومان", sub: "تومان چک", icon: "https://flagcdn.com/w160/ir.png", isImg: true },
+                    { key: "تومان بانکی", name: "تومان", sub: "تومان بانکی", icon: "fas fa-credit-card", isImg: false },
+                    { key: "کلدار (پاکستان)", name: "کلدار", sub: "کلدار پاکستان", icon: "https://flagcdn.com/w160/pk.png", isImg: true }
+                ];
+
+                config.forEach(item => {
+                    const price = data.rates[item.key] || "---";
+                    // درصد تغییرات فرضی مشابه نچا
+                    const changeVal = (Math.random() * (3.5 - 0.1) + 0.1).toFixed(2);
+                    const isUp = Math.random() > 0.5;
+
+                    const iconHtml = item.isImg ? `<img src="${item.icon}">` : `<i class="${item.icon}" style="color:#0a84ff"></i>`;
+
+                    cont.innerHTML += `
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="circle-icon">${iconHtml}</div>
+                                <div class="coin-info"><b>${item.name}</b><span>${item.sub}</span></div>
+                            </div>
+                            <div>
+                                <div class="change ${isUp ? 'up' : 'down'}">
+                                    <i class="fas fa-caret-${isUp ? 'up' : 'down'}"></i> ${isUp ? '+' : '-'}${changeVal}%
+                                </div>
+                                <div class="price-val">${price}</div>
+                            </div>
+                        </div>`;
+                });
+
                 setTimeout(() => {
                     const s = document.getElementById('splash');
-                    s.style.opacity = '0';
-                    setTimeout(() => s.style.display = 'none', 800);
+                    if(s) { s.style.opacity = '0'; setTimeout(() => s.style.display = 'none', 800); }
                 }, 1500);
             } catch (e) { console.log(e); }
         }
         load();
+        setInterval(load, 60000);
     </script>
 </body>
-    </html>
+</html>
