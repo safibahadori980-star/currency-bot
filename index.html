@@ -34,6 +34,13 @@
         .about-text { display: none; background: rgba(120,120,128,0.1); border-radius: 15px; padding: 15px; margin-top: 15px; font-size: 0.85rem; line-height: 1.8; }
         .about-text.show { display: block; }
     </style>
+    <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon.png">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
 </head>
 <body class="dark-mode">
     <div class="top-bar">
