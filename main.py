@@ -1,71 +1,80 @@
-import requests
-from bs4 import BeautifulSoup
-import re
+import telethon
+from telethon import TelegramClient, events
 import json
 import os
 from datetime import datetime
-import pytz
 
-# نام فایل برای ذخیره نرخ‌ها
-DB_FILE = "last_rates.json"
+# اطلاعات تلگرام خودت را اینجا بذار
+api_id = 'YOUR_API_ID'
+api_hash = 'YOUR_API_HASH'
+channel_id = 'کانال_مورد_نظر' # مثلاً @nerkhyab_channel
 
-def load_last_rates():
-    if os.path.exists(DB_FILE):
-        with open(DB_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {
-        "rates": {"دالر هرات": "63.50", "تومان بانکی": "0.39", "یورو هرات": "73.70", "کلدار (پاکستان)": "216.50", "تومان چک": "0.51"},
-        "last_update": "---"
-    }
+client = TelegramClient('session', api_id, api_hash)
 
-def save_rates(data):
-    with open(DB_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+def update_json(name, new_price):
+    file_path = 'last_rates.json'
+    
+    # خواندن فایل قدیمی
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    else:
+        data = {"rates": {}}
 
-def get_latest_rate(messages, keyword, old_value):
-    for msg in reversed(messages):
-        if keyword in msg:
-            match = re.search(r"(\d+\.\d+|\d+)", msg.split(keyword)[1])
-            if match:
-                return match.group(1), True
-    return old_value, False
+    # اگر ارز از قبل نبود، بسازش
+    if name not in data["rates"]:
+        data["rates"][name] = {"current": "0", "status": "up", "diff": "0.0", "history": []}
 
-def start():
-    url = "https://t.me/s/NerkhYab_Khorasan"
-    current_data = load_last_rates()
-    rates = current_data["rates"]
-    any_new_rate = False
+    old_price_str = data["rates"][name]["current"].replace(',', '')
+    new_price_str = str(new_price).replace(',', '')
 
     try:
-        res = requests.get(url, timeout=15)
-        soup = BeautifulSoup(res.text, 'html.parser')
-        all_msgs = [m.get_text() for m in soup.find_all('div', class_='tgme_widget_message_text')]
-        recent_msgs = all_msgs[-30:]
+        old_p = float(old_price_str)
+        new_p = float(new_price_str)
+        
+        # محاسبه تغییرات
+        if new_p > old_p:
+            status = "up"
+        elif new_p < old_p:
+            status = "down"
+        else:
+            status = data["rates"][name].get("status", "up")
 
-        keywords = {
-            "دالر هرات": "دالر به افغانی",
-            "تومان بانکی": "تومان بانکی",
-            "یورو هرات": "یورو به افغانی",
-            "کلدار (پاکستان)": "کلدار افغانی",
-            "تومان چک": "تومان چک"
+        diff = 0
+        if old_p != 0:
+            diff = round(((new_p - old_p) / old_p) * 100, 2)
+
+        # آپدیت لیست تاریخچه (برای نمودار)
+        history = data["rates"][name].get("history", [])
+        history.append(new_p)
+        if len(history) > 20: # فقط ۲۰ قیمت آخر را نگه دار
+            history.pop(0)
+
+        # ذخیره نهایی
+        data["rates"][name] = {
+            "current": "{:,}".format(int(new_p)),
+            "status": status,
+            "diff": str(abs(diff)),
+            "history": history
         }
+        data["last_update"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-        for key, tg_key in keywords.items():
-            new_val, found = get_latest_rate(recent_msgs, tg_key, rates[key])
-            if found and new_val != rates[key]:
-                rates[key] = new_val
-                any_new_rate = True
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+            
+    except:
+        pass
 
-        if any_new_rate:
-            tz_kabul = pytz.timezone('Asia/Kabul')
-            current_data["last_update"] = datetime.now(tz_kabul).strftime("%Y-%m-%d %H:%M")
+@client.on(events.NewMessage(chats=channel_id))
+async def my_event_handler(event):
+    text = event.raw_text
+    # اینجا باید منطق استخراج قیمت از متن پیام کانال خودت را بنویسی
+    # مثلاً: اگر در پیام کلمه "دالر هرات" بود، عدد جلوی آن را بردار
+    # فعلاً برای تست:
+    if "دالر هرات" in text:
+        # فرض کنیم پیام این شکلی است: دالر هرات 62450
+        price = ''.join(filter(str.isdigit, text))
+        update_json("دالر هرات", price)
 
-        current_data["rates"] = rates
-        save_rates(current_data)
-        print("بروزرسانی با موفقیت انجام شد.")
-
-    except Exception as e:
-        print(f"خطا: {e}")
-
-if __name__ == "__main__":
-    start()
+client.start()
+client.run_until_disconnected()
