@@ -2,8 +2,8 @@ import re, json, os, asyncio
 from telethon import TelegramClient
 
 # مقادیر استاندارد طلایی (بدون تغییر)
-api_id = 6
-api_hash = 'eb06d4abfb49ad3eeb1aeb98ae0f581e'
+api_id = 2496
+api_hash = '8bb4597412e4dad4213e65a9a15c4013'
 bot_token = '8411624697:AAFvOz2GmTwTslHVQ592H6ayqDhtxnR6L-s'
 SOURCE_CHANNEL = 'NerkhYab_Khorasan'
 
