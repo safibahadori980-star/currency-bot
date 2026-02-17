@@ -1,9 +1,8 @@
-name: Update Rates
-
+name: Update Currency Rates
 on:
   schedule:
-    - cron: '*/10 * * * *' # هر ۱۰ دقیقه اجرا شود
-  workflow_dispatch: # برای اجرای دستی
+    - cron: '*/10 * * * *' # هر ۱۰ دقیقه یکبار خودکار اجرا می‌شود
+  workflow_dispatch: # دکمه اجرای دستی در گیت‌هاب
 
 jobs:
   build:
@@ -18,9 +17,10 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install telethon
 
-      - name: Run bot
+      - name: Run update script
         run: python main.py
 
       - name: Commit and Push changes
@@ -30,3 +30,4 @@ jobs:
           git add last_rates.json
           git commit -m "Update rates" || exit 0
           git push
+          
