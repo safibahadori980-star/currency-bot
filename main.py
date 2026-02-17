@@ -9,7 +9,7 @@ bot_token = '8411624697:AAFvOz2GmTwTslHVQ592H6ayqDhtxnR6L-s'
 SOURCE_CHANNEL = '@NerkhYab_Khorasan' 
 
 # ایجاد کلاینت
-client = TelegramClient('bot_session', api_id, api_hash)
+client = TelegramClient('new_session_v3', api_id, api_hash)
 
 mapping = {
     "دالر هرات": "دالر به افغانی",
