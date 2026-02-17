@@ -1,8 +1,9 @@
 name: Update Currency Rates
+
 on:
+  workflow_dispatch: # برای اینکه بتوانی دستی دکمه را بزنی
   schedule:
-    - cron: '*/10 * * * *' # هر ۱۰ دقیقه یکبار خودکار اجرا می‌شود
-  workflow_dispatch: # دکمه اجرای دستی در گیت‌هاب
+    - cron: '0 * * * *' # خودش هر ساعت اتوماتیک اجرا شود
 
 jobs:
   build:
@@ -16,18 +17,17 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+      - name: Install Libraries
         run: |
-          pip install telethon
+          pip install requests beautifulsoup4
 
       - name: Run update script
         run: python main.py
 
-      - name: Commit and Push changes
+      - name: Save Changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add last_rates.json
           git commit -m "Update rates" || exit 0
           git push
-          
