@@ -1,10 +1,10 @@
 {
     "rates": {
-        "دالر هرات": { "current": "62,450", "status": "up", "diff": "0.15", "history": [62100, 62450] },
-        "دلار تهران": { "current": "63,100", "status": "down", "diff": "0.22", "history": [63500, 63100] },
+        "دالر هرات": { "current": "63,30", "status": "up", "diff": "0.15", "history": [62100, 62450] },
+        "دلار تهران": { "current": "158.000", "status": "down", "diff": "0.22", "history": [63500, 63100] },
         "یورو هرات": { "current": "68,200", "status": "up", "diff": "0.05", "history": [68100, 68200] },
-        "تومان چک": { "current": "1,240", "status": "up", "diff": "0.1", "history": [1230, 1240] },
-        "تومان بانکی": { "current": "1,235", "status": "down", "diff": "0.05", "history": [1240, 1235] },
-        "کلدار (پاکستان)": { "current": "225", "status": "up", "diff": "0.3", "history": [220, 225] }
+        "تومان چک": { "current": "0,51", "status": "up", "diff": "0.1", "history": [1230, 1240] },
+        "تومان بانکی": { "current": "0,40", "status": "down", "diff": "0.05", "history": [1240, 1235] },
+        "کلدار (پاکستان)": { "current": "213", "status": "up", "diff": "0.3", "history": [220, 225] }
     }
 }
