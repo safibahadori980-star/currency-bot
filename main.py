@@ -2,8 +2,8 @@ import re, json, os, asyncio
 from telethon import TelegramClient
 
 # این دو مقدار رسمی و عمومی هستند و نباید تغییر کنند
-api_id = 2040 
-api_hash = 'b18441a1ff62a0123094e073c68e1462'
+api_id = 6
+api_hash = 'eb06d4abfb49ad3eeb1aeb98ae0f581e'
 
 # توکن ربات خودت (درست است)
 bot_token = '8411624697:AAFvOz2GmTwTslHVQ592H6ayqDhtxnR6L-s' 
