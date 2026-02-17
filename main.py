@@ -1,16 +1,19 @@
 import re, json, os, asyncio
 from telethon import TelegramClient
 
-# اطلاعات اتصال
+# این دو مقدار رسمی و عمومی هستند و نباید تغییر کنند
 api_id = 2040 
 api_hash = 'b18441a1ff62a0123094e073c68e1462'
+
+# توکن ربات خودت (درست است)
 bot_token = '8411624697:AAFvOz2GmTwTslHVQ592H6ayqDhtxnR6L-s' 
 SOURCE_CHANNEL = 'NerkhYab_Khorasan'
 
 async def main():
-    # اتصال بدون سشن برای جلوگیری از ارور شماره تلفن
+    # استفاده از None برای محیط گیت‌هاب ضروری است
     client = TelegramClient(None, api_id, api_hash)
-    print("Connecting...")
+    
+    print("در حال اتصال به تلگرام...")
     await client.start(bot_token=bot_token)
     
     mapping = {
@@ -23,20 +26,16 @@ async def main():
 
     file_name = 'last_rates.json'
     
-    # ایجاد دیتای اولیه اگر فایل وجود نداشت
-    data = {"rates": {k: {"current": "---", "status": "up", "diff": "0.00"} for k in mapping.keys()}}
-
-    # اگر فایل وجود داشت، آن را بخوان
+    # خواندن دیتای فعلی (که دستی وارد کردی) برای حفظ ساختار
     if os.path.exists(file_name):
-        try:
-            with open(file_name, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-        except:
-            print("Creating new data structure...")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    else:
+        data = {"rates": {k: {"current": "---", "status": "up", "diff": "0.00"} for k in mapping.keys()}}
 
     updated = False
-    print("Fetching rates...")
-    async for message in client.iter_messages(SOURCE_CHANNEL, limit=20):
+    print("در حال دریافت پیام‌ها...")
+    async for message in client.iter_messages(SOURCE_CHANNEL, limit=15):
         if message.text:
             for site_key, telegram_key in mapping.items():
                 if telegram_key in message.text:
@@ -46,14 +45,23 @@ async def main():
                             price_match = re.findall(r'\d+[.,]?\d*', line)
                             if price_match:
                                 new_val = price_match[-1].replace(',', '')
+                                # مقایسه برای تعیین وضعیت up یا down
+                                if data['rates'][site_key]['current'] != "---":
+                                    old_val = float(data['rates'][site_key]['current'])
+                                    current_val = float(new_val)
+                                    if current_val > old_val:
+                                        data['rates'][site_key]['status'] = "up"
+                                    elif current_val < old_val:
+                                        data['rates'][site_key]['status'] = "down"
+                                
                                 data['rates'][site_key]['current'] = new_val
                                 updated = True
 
-    # ذخیره فایل (حتی اگر آپدیت نشد، فایل را بساز تا ارور ندهد)
-    with open(file_name, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    if updated:
+        with open(file_name, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        print("فایل با موفقیت آپدیت شد.")
     
-    print("Success! File saved.")
     await client.disconnect()
 
 if __name__ == '__main__':
