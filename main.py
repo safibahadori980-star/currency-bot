@@ -1,32 +1,27 @@
 import re, json, os, asyncio
 from telethon import TelegramClient
 
-# این دو مقدار رسمی و عمومی هستند و نباید تغییر کنند
+# مقادیر استاندارد طلایی (بدون تغییر)
 api_id = 6
 api_hash = 'eb06d4abfb49ad3eeb1aeb98ae0f581e'
-
-# توکن ربات خودت (درست است)
-bot_token = '8411624697:AAFvOz2GmTwTslHVQ592H6ayqDhtxnR6L-s' 
+bot_token = '8411624697:AAFvOz2GmTwTslHVQ592H6ayqDhtxnR6L-s'
 SOURCE_CHANNEL = 'NerkhYab_Khorasan'
 
 async def main():
-    # استفاده از None برای محیط گیت‌هاب ضروری است
+    # استفاده از سشن موقت برای گیت‌هاب
     client = TelegramClient(None, api_id, api_hash)
-    
-    print("در حال اتصال به تلگرام...")
     await client.start(bot_token=bot_token)
     
+    # این لیست دقیقاً بر اساس اسکرین‌شات پیام‌های کانال تو تنظیم شده
     mapping = {
-        "دالر هرات": "دالر به افغانی",
-        "یورو هرات": "یورو به افغانی",
-        "تومان چک": "تومان چک",
-        "تومان بانکی": "تومان بانکی",
-        "کلدار (پاکستان)": "کلدار افغانی"
+        "دالر هرات": "هرات دالر به افغانی",
+        "یورو هرات": "هرات یورو به افغانی",
+        "تومان چک": "هرات تومان چک",
+        "تومان بانکی": "هرات تومان بانکی",
+        "کلدار افغانی": "هرات کلدار افغانی"
     }
 
     file_name = 'last_rates.json'
-    
-    # خواندن دیتای فعلی (که دستی وارد کردی) برای حفظ ساختار
     if os.path.exists(file_name):
         with open(file_name, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -34,25 +29,23 @@ async def main():
         data = {"rates": {k: {"current": "---", "status": "up", "diff": "0.00"} for k in mapping.keys()}}
 
     updated = False
-    print("در حال دریافت پیام‌ها...")
     async for message in client.iter_messages(SOURCE_CHANNEL, limit=15):
         if message.text:
             for site_key, telegram_key in mapping.items():
                 if telegram_key in message.text:
                     lines = message.text.split('\n')
                     for line in lines:
+                        # جستجوی عدد جلوی کلمه فروش
                         if "فروش" in line:
                             price_match = re.findall(r'\d+[.,]?\d*', line)
                             if price_match:
                                 new_val = price_match[-1].replace(',', '')
-                                # مقایسه برای تعیین وضعیت up یا down
-                                if data['rates'][site_key]['current'] != "---":
-                                    old_val = float(data['rates'][site_key]['current'])
-                                    current_val = float(new_val)
-                                    if current_val > old_val:
-                                        data['rates'][site_key]['status'] = "up"
-                                    elif current_val < old_val:
-                                        data['rates'][site_key]['status'] = "down"
+                                # تشخیص بالا یا پایین رفتن
+                                try:
+                                    old = float(data['rates'][site_key]['current'])
+                                    new = float(new_val)
+                                    data['rates'][site_key]['status'] = "up" if new >= old else "down"
+                                except: pass
                                 
                                 data['rates'][site_key]['current'] = new_val
                                 updated = True
@@ -60,7 +53,6 @@ async def main():
     if updated:
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-        print("فایل با موفقیت آپدیت شد.")
     
     await client.disconnect()
 
