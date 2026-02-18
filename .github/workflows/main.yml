@@ -2,27 +2,32 @@ name: Update Currency Rates
 
 on:
   schedule:
-    - cron: '*/15 * * * *' # هر 15 دقیقه خودکار اجرا شود
-  workflow_dispatch: # اجازه اجرای دستی با دکمه Run workflow
+    - cron: '*/10 * * * *'  # بیدار شدن خودکار هر 10 دقیقه
+  workflow_dispatch:        # نگه داشتن دکمه اجرای دستی
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4
+          python -m pip install --upgrade pip
+          pip install requests telethon
 
-      - name: Run script
-        run: python main.py
+      - name: Run fetch script
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: python main.py  # دقت کن! اگر اسم فایلت main.py نیست، اینجا عوضش کن
 
       - name: Commit and push changes
         run: |
