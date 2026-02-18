@@ -75,12 +75,13 @@
 
     <script>
         let currentLang = 'fa';
+        // اصلاح کلید کلدار برای هماهنگی با گیت‌هاب
         const config = [
             { key: "دالر هرات", name: "دالر", en: "Dollar", sub: "دالر هرات", icon: "https://flagcdn.com/w160/us.png" },
             { key: "یورو هرات", name: "یورو", en: "Euro", sub: "یورو هرات", icon: "https://flagcdn.com/w160/eu.png" },
             { key: "تومان چک", name: "تومان چک", en: "Toman Check", sub: "تومان هرات", icon: "https://flagcdn.com/w160/ir.png" },
             { key: "تومان بانکی", name: "تومان بانکی", en: "Toman Bank", sub: "تومان ایران", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
-            { key: "کلدار (پاکستان)", name: "کلدار", en: "PKR", sub: "کلدار پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
+            { key: "کلدار", name: "کلدار", en: "PKR", sub: "کلدار پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
         ];
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -105,12 +106,12 @@
             document.getElementById('update-text').innerText = lang === 'fa' ? 'بروزرسانی لحظه‌ای' : 'Live Update';
             load();
         }
-        function showDetail(item, price, isUp, diff) {
+        function showDetail(item, price, isUp, percent) {
             document.getElementById('detName').innerText = currentLang === 'fa' ? item.name : item.en;
             document.getElementById('detSub').innerText = item.sub;
             document.getElementById('detPrice').innerText = price;
             document.getElementById('detIcon').innerHTML = `<img src="${item.icon}">`;
-            document.getElementById('detTrend').innerHTML = `<span style="color:${isUp?'var(--accent)':'var(--down)'}">${isUp?'▲': '▼'} ${diff}%</span>`;
+            document.getElementById('detTrend').innerHTML = `<span style="color:${isUp?'var(--accent)':'var(--down)'}">${isUp?'▲': '▼'} ${percent}</span>`;
             const p = parseFloat(price.replace(/,/g,'')) || 0;
             document.getElementById('detLow').innerText = (p * 0.99).toLocaleString();
             document.getElementById('detHigh').innerText = (p * 1.01).toLocaleString();
@@ -118,19 +119,26 @@
         }
         async function load() {
             try {
+                // دریافت دیتای جدید با فلش کردن کش
                 const res = await fetch('last_rates.json?v=' + Date.now());
                 const data = await res.json();
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
                 config.forEach(item => {
-                    const rateObj = data.rates[item.key] || {current: "---", status: "up", diff: "0.00"};
+                    // هماهنگی با نام‌های جدید (percent بجای diff)
+                    const rateObj = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
                     const val = rateObj.current;
-                    const isUp = rateObj.status === "up";
-                    const diff = rateObj.diff;
+                    const status = rateObj.status;
+                    const percent = rateObj.percent;
+                    const isUp = status === "up";
+                    const isDown = status === "down";
                     
+                    const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
+                    const arrow = isUp ? '▲' : (isDown ? '▼' : '▬');
+
                     const card = document.createElement('div');
                     card.className = 'card';
-                    card.onclick = () => showDetail(item, val, isUp, diff);
+                    card.onclick = () => showDetail(item, val, isUp, percent);
                     card.innerHTML = `
                         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                             <div class="circle-icon"><img src="${item.icon}"></div>
@@ -140,8 +148,8 @@
                             </div>
                         </div>
                         <div>
-                            <div class="change-tag" style="color:${isUp?'var(--accent)':'var(--down)'}">
-                                ${isUp?'▲':'▼'} ${diff}%
+                            <div class="change-tag" style="color:${color}">
+                                ${arrow} ${percent}
                             </div>
                             <div class="price-val">${val}</div>
                         </div>`;
@@ -156,4 +164,5 @@
         load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-</html>
+    </html>
+    
