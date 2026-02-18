@@ -2,7 +2,8 @@
     "rates": {
         "دالر هرات": {
             "current": "62.95",
-            "status": "up"
+            "status": "same",
+            "percent": "+0.00%"
         },
         "یورو هرات": {
             "current": "---",
