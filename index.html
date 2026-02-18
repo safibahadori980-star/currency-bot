@@ -3,90 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NERKHYAB KHORASAN</title>
+    <title>NERKHYAB KHORASAN - Theme Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
         :root { 
             --bg: #000; 
-            --bg-grad: radial-gradient(circle at top right, #1c1c1e, #000);
-            --card: rgba(255, 255, 255, 0.06); 
+            --card: rgba(255, 255, 255, 0.05); 
             --text: #fff; 
-            --sub: #a1a1a6; 
+            --sub: #919196; 
             --accent: #32d74b; 
             --down: #ff453a; 
-            --modal: rgba(10, 10, 12, 0.9); 
-            --border: rgba(255, 255, 255, 0.1);
+            --modal: rgba(10, 10, 12, 0.95);
+            --border: rgba(255,255,255,0.08);
         }
 
-        /* استایل حالت روشن */
+        /* استایل اختصاصی برای حالت روشن */
         .light-mode { 
             --bg: #f2f2f7; 
-            --bg-grad: radial-gradient(circle at top right, #ffffff, #e5e5ea);
-            --card: rgba(0, 0, 0, 0.05); 
+            --card: rgba(255, 255, 255, 0.7); 
             --text: #000; 
             --sub: #636366; 
             --modal: rgba(255, 255, 255, 0.9);
-            --border: rgba(0, 0, 0, 0.1);
+            --border: rgba(0,0,0,0.05);
         }
         
         body { 
             background: var(--bg); 
-            background-image: var(--bg-grad);
+            background-image: radial-gradient(circle at top right, #1c1c1e, var(--bg));
             color: var(--text); 
             font-family: 'Vazirmatn', sans-serif; 
             margin: 0; 
-            transition: 0.3s; 
+            transition: background 0.4s, color 0.4s; 
             overflow-x: hidden; 
             min-height: 100vh;
         }
 
-        .top-bar { padding: 50px 25px 20px 25px; display: flex; justify-content: space-between; align-items: flex-start; }
-        .logo-text { font-size: 2.4rem; font-weight: 900; letter-spacing: -1px; margin: 0; line-height: 0.9; text-align: left; color: var(--text); }
-        .sub-logo { font-size: 0.8rem; font-weight: 600; letter-spacing: 5px; opacity: 0.6; display: block; text-align: left; margin-top: 5px;}
-        .date-time { text-align: right; font-size: 0.9rem; font-weight: bold; opacity: 0.8; line-height: 1.6; }
+        .top-bar { padding: 45px 25px 15px 25px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .logo-text { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; margin: 0; line-height: 0.9; text-align: left; }
+        .sub-logo { font-size: 0.75rem; font-weight: 400; letter-spacing: 4px; opacity: 0.5; display: block; text-align: left; margin-top: 5px;}
+        .date-time { text-align: right; font-size: 0.85rem; font-weight: 500; opacity: 0.7; }
 
-        .container { padding: 15px; display: grid; gap: 15px; margin-bottom: 100px; }
+        .container { padding: 12px; display: grid; gap: 12px; margin-bottom: 100px; }
         .grid-view { grid-template-columns: 1fr 1fr; }
         .list-view { grid-template-columns: 1fr; }
 
         .card { 
             background: var(--card); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 28px; 
-            padding: 20px; 
-            min-height: 150px; 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 22px; 
+            padding: 16px; 
+            min-height: 130px; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             cursor: pointer; 
             transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 1px solid var(--border); 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .card:active { transform: scale(0.96); }
+        .card:active { transform: scale(0.97); }
 
         .circle-icon { 
-            width: 44px; height: 44px; border-radius: 50%; overflow: hidden; 
-            background: rgba(128,128,128,0.1); display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border);
+            width: 38px; height: 38px; border-radius: 50%; overflow: hidden; 
+            background: rgba(150,150,150,0.1); display: flex; align-items: center; justify-content: center;
         }
         .circle-icon img { width: 100%; height: 100%; object-fit: cover; }
 
-        .price-val { font-size: 2rem; font-weight: 800; text-align: left; margin-top: 8px; letter-spacing: -1px; }
-        .change-tag { font-size: 0.95rem; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+        .card b { font-size: 1.05rem; font-weight: 500; }
+        .card small { font-size: 0.7rem; font-weight: 400; color: var(--sub); }
 
-        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 35px; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border: 1px solid var(--border); }
+        .price-val { font-size: 1.8rem; font-weight: 600; text-align: left; margin-top: 6px; letter-spacing: -0.5px; }
+        .change-tag { font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 3px; }
+
+        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border: 1px solid var(--border); }
         
-        .full-modal { position: fixed; inset: 0; background: var(--modal); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
+        .full-modal { position: fixed; inset: 0; background: var(--modal); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
         .full-modal.active { display: flex; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .toggle-box { background: rgba(128,128,128,0.1); border-radius: 14px; display: flex; padding: 4px; margin: 10px 0 20px 0; border: 0.5px solid var(--border); }
-        .toggle-btn { flex: 1; border: none; background: none; color: var(--text); padding: 10px; border-radius: 11px; font-family: 'Vazirmatn'; cursor: pointer; }
-        .toggle-btn.active { background: rgba(128,128,128,0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .toggle-box { background: rgba(150,150,150,0.1); border-radius: 12px; display: flex; padding: 3px; margin: 10px 0 20px 0; }
+        .toggle-btn { flex: 1; border: none; background: none; color: var(--text); padding: 9px; border-radius: 10px; font-family: 'Vazirmatn'; cursor: pointer; font-size: 0.85rem; }
+        .toggle-btn.active { background: rgba(150,150,150,0.2); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="dark-mode">
@@ -99,26 +99,25 @@
     <div id="main-container" class="container grid-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.4rem;"></i>
-        <span id="update-text" style="font-size: 0.85rem; font-weight: 600;">LIVE UPDATE</span>
-        <i class="fas fa-border-all" id="viewToggle" onclick="toggleView()" style="font-size: 1.3rem;"></i>
+        <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.2rem; opacity: 0.6; cursor:pointer;"></i>
+        <span id="update-text" style="font-size: 0.8rem; font-weight: 400; opacity: 0.6;">LIVE UPDATES</span>
+        <i class="fas fa-th-large" id="viewToggle" onclick="toggleView()" style="font-size: 1.2rem; opacity: 0.6; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px;"><b id="sett-title" style="font-size:1.6rem;">تنظیمات</b><i class="fas fa-times" onclick="closeModal('sMod')"></i></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:30px;"><b style="font-size:1.4rem; font-weight:500;">تنظیمات</b><i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.4rem; cursor:pointer;"></i></div>
         
-        <label style="color:var(--sub); font-size:0.85rem;">حالت ظاهری / Theme</label>
+        <label style="color:var(--sub); font-size:0.8rem;">حالت ظاهری / Theme</label>
         <div class="toggle-box">
-            <button class="toggle-btn active" id="darkBtn" onclick="setTheme('dark')">تیره</button>
-            <button class="toggle-btn" id="lightBtn" onclick="setTheme('light')">روشن</button>
+            <button id="darkBtn" class="toggle-btn active" onclick="setTheme('dark')">تیره</button>
+            <button id="lightBtn" class="toggle-btn" onclick="setTheme('light')">روشن</button>
         </div>
 
-        <label style="color:var(--sub); font-size:0.85rem;">زبان / Language</label>
+        <label style="color:var(--sub); font-size:0.8rem;">زبان / Language</label>
         <div class="toggle-box">
-            <button class="toggle-btn active" onclick="setLang('fa', this)">فارسی</button>
-            <button class="toggle-btn" onclick="setLang('en', this)">English</button>
+            <button id="faBtn" class="toggle-btn active" onclick="setLang('fa')">فارسی</button>
+            <button id="enBtn" class="toggle-btn" onclick="setLang('en')">English</button>
         </div>
-        <div style="margin-top:auto; text-align:center; opacity:0.4; font-size:0.8rem;">Safi Bahadori v2.6</div>
     </div>
 
     <script>
@@ -131,6 +130,19 @@
             { key: "کلدار", name: "کلدار", en: "PKR", sub: "کلدار پاکستان", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
+        function setTheme(mode) {
+            document.body.className = mode === 'light' ? 'light-mode' : 'dark-mode';
+            document.getElementById('darkBtn').classList.toggle('active', mode === 'dark');
+            document.getElementById('lightBtn').classList.toggle('active', mode === 'light');
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.getElementById('faBtn').classList.toggle('active', lang === 'fa');
+            document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+            load();
+        }
+
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         
@@ -138,19 +150,7 @@
             const container = document.getElementById('main-container');
             container.classList.toggle('grid-view');
             container.classList.toggle('list-view');
-        }
-
-        function setTheme(mode) {
-            document.body.className = mode === 'light' ? 'light-mode' : 'dark-mode';
-            document.getElementById('darkBtn').classList.toggle('active', mode === 'dark');
-            document.getElementById('lightBtn').classList.toggle('active', mode === 'light');
-        }
-
-        function setLang(lang, btn) {
-            currentLang = lang;
-            document.querySelectorAll('.toggle-box:last-of-type .toggle-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            load();
+            document.getElementById('viewToggle').className = container.classList.contains('grid-view') ? 'fas fa-th-large' : 'fas fa-list';
         }
 
         async function load() {
@@ -165,7 +165,6 @@
                     const val = rateObj.current;
                     const status = rateObj.status;
                     const percent = rateObj.percent;
-                    
                     const isUp = status === "up";
                     const isDown = status === "down";
                     const color = isUp ? 'var(--accent)' : (isDown ? 'var(--down)' : 'var(--sub)');
@@ -177,8 +176,8 @@
                         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                             <div class="circle-icon"><img src="${item.icon}"></div>
                             <div style="text-align:left">
-                                <b style="font-size:1.1rem;">${currentLang === 'fa' ? item.name : item.en}</b><br>
-                                <small style="color:var(--sub); font-size:0.75rem;">${item.sub}</small>
+                                <b>${currentLang === 'fa' ? item.name : item.en}</b><br>
+                                <small>${item.sub}</small>
                             </div>
                         </div>
                         <div>
