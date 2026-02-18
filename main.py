@@ -1,59 +1,79 @@
 import os
 import json
 import requests
-from bs4 import BeautifulSoup
 import re
 
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    os.system('pip install beautifulsoup4')
+    from bs4 import BeautifulSoup
+
 def get_rates():
-    print("🚀 شروع عملیات دریافت نرخ...")
     url = "https://t.me/s/NerkhYab_Khorasan"
     
+    # کلمات کلیدی را کوتاه کردیم تا حساسیت کمتر شود
     mapping = {
-        "دالر هرات": "هرات دالر به افغانی",
-        "یورو هرات": "هرات یورو به افغانی",
-        "تومان چک": "هرات تومان چک",
-        "تومان بانکی": "هرات تومان بانکی",
-        "کلدار": "هرات کلدار افغانی"
+        "دالر هرات": "دالر افغانی",
+        "یورو هرات": "یورو افغانی",
+        "تومان چک": "تومان چک",
+        "تومان بانکی": "تومان بانکی",
+        "کلدار": "کلدار افغانی"
     }
 
     file_name = 'last_rates.json'
-    
-    # دیتای پیش‌فرض
-    data = {"rates": {k: {"current": "---", "status": "up"} for k in mapping.keys()}}
+    data = {"rates": {k: {"current": "---", "status": "up", "percent": "0.00%"} for k in mapping.keys()}}
+
+    # خواندن مقادیر قبلی برای محاسبه درصد و نوسان
+    if os.path.exists(file_name):
+        try:
+            with open(file_name, 'r', encoding='utf-8') as f:
+                old_data = json.load(f)
+        except: old_data = {"rates": {}}
+    else: old_data = {"rates": {}}
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         response = requests.get(url, headers=headers, timeout=20)
-        
-        if response.status_code != 200:
-            print(f"❌ خطا: تلگرام پاسخ نداد (کد {response.status_code})")
-            return
-
         soup = BeautifulSoup(response.text, 'html.parser')
         messages = soup.find_all('div', class_='tgme_widget_message_text')
         
-        if not messages:
-            print("❌ هیچ پیامی در کانال پیدا نشد!")
-            return
-
         found_count = 0
-        for msg in reversed(messages[-40:]):
+        for msg in reversed(messages[-60:]):
             text = msg.get_text(separator=" ").replace('\n', ' ')
             for site_key, telegram_key in mapping.items():
                 if telegram_key in text and data["rates"][site_key]["current"] == "---":
-                    match = re.search(r'(\d+[\.,]\d+|\d+)\s+خرید', text)
+                    # پیدا کردن اولین عدد قبل از کلمه "خرید" یا اولین عدد در پیام
+                    match = re.search(r'(\d+[\.,]\d+|\d+)', text)
                     if match:
-                        data["rates"][site_key]["current"] = match.group(1).replace(',', '.')
+                        new_val = match.group(1).replace(',', '.')
+                        data["rates"][site_key]["current"] = new_val
+                        
+                        # محاسبه نوسان و درصد (اگر دیتای قبلی بود)
+                        if site_key in old_data.get("rates", {}):
+                            try:
+                                old_val = float(old_data["rates"][site_key]["current"])
+                                current_val = float(new_val)
+                                diff = current_val - old_val
+                                
+                                if diff > 0: data["rates"][site_key]["status"] = "up"
+                                elif diff < 0: data["rates"][site_key]["status"] = "down"
+                                else: data["rates"][site_key]["status"] = old_data["rates"][site_key].get("status", "up")
+                                
+                                # محاسبه درصد نوسان
+                                if old_val != 0:
+                                    percent = (diff / old_val) * 100
+                                    data["rates"][site_key]["percent"] = f"{percent:+.2f}%"
+                            except: pass
+                        
                         found_count += 1
             if found_count == len(mapping): break
 
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-        
-        print(f"✅ موفقیت! {found_count} نرخ بروزرسانی شد.")
+        print(f"✅ بروزرسانی موفق: {found_count} مورد")
 
-    except Exception as e:
-        print(f"🔥 ارور سیستمی: {str(e)}")
+    except Exception as e: print(f"🔥 خطا: {e}")
 
 if __name__ == "__main__":
     get_rates()
