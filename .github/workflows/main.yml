@@ -27,7 +27,7 @@ jobs:
           API_ID: ${{ secrets.API_ID }}
           API_HASH: ${{ secrets.API_HASH }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: python main.py  # دقت کن! اگر اسم فایلت main.py نیست، اینجا عوضش کن
+        run: python main.py  # چون اسم فایل تو main.py است
 
       - name: Commit and push changes
         run: |
