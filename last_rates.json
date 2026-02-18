@@ -1,58 +1,24 @@
 {
     "rates": {
         "دالر هرات": {
-            "current": "62.95",
-            "status": "down",
-            "diff": "0.15",
-            "history": [
-                62100,
-                62450
-            ]
-        },
-        "دلار تهران": {
-            "current": "158.000",
-            "status": "down",
-            "diff": "0.22",
-            "history": [
-                63500,
-                63100
-            ]
+            "current": "---",
+            "status": "up"
         },
         "یورو هرات": {
-            "current": "73.20",
-            "status": "up",
-            "diff": "0.05",
-            "history": [
-                68100,
-                68200
-            ]
+            "current": "---",
+            "status": "up"
         },
         "تومان چک": {
-            "current": "0.51",
-            "status": "up",
-            "diff": "0.1",
-            "history": [
-                1230,
-                1240
-            ]
+            "current": "0.50",
+            "status": "up"
         },
         "تومان بانکی": {
-            "current": "0.41",
-            "status": "down",
-            "diff": "0.05",
-            "history": [
-                1240,
-                1235
-            ]
+            "current": "0.39",
+            "status": "up"
         },
-        "کلدار (پاکستان)": {
-            "current": "213",
-            "status": "up",
-            "diff": "0.3",
-            "history": [
-                220,
-                225
-            ]
+        "کلدار": {
+            "current": "213.00",
+            "status": "up"
         }
     }
 }
