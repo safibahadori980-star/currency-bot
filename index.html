@@ -3,131 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NERKHYAB KHORASAN</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>نرخ‌یاب خراسان</title>
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #000; --card: #1c1c1e; --text: #fff; 
-            --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; 
-            --border: rgba(255,255,255,0.1); --modal-bg: rgba(20, 20, 20, 0.95);
-        }
-        .light-mode {
-            --bg: #f2f2f7; --card: #ffffff; --text: #000; 
-            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.95);
-        }
-        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
-        
-        /* Header */
-        .header { padding: 25px 20px 10px; display: flex; justify-content: space-between; align-items: flex-start; }
-        .brand { font-size: 1.6rem; font-weight: 900; line-height: 1.1; }
-        .date-time { text-align: left; font-weight: 800; font-size: 0.85rem; opacity: 0.8; }
-
-        /* Container & Cards */
-        .container { display: grid; gap: 12px; padding: 15px; padding-bottom: 120px; }
-        .list-view { grid-template-columns: 1fr; }
-        .grid-view { grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .card { 
-            background: var(--card); border-radius: 24px; padding: 18px; 
-            border: 1px solid var(--border); transition: 0.3s ease; 
-            overflow: hidden; cursor: pointer; position: relative;
-        }
-
-        .trend-label { display: flex; align-items: center; gap: 3px; font-size: 0.95rem; font-weight: 900; direction: ltr; }
-        .trend-up { color: var(--accent); }
-        .trend-down { color: var(--down); }
-        .trend-neutral { color: var(--sub); }
-
-        .price-val { font-size: 2.5rem; font-weight: 900; margin-top: 15px; letter-spacing: -1px; }
-        .grid-view .price-val { font-size: 1.8rem; }
-
-        /* Panel & Chart */
-        .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card.active .extra-panel { max-height: 280px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
-
-        .chart-container { position: relative; width: 100%; height: 90px; margin-top: 10px; }
-        .chart-svg { width: 100%; height: 100%; overflow: visible; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(20px); border-radius: 30px; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; }
-        
-        /* Modal Settings */
-        .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(30px); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; }
-        .full-modal.active { display: flex; }
-        .setting-box { background: rgba(150, 150, 150, 0.1); padding: 6px; border-radius: 20px; display: flex; margin-bottom: 20px; }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 15px; border-radius: 16px; font-weight: 800; cursor: pointer; }
-        .setting-box button.active { background: var(--accent); color: #000; }
+        :root { --bg: #000; --card: #1c1c1e; --text: #fff; --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; --border: rgba(255,255,255,0.1); }
+        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; }
+        .header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.5rem; font-weight: 900; }
+        .date-time { text-align: left; font-size: 0.8rem; opacity: 0.7; }
+        .container { display: grid; gap: 12px; padding: 15px; padding-bottom: 100px; }
+        .card { background: var(--card); border-radius: 24px; padding: 18px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
+        .card:active { transform: scale(0.98); }
+        .trend-up { color: var(--accent); } .trend-down { color: var(--down); }
+        .price-val { font-size: 2.6rem; font-weight: 900; margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+        .closed-tag { font-size: 0.7rem; color: var(--down); background: rgba(255,69,58,0.1); padding: 2px 8px; border-radius: 10px; }
+        .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s; }
+        .card.active .extra-panel { max-height: 200px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .chart-container { width: 100%; height: 80px; }
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; background: var(--card); border-radius: 30px; padding: 15px; border: 1px solid var(--border); display: flex; justify-content: space-around; }
     </style>
 </head>
-<body class="">
+<body>
 
     <div class="header">
         <div class="brand">NERKHYAB<br>KHORASAN</div>
         <div class="date-time" id="dt"></div>
     </div>
 
-    <div id="main-container" class="container list-view"></div>
+    <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-th-large" id="vIcon" onclick="toggleView()" style="opacity: 0.6; cursor:pointer;"></i>
-        <span style="font-weight: 900; font-size: 0.95rem;">نرخ زنده بازار</span>
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.6; cursor:pointer;"></i>
-    </div>
-
-    <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <b style="font-size:1.8rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.8rem; cursor:pointer;"></i>
-        </div>
-        <div class="setting-box">
-            <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
-            <button id="tLight" onclick="setTheme('light')">روشن</button>
-        </div>
-        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:22px; background:var(--text); border:none; border-radius:24px; color:var(--bg); font-weight:900;">بستن صفحه</button>
+        <i class="fas fa-chart-line" style="color:var(--accent)"></i>
+        <span style="font-weight: 800;">نرخ زنده بازار</span>
+        <i class="fas fa-history" style="opacity: 0.5;"></i>
     </div>
 
     <script>
         const config = [
-    { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
-    { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
-    { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
-    { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
-    { key: "کلدار", name: "کلدار پاکستان", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
-];
+            { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
+            { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
+            { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
+            { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
+            { key: "کلدار", name: "کلدار پاکستان", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
+        ];
 
         function updateDT() {
             const now = new Date();
             const j = jalaali.toJalaali(now);
-            const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('dt').innerHTML = `${j.jy}/${j.jm}/${j.jd}<br>PM ${time}`;
+            document.getElementById('dt').innerHTML = `${j.jy}/${j.jm}/${j.jd}<br>${now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}`;
         }
         setInterval(updateDT, 1000); updateDT();
-
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        function setTheme(m) { 
-            document.body.className = m === 'light' ? 'light-mode' : ''; 
-            document.getElementById('tDark').classList.toggle('active', m === 'dark');
-            document.getElementById('tLight').classList.toggle('active', m === 'light');
-        }
-
-        function toggleView() {
-            const c = document.getElementById('main-container');
-            c.classList.toggle('grid-view');
-            document.getElementById('vIcon').className = c.classList.contains('grid-view') ? 'fas fa-list' : 'fas fa-th-large';
-        }
-
-        function getCurvePath(pts) {
-            if (pts.length < 2) return "";
-            let d = `M ${pts[0].x},${pts[0].y}`;
-            for (let i = 0; i < pts.length - 1; i++) {
-                let cp1x = pts[i].x + (pts[i+1].x - pts[i].x) / 2;
-                d += ` C ${cp1x},${pts[i].y} ${cp1x},${pts[i+1].y} ${pts[i+1].x},${pts[i+1].y}`;
-            }
-            return d;
-        }
 
         async function load() {
             try {
@@ -136,65 +63,45 @@
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
                 
-                const now = new Date();
-                const isClosed = now.getHours() >= 17;
+                const isClosed = new Date().getHours() >= 17;
 
                 config.forEach((item, idx) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", history: [0,0,0,0], percent: "0.00%"};
                     const history = rate.history || [0,0,0,0];
                     const chartColor = rate.status === "down" ? '#ff453a' : '#32d74b';
-                    const trendClass = rate.status === "up" ? 'trend-up' : (rate.status === "down" ? 'trend-down' : 'trend-neutral');
-                    const arrow = rate.status === "up" ? '↑' : (rate.status === "down" ? '↓' : '');
+                    const trendClass = rate.status === "up" ? 'trend-up' : (rate.status === "down" ? 'trend-down' : '');
 
+                    // چارت ساده شده
                     const min = Math.min(...history);
                     const max = Math.max(...history);
                     const range = (max - min) || 1;
-                    const points = history.map((p, i) => ({
-                        x: i * (100 / (history.length - 1)),
-                        y: 42 - ((p - min) / range) * 35
-                    }));
-
-                    const curveD = getCurvePath(points);
-                    const areaD = `${curveD} L 100,50 L 0,50 Z`;
+                    const points = history.map((p, i) => `${i * (100/(history.length-1))},${40 - ((p-min)/range)*35}`).join(' ');
 
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.onclick = function() { this.classList.toggle('active'); };
                     card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; gap:12px; align-items:center;">
-                                <img src="${item.icon}" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
-                                <div><b style="font-size:1.15rem; display:block;">${item.name}</b><small style="opacity:0.5; font-weight:800;">${item.sub}</small></div>
+                                <img src="${item.icon}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                                <div><b style="display:block;">${item.name}</b><small style="opacity:0.5;">${item.sub}</small></div>
                             </div>
-                            <div class="trend-label ${trendClass}">
-                                <span>${arrow}</span><span>${rate.percent}</span>
+                            <div class="${trendClass}" style="font-weight:900; direction:ltr;">
+                                ${rate.status === 'up' ? '↑' : (rate.status === 'down' ? '↓' : '')} ${rate.percent}
                             </div>
                         </div>
-                        
                         <div class="price-val">
-                            ${rate.current} 
-                            <span style="font-size:0.8rem; color:var(--down); font-weight:normal;">
-                                ${isClosed ? 'Closed Market' : ''}
-                            </span>
+                            ${rate.current || rate.buy || '---'}
+                            ${isClosed ? '<span class="closed-tag">Closed Market</span>' : ''}
                         </div>
-
                         <div class="extra-panel">
                             <div class="chart-container">
-                                <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="chart-svg">
-                                    <defs>
-                                        <linearGradient id="g${idx}" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="${chartColor}" stop-opacity="0.5"/>
-                                            <stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="${areaD}" fill="url(#g${idx})" />
-                                    <path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
+                                <svg viewBox="0 0 100 50" preserveAspectRatio="none" style="width:100%; height:100%;">
+                                    <polyline points="${points}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </div>
-                            <div style="display:flex; justify-content:space-between; opacity:0.5; font-size:0.75rem; margin-top:10px; font-family:sans-serif; font-weight:bold;">
-                                ${history.map(h => `<span>${h}</span>`).join('')}
-                            </div>
-                        </div>`;
+                        </div>
+                    `;
                     cont.appendChild(card);
                 });
             } catch (e) { console.error(e); }
