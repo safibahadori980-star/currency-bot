@@ -23,10 +23,10 @@
         }
         
         /* هدر و لوگو */
-        .top-bar { padding: 25px 20px 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar { padding: 20px 20px 10px 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo-area { display: flex; flex-direction: column; line-height: 1; }
-        .logo-text { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; }
-        .sub-logo { font-size: 2rem; font-weight: 900; margin: 0; margin-top: -2px; }
+        .logo-text { font-size: 2.2rem; font-weight: 800; letter-spacing: -1.5px; margin: 0; }
+        .sub-logo { font-size: 2rem; font-weight: 800; margin: 0; margin-top: -2px; }
         
         .date-time { text-align: right; font-size: 0.95rem; font-weight: 800; line-height: 1.3; }
         .time-en { font-family: sans-serif; font-size: 1.15rem; display: block; margin-top: 2px; }
@@ -43,13 +43,13 @@
             -webkit-tap-highlight-color: transparent; cursor: pointer; transition: 0.3s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .grid-view .card { height: 125px; padding: 12px; }
+        .grid-view .card { height: 115px; padding: 12px; }
 
         .circle-icon { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: rgba(150,150,150,0.1); }
         .circle-icon img { width: 100%; height: 100%; object-fit: cover; }
         
         .card b { font-size: 1.15rem; font-weight: 700; }
-        .closed-text { font-size: 0.7rem; color: var(--down); font-weight: 900; margin-right: 8px; display: inline-block; }
+        .closed-text { font-size: 0.7rem; color: var(--down); font-weight: 800; margin-right: 8px; display: inline-block; }
 
         .price-row { display: flex; justify-content: space-between; align-items: flex-end; }
         .price-val { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
@@ -86,7 +86,7 @@
 
     <div class="bottom-nav">
         <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
-        <span id="nav-status" style="font-size: 1rem; font-weight: 900; letter-spacing: 0.5px;">نرخ زنده</span>
+        <span id="nav-status" style="font-size: 1rem; font-weight: 900; letter-spacing: 0.5px;">نرخیاب خراسان </span>
         <i class="fas fa-list" id="viewToggle" onclick="toggleView()" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
     </div>
 
@@ -109,8 +109,8 @@
         </div>
 
         <div class="dev-tag">
-            <p style="margin:0; font-weight:900; font-size:1.1rem; color:var(--accent);">Developer: Safi-Bahadori</p>
-            <p style="margin:8px 0 0 0; font-size:0.85rem; opacity:0.8; line-height:1.6;">این اپلیکیشن نرخ‌های لحظه‌ای بازارهای مالی را با دقت بالا نمایش می‌دهد.<br>نسخه نهایی ۱.۸</p>
+            <p style="margin:0; font-weight:900; font-size:1.1rem; color:var(--accent);">Developer: Safi-Bahadori - توسعه دهنده: صفی‌الله بهادری</p>
+            <p style="margin:8px 0 0 0; font-size:0.85rem; opacity:0.8; line-height:1.6;">این اپلیکیشن نرخ‌های لحظه‌ای بازارهای مالی را با دقت بالا در بازار هرات نمایش می‌دهد.<br>نسخه نهایی ۱.۸</p>
         </div>
 
         <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--accent); border:none; border-radius:20px; color:#000; font-weight:900; font-size:1.1rem;">ذخیره و بازگشت</button>
@@ -159,8 +159,6 @@
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
                 
-                // بررسی ساعت ۵ عصر برای بازار بسته
-                const isClosed = new Date().getHours() >= 17;
 
                 config.forEach((item, index) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
