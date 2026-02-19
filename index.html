@@ -11,69 +11,75 @@
         :root { 
             --bg: #000; --card: #1c1c1e; --text: #fff; 
             --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; 
-            --border: rgba(255,255,255,0.1); --modal-bg: rgba(30, 30, 35, 0.8);
+            --border: rgba(255,255,255,0.1); --modal-bg: rgba(20, 20, 20, 0.95);
         }
         .light-mode {
             --bg: #f2f2f7; --card: #ffffff; --text: #000; 
-            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.8);
+            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.95);
         }
         body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; }
         
+        .header { padding: 25px 20px 10px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .brand { font-size: 1.6rem; font-weight: 900; line-height: 1.1; }
+        .date-time { text-align: left; font-weight: 800; font-size: 0.85rem; opacity: 0.8; }
+
         .container { display: grid; gap: 12px; padding: 15px; padding-bottom: 120px; }
         .list-view { grid-template-columns: 1fr; }
         .grid-view { grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .card { 
-            background: var(--card); border-radius: 24px; padding: 16px; 
-            border: 1px solid var(--border); transition: 0.3s; 
-            overflow: hidden; cursor: pointer; height: auto;
+            background: var(--card); border-radius: 24px; padding: 18px; 
+            border: 1px solid var(--border); transition: 0.3s ease; 
+            overflow: hidden; cursor: pointer;
         }
-        .card.active { background: rgba(142, 142, 147, 0.15); }
 
-        .badge { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 900; }
-        .up-badge { background: var(--accent); color: #000; }
-        .down-badge { background: var(--down); color: #fff; }
-        .neutral-badge { background: #3a3a3c; color: #8e8e93; }
+        .trend-label { display: flex; align-items: center; gap: 3px; font-size: 0.95rem; font-weight: 900; direction: ltr; }
+        .trend-up { color: var(--accent); }
+        .trend-down { color: var(--down); }
+        .trend-neutral { color: var(--sub); }
 
-        .price-val { font-size: 2rem; font-weight: 900; margin-top: 15px; letter-spacing: -1px; }
-        .grid-view .price-val { font-size: 1.6rem; }
+        .price-val { font-size: 2.2rem; font-weight: 900; margin-top: 10px; letter-spacing: -1px; }
 
-        .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease; }
-        .card.active .extra-panel { max-height: 250px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card.active .extra-panel { max-height: 280px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
 
-        .chart-container { position: relative; width: 100%; height: 90px; margin-top: 10px; }
+        .chart-container { position: relative; width: 100%; height: 95px; margin-top: 10px; }
         .chart-svg { width: 100%; height: 100%; overflow: visible; }
 
-        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(20px); border-radius: 30px; padding: 15px 22px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(20px); border-radius: 30px; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; }
         
-        /* Modal Styles */
         .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(30px); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; }
         .full-modal.active { display: flex; }
-        .setting-box { background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 18px; display: flex; margin-bottom: 20px; border: 1px solid var(--border); }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; }
+        .setting-box { background: rgba(150, 150, 150, 0.1); padding: 6px; border-radius: 20px; display: flex; margin-bottom: 20px; }
+        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 15px; border-radius: 16px; font-weight: 800; cursor: pointer; }
         .setting-box button.active { background: var(--accent); color: #000; }
     </style>
 </head>
 <body>
 
+    <div class="header">
+        <div class="brand">NERKHYAB<br>KHORASAN</div>
+        <div class="date-time" id="dt"></div>
+    </div>
+
     <div id="main-container" class="container list-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.6; cursor:pointer;"></i>
-        <span style="font-weight: 900; font-size: 0.9rem;">نرخ زنده بازار</span>
         <i class="fas fa-th-large" id="vIcon" onclick="toggleView()" style="opacity: 0.6; cursor:pointer;"></i>
+        <span style="font-weight: 900; font-size: 0.95rem;">نرخ زنده بازار</span>
+        <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.6; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
             <b style="font-size:1.8rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer;"></i>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.8rem; cursor:pointer;"></i>
         </div>
         <div class="setting-box">
             <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
             <button id="tLight" onclick="setTheme('light')">روشن</button>
         </div>
-        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--text); border:none; border-radius:22px; color:var(--bg); font-weight:900;">بستن</button>
+        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:22px; background:var(--text); border:none; border-radius:24px; color:var(--bg); font-weight:900;">بستن صفحه</button>
     </div>
 
     <script>
@@ -84,6 +90,14 @@
             { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
             { key: "کلدار", name: "کلدار پاکستان", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
         ];
+
+        function updateDT() {
+            const now = new Date();
+            const j = jalaali.toJalaali(now);
+            const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('dt').innerHTML = `${j.jy}/${j.jm}/${j.jd}<br>PM ${time}`;
+        }
+        setInterval(updateDT, 1000); updateDT();
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -116,11 +130,14 @@
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
                 
+                const now = new Date();
+                const isClosed = now.getHours() >= 17;
+
                 config.forEach((item, idx) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", history: [0,0,0,0], percent: "0%"};
                     const history = rate.history || [0,0,0,0];
                     const chartColor = rate.status === "down" ? '#ff453a' : '#32d74b';
-                    const badgeClass = rate.status === "up" ? 'up-badge' : (rate.status === "down" ? 'down-badge' : 'neutral-badge');
+                    const trendClass = rate.status === "up" ? 'trend-up' : (rate.status === "down" ? 'trend-down' : 'trend-neutral');
                     const arrow = rate.status === "up" ? '↑' : (rate.status === "down" ? '↓' : '');
 
                     const min = Math.min(...history);
@@ -128,7 +145,7 @@
                     const range = (max - min) || 1;
                     const points = history.map((p, i) => ({
                         x: i * (100 / (history.length - 1)),
-                        y: 40 - ((p - min) / range) * 35
+                        y: 42 - ((p - min) / range) * 35
                     }));
 
                     const curveD = getCurvePath(points);
@@ -139,25 +156,27 @@
                     card.className = 'card';
                     card.onclick = function() { this.classList.toggle('active'); };
                     card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                             <div style="display:flex; gap:12px; align-items:center;">
-                                <img src="${item.icon}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
-                                <div><b>${item.name}</b><br><small style="opacity:0.5;">${item.sub}</small></div>
+                                <img src="${item.icon}" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
+                                <div><b style="font-size:1.15rem; display:block;">${item.name}</b><small style="opacity:0.5; font-weight:800;">${item.sub}</small></div>
                             </div>
-                            <div class="badge ${badgeClass}">${arrow} ${rate.percent}</div>
+                            <div class="trend-label ${trendClass}">
+                                <span>${arrow}</span><span>${rate.percent}</span>
+                            </div>
                         </div>
-                        <div class="price-val">${rate.current}</div>
+                        <div class="price-val">${rate.current} <span style="font-size:0.8rem; opacity:0.5;">${isClosed ? 'Closed Market' : ''}</span></div>
                         <div class="extra-panel">
-                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:bold; margin-bottom:5px;">
-                                <span style="opacity:0.6;">تغییر ۳ روز:</span><span style="color:${chartColor}">${rate.diff_3d || '0%'}</span>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:900; margin-bottom:8px;">
+                                <span style="opacity:0.6;">تغییرات اخیر:</span><span style="color:${chartColor}">${rate.diff_3d || '---'}</span>
                             </div>
                             <div class="chart-container">
                                 <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="chart-svg">
-                                    <defs><linearGradient id="${gId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${chartColor}" stop-opacity="0.4"/><stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/></linearGradient></defs>
+                                    <defs><linearGradient id="${gId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${chartColor}" stop-opacity="0.5"/><stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/></linearGradient></defs>
                                     <path d="${areaD}" fill="url(#${gId})" /><path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
                                 </svg>
                             </div>
-                            <div style="display:flex; justify-content:space-between; opacity:0.5; font-size:0.65rem; margin-top:8px; font-family:sans-serif;">
+                            <div style="display:flex; justify-content:space-between; opacity:0.5; font-size:0.75rem; margin-top:10px; font-family:sans-serif; font-weight:bold;">
                                 ${history.map(h => `<span>${h}</span>`).join('')}
                             </div>
                         </div>`;
@@ -168,4 +187,4 @@
         load(); setInterval(load, 30000);
     </script>
 </body>
-            </html>
+                </html>
