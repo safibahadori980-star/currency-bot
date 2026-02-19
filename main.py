@@ -8,12 +8,13 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
+    # کلمات کلیدی گسترده‌تر برای پیدا کردن یورو و کلدار
     mapping = {
-        "دالر هرات": ["دالر"],
+        "دالر هرات": ["دالر", "دلار"],
         "یورو هرات": ["یورو"],
-        "تومان چک": ["تومان چک"],
-        "کلدار": ["کلدار"],
-        "تومان بانکی": ["تومان بانکی"]
+        "تومان چک": ["تومان چک", "چک هرات"],
+        "کلدار": ["کلدار", "پاکستا"],
+        "تومان بانکی": ["تومان بانکی", "حواله ایران"]
     }
 
     if os.path.exists(file_name):
@@ -30,12 +31,13 @@ def get_rates():
         messages = soup.find_all('div', class_='tgme_widget_message_text')
 
         found_keys = set()
-        for msg in reversed(messages[-30:]):
+        # بررسی ۱۰۰ پیام آخر برای اطمینان از پیدا شدن تمام ارزها
+        for msg in reversed(messages[-100:]):
             text = msg.get_text(separator=" ").replace('\n', ' ').replace(',', '.')
             
             for site_key, keywords in mapping.items():
                 if site_key not in found_keys and any(k in text for k in keywords):
-                    # پیدا کردن اولین عدد در متن (نرخ خرید)
+                    # استخراج اولین عدد (قیمت خرید)
                     match = re.search(r'(\d+\.\d+|\d+)', text)
                     if match:
                         new_val = match.group(1)
@@ -45,7 +47,7 @@ def get_rates():
                         
                         old_val = data["rates"][site_key].get("current", "0")
                         
-                        # محاسبه وضعیت صourcedی/نزولی
+                        # محاسبه وضعیت صعودی/نزولی
                         try:
                             ov, nv = float(old_val), float(new_val)
                             if nv > ov: data["rates"][site_key]["status"] = "up"
@@ -56,7 +58,7 @@ def get_rates():
 
                         data["rates"][site_key]["current"] = new_val
                         
-                        # بروزرسانی تاریخچه برای نمودار
+                        # بروزرسانی تاریخچه برای نمودار منحنی (ذخیره ۱۰ تغییر آخر)
                         hist = data["rates"][site_key].get("history", [])
                         if not hist or hist[-1] != float(new_val):
                             hist.append(float(new_val))
@@ -67,9 +69,9 @@ def get_rates():
 
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"Success: {list(found_keys)}")
+        print(f"با موفقیت آپدیت شد: {list(found_keys)}")
 
-    except Exception as e: print(f"Error: {e}")
+    except Exception as e: print(f"خطا در اجرا: {e}")
 
 if __name__ == "__main__":
     get_rates()
