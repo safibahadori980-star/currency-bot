@@ -17,12 +17,14 @@
             --bg: #f2f2f7; --card: #ffffff; --text: #000; 
             --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.95);
         }
-        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; }
+        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
         
+        /* Header */
         .header { padding: 25px 20px 10px; display: flex; justify-content: space-between; align-items: flex-start; }
         .brand { font-size: 1.6rem; font-weight: 900; line-height: 1.1; }
         .date-time { text-align: left; font-weight: 800; font-size: 0.85rem; opacity: 0.8; }
 
+        /* Container & Cards */
         .container { display: grid; gap: 12px; padding: 15px; padding-bottom: 120px; }
         .list-view { grid-template-columns: 1fr; }
         .grid-view { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -30,7 +32,7 @@
         .card { 
             background: var(--card); border-radius: 24px; padding: 18px; 
             border: 1px solid var(--border); transition: 0.3s ease; 
-            overflow: hidden; cursor: pointer;
+            overflow: hidden; cursor: pointer; position: relative;
         }
 
         .trend-label { display: flex; align-items: center; gap: 3px; font-size: 0.95rem; font-weight: 900; direction: ltr; }
@@ -38,16 +40,20 @@
         .trend-down { color: var(--down); }
         .trend-neutral { color: var(--sub); }
 
-        .price-val { font-size: 2.2rem; font-weight: 900; margin-top: 10px; letter-spacing: -1px; }
+        .price-val { font-size: 2.5rem; font-weight: 900; margin-top: 15px; letter-spacing: -1px; }
+        .grid-view .price-val { font-size: 1.8rem; }
 
+        /* Panel & Chart */
         .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .card.active .extra-panel { max-height: 280px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
 
-        .chart-container { position: relative; width: 100%; height: 95px; margin-top: 10px; }
+        .chart-container { position: relative; width: 100%; height: 90px; margin-top: 10px; }
         .chart-svg { width: 100%; height: 100%; overflow: visible; }
 
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(20px); border-radius: 30px; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; }
         
+        /* Modal Settings */
         .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(30px); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; }
         .full-modal.active { display: flex; }
         .setting-box { background: rgba(150, 150, 150, 0.1); padding: 6px; border-radius: 20px; display: flex; margin-bottom: 20px; }
@@ -55,7 +61,7 @@
         .setting-box button.active { background: var(--accent); color: #000; }
     </style>
 </head>
-<body>
+<body class="">
 
     <div class="header">
         <div class="brand">NERKHYAB<br>KHORASAN</div>
@@ -134,7 +140,7 @@
                 const isClosed = now.getHours() >= 17;
 
                 config.forEach((item, idx) => {
-                    const rate = data.rates[item.key] || {current: "---", status: "same", history: [0,0,0,0], percent: "0%"};
+                    const rate = data.rates[item.key] || {current: "---", status: "same", history: [0,0,0,0], percent: "0.00%"};
                     const history = rate.history || [0,0,0,0];
                     const chartColor = rate.status === "down" ? '#ff453a' : '#32d74b';
                     const trendClass = rate.status === "up" ? 'trend-up' : (rate.status === "down" ? 'trend-down' : 'trend-neutral');
@@ -150,7 +156,6 @@
 
                     const curveD = getCurvePath(points);
                     const areaD = `${curveD} L 100,50 L 0,50 Z`;
-                    const gId = `g-${idx}`;
 
                     const card = document.createElement('div');
                     card.className = 'card';
@@ -165,15 +170,25 @@
                                 <span>${arrow}</span><span>${rate.percent}</span>
                             </div>
                         </div>
-                        <div class="price-val">${rate.current} <span style="font-size:0.8rem; opacity:0.5;">${isClosed ? 'Closed Market' : ''}</span></div>
+                        
+                        <div class="price-val">
+                            ${rate.current} 
+                            <span style="font-size:0.8rem; color:var(--down); font-weight:normal;">
+                                ${isClosed ? 'Closed Market' : ''}
+                            </span>
+                        </div>
+
                         <div class="extra-panel">
-                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:900; margin-bottom:8px;">
-                                <span style="opacity:0.6;">تغییرات اخیر:</span><span style="color:${chartColor}">${rate.diff_3d || '---'}</span>
-                            </div>
                             <div class="chart-container">
                                 <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="chart-svg">
-                                    <defs><linearGradient id="${gId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${chartColor}" stop-opacity="0.5"/><stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/></linearGradient></defs>
-                                    <path d="${areaD}" fill="url(#${gId})" /><path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
+                                    <defs>
+                                        <linearGradient id="g${idx}" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="${chartColor}" stop-opacity="0.5"/>
+                                            <stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="${areaD}" fill="url(#g${idx})" />
+                                    <path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
                                 </svg>
                             </div>
                             <div style="display:flex; justify-content:space-between; opacity:0.5; font-size:0.75rem; margin-top:10px; font-family:sans-serif; font-weight:bold;">
@@ -187,4 +202,4 @@
         load(); setInterval(load, 30000);
     </script>
 </body>
-                </html>
+    </html>
