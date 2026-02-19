@@ -8,7 +8,6 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
-    # مپینگ هوشمند: کلمات کلیدی کوتاه برای شناسایی بهتر
     mapping = {
         "دالر هرات": ["دالر", "دلار"],
         "یورو هرات": ["یورو"],
@@ -25,52 +24,47 @@ def get_rates():
     else: data = {"rates": {}}
 
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         response = requests.get(url, headers=headers, timeout=20)
         soup = BeautifulSoup(response.text, 'html.parser')
         messages = soup.find_all('div', class_='tgme_widget_message_text')
 
         found_keys = set()
-        # اسکن ۱۰۰ پیام آخر کانال
         for msg in reversed(messages[-100:]):
             text = msg.get_text(separator=" ").replace('\n', ' ').replace(',', '.')
             
             for site_key, keywords in mapping.items():
                 if site_key not in found_keys and any(k in text for k in keywords):
-                    # استخراج عدد (پشتیبانی از فرمت‌های مختلف پیام)
-                    match = re.search(r'(\d+\.\d+|\d+)', text)
-                    if match:
-                        new_val = match.group(1)
+                    numbers = re.findall(r'(\d+\.\d+|\d+)', text)
+                    if numbers:
+                        buy_val = numbers[0]
+                        sell_val = numbers[1] if len(numbers) > 1 else buy_val
                         
                         if site_key not in data["rates"]:
-                            data["rates"][site_key] = {"current": "---", "status": "same", "percent": "0.00%", "history": []}
+                            data["rates"][site_key] = {"history": [], "status": "same", "percent": "0.00%"}
                         
                         old_val = data["rates"][site_key].get("current", "0")
                         
-                        # محاسبه روند تغییرات
+                        # ذخیره مقادیر (هم Current هم Buy برای احتیاط)
+                        data["rates"][site_key]["current"] = buy_val
+                        data["rates"][site_key]["buy"] = buy_val
+                        data["rates"][site_key]["sell"] = sell_val
+                        
                         try:
-                            ov, nv = float(old_val if old_val != "---" else 0), float(new_val)
+                            ov, nv = float(old_val if old_val != "---" else 0), float(buy_val)
                             if ov != 0:
-                                if nv > ov: data[ "rates"][site_key]["status"] = "up"
+                                if nv > ov: data["rates"][site_key]["status"] = "up"
                                 elif nv < ov: data["rates"][site_key]["status"] = "down"
                                 data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
                         except: pass
 
-                        data["rates"][site_key]["current"] = new_val
-                        
-                        # بروزرسانی تاریخچه برای نمودار
                         hist = data["rates"][site_key].get("history", [])
-                        if not hist or hist[-1] != float(new_val):
-                            hist.append(float(new_val))
+                        if not hist or hist[-1] != float(buy_val):
+                            hist.append(float(buy_val))
                         if len(hist) > 15: hist.pop(0)
                         data["rates"][site_key]["history"] = hist
                         
                         found_keys.add(site_key)
-
-        # اطمینان از اینکه هیچ مقداری Undefined نماند
-        for k in mapping.keys():
-            if k not in data["rates"]:
-                data["rates"][k] = {"current": "---", "status": "same", "percent": "0.00%", "history": [0]}
 
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
