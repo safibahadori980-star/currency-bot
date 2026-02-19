@@ -8,24 +8,14 @@
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
-        .live-dot { 
-    width: 8px; height: 8px; background: #32d74b; 
-    border-radius: 50%; display: inline-block; margin-left: 8px; 
-    box-shadow: 0 0 10px #32d74b; animation: pulse 1.5s infinite; 
-}
-@keyframes pulse { 
-    0% { opacity: 1; transform: scale(1); } 
-    50% { opacity: 0.3; transform: scale(0.8); } 
-    100% { opacity: 1; transform: scale(1); } 
-            }
         :root { 
             --bg: #000; --card: rgba(255, 255, 255, 0.05); --text: #fff; 
             --sub: #919196; --accent: #32d74b; --down: #ff453a; 
-            --modal: rgba(10, 10, 12, 0.98); --border: rgba(255,255,255,0.08);
+            --modal-bg: rgba(20, 20, 25, 0.6); --border: rgba(255,255,255,0.08);
         }
         .light-mode {
             --bg: #f2f2f7; --card: #ffffff; --text: #000; 
-            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal: rgba(255,255,255,0.98);
+            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255,255,255,0.6);
         }
         body { 
             background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; 
@@ -66,47 +56,43 @@
         .grid-view .circle-icon { width: 30px !important; height: 30px !important; }
 
         .card b { font-size: 1.05rem; font-weight: 700; }
-        .closed-text { font-size: 0.6rem; color: var(--down); font-weight: 800; margin-right: 5px; }
 
         .price-row { display: flex; justify-content: space-between; align-items: flex-end; }
         .price-val { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
 
+        /* منوی پایین */
         .bottom-nav { 
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
-            width: 88%; background: var(--card); backdrop-filter: blur(30px); 
+            width: 88%; background: var(--card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border-radius: 28px; padding: 12px 22px; display: flex; 
             justify-content: space-between; align-items: center; border: 1px solid var(--border); 
             z-index: 1000; box-sizing: border-box;
         }
         
-        .full-modal { 
-            position: fixed; inset: 0; background: var(--modal); display: none; 
-            z-index: 2000; padding: 40px 30px; flex-direction: column; box-sizing: border-box; 
+        .live-dot { 
+            width: 8px; height: 8px; background: #32d74b; 
+            border-radius: 50%; display: inline-block; margin-left: 8px; 
+            box-shadow: 0 0 10px #32d74b; animation: pulse 1.5s infinite; 
         }
-        .full-modal.active { display: flex; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* استایل شیشه‌ای تنظیمات */
+        .full-modal { 
+            position: fixed; inset: 0; 
+            background: var(--modal-bg); 
+            backdrop-filter: blur(40px) saturate(150%); -webkit-backdrop-filter: blur(40px) saturate(150%);
+            display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; box-sizing: border-box; 
+        }
+        .full-modal.active { display: flex; animation: modalFade 0.3s ease; }
+        @keyframes modalFade { from { opacity: 0; transform: scale(1.1); } to { opacity: 1; transform: scale(1); } }
         
-        .setting-box { background: rgba(150,150,150,0.1); padding: 5px; border-radius: 15px; display: flex; margin-bottom: 25px; }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 12px; border-radius: 12px; font-family: 'Vazirmatn'; font-weight: 600; cursor: pointer; }
-        .setting-box button.active { background: var(--accent); color: #000; font-weight: 800; }
+        .setting-box { background: rgba(150,150,150,0.15); padding: 5px; border-radius: 18px; display: flex; margin-bottom: 20px; border: 1px solid var(--border); }
+        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 14px; border-radius: 14px; font-family: 'Vazirmatn'; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .setting-box button.active { background: var(--accent); color: #000; font-weight: 800; box-shadow: 0 4px 12px rgba(50, 215, 75, 0.3); }
+
+        .dev-card { background: rgba(150,150,150,0.1); padding: 20px; border-radius: 20px; margin-top: 10px; border: 1px solid var(--border); }
 
         i, button, .card { outline: none !important; -webkit-tap-highlight-color: transparent; }
-        /* افکت نقطه سبز زنده */
-.live-dot { 
-    width: 8px; 
-    height: 8px; 
-    background: #32d74b; 
-    border-radius: 50%; 
-    display: inline-block; 
-    margin-left: 8px; 
-    box-shadow: 0 0 10px #32d74b; 
-    animation: pulse 1.5s infinite; 
-}
-
-@keyframes pulse { 
-    0% { opacity: 1; transform: scale(1); } 
-    50% { opacity: 0.3; transform: scale(0.8); } 
-    100% { opacity: 1; transform: scale(1); } 
-}
     </style>
 </head>
 <body class="dark-mode">
@@ -123,29 +109,37 @@
 
     <div class="bottom-nav">
         <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
-        <span class="live-dot"></span>
-<span id="nav-status" style="font-size: 0.95rem; font-weight: 900;">نرخ زنده</span>
+        <div style="display: flex; align-items: center;">
+            <span class="live-dot"></span>
+            <span id="nav-status" style="font-size: 0.95rem; font-weight: 900;">نرخ زنده</span>
+        </div>
         <i class="fas fa-list" id="viewToggle" onclick="toggleView()" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
             <b style="font-size:1.8rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer;"></i>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer; opacity: 0.5;"></i>
         </div>
+        
+        <label style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 8px; display: block;">تم ظاهری</label>
         <div class="setting-box">
             <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
             <button id="tLight" onclick="setTheme('light')">روشن</button>
         </div>
+
+        <label style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 8px; display: block;">زبان برنامه</label>
         <div class="setting-box">
             <button id="lFa" class="active" onclick="setLang('fa')">فارسی</button>
             <button id="lEn" onclick="setLang('en')">English</button>
         </div>
-        <div style="background:rgba(150,150,150,0.1); padding:20px; border-radius:15px; margin-top:10px;">
-            <p style="margin:0; font-weight:900; color:var(--accent);">Developer: Safi-Bahadori</p>
-            <p style="margin:5px 0 0 0; font-size:0.85rem; opacity:0.8;">نسخه نهایی ۱.۹</p>
+
+        <div class="dev-card">
+            <p style="margin:0; font-weight:900; color:var(--accent); font-size: 1.1rem;">Developer: Safi-Bahadori</p>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; opacity:0.8;">نسخه نهایی ۲.۱ (Glass Edition)</p>
         </div>
-        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--accent); border:none; border-radius:20px; color:#000; font-weight:900;">بستن</button>
+
+        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--text); border:none; border-radius:22px; color:var(--bg); font-weight:900; font-size: 1.1rem;">بستن تنظیمات</button>
     </div>
 
     <script>
@@ -190,8 +184,6 @@
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
                 
-                const isClosed = new Date().getHours() >= 17;
-
                 config.forEach((item) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
                     const color = rate.status === "up" ? 'var(--accent)' : (rate.status === "down" ? 'var(--down)' : 'var(--sub)');
@@ -203,7 +195,6 @@
                                 <div class="circle-icon"><img src="${item.icon}"></div>
                                 <div>
                                     <b>${currentLang === 'fa' ? item.name : item.nameEn}</b>
-                                    ${isClosed ? '<span class="closed-text">Closed Market</span>' : ''}
                                     <br><small style="opacity:0.6;">${item.sub}</small>
                                 </div>
                             </div>
@@ -228,4 +219,4 @@
         load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-    </html>
+            </html>
