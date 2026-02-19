@@ -80,6 +80,23 @@
         .setting-box button.active { background: var(--accent); color: #000; font-weight: 800; }
 
         i, button, .card { outline: none !important; -webkit-tap-highlight-color: transparent; }
+        /* افکت نقطه سبز زنده */
+.live-dot { 
+    width: 8px; 
+    height: 8px; 
+    background: #32d74b; 
+    border-radius: 50%; 
+    display: inline-block; 
+    margin-left: 8px; 
+    box-shadow: 0 0 10px #32d74b; 
+    animation: pulse 1.5s infinite; 
+}
+
+@keyframes pulse { 
+    0% { opacity: 1; transform: scale(1); } 
+    50% { opacity: 0.3; transform: scale(0.8); } 
+    100% { opacity: 1; transform: scale(1); } 
+}
     </style>
 </head>
 <body class="dark-mode">
