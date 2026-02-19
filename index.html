@@ -8,6 +8,16 @@
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
+        .live-dot { 
+    width: 8px; height: 8px; background: #32d74b; 
+    border-radius: 50%; display: inline-block; margin-left: 8px; 
+    box-shadow: 0 0 10px #32d74b; animation: pulse 1.5s infinite; 
+}
+@keyframes pulse { 
+    0% { opacity: 1; transform: scale(1); } 
+    50% { opacity: 0.3; transform: scale(0.8); } 
+    100% { opacity: 1; transform: scale(1); } 
+            }
         :root { 
             --bg: #000; --card: rgba(255, 255, 255, 0.05); --text: #fff; 
             --sub: #919196; --accent: #32d74b; --down: #ff453a; 
