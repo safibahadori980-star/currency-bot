@@ -8,7 +8,6 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
-    # هماهنگی نام‌ها با کلیدهای کد HTML شما
     mapping = {
         "دالر هرات": ["دالر"],
         "یورو هرات": ["یورو"],
@@ -31,39 +30,36 @@ def get_rates():
         messages = soup.find_all('div', class_='tgme_widget_message_text')
 
         found_keys = set()
-        for msg in reversed(messages[-20:]): # بررسی ۲۰ پیام آخر
+        for msg in reversed(messages[-30:]):
             text = msg.get_text(separator=" ").replace('\n', ' ').replace(',', '.')
             
             for site_key, keywords in mapping.items():
                 if site_key not in found_keys and any(k in text for k in keywords):
-                    # استخراج تمام اعداد موجود در خط (خرید و فروش)
-                    numbers = re.findall(r'(\d+\.\d+|\d+)', text)
-                    
-                    if len(numbers) >= 2:
-                        buy_val = numbers[0]
-                        sell_val = numbers[1]
+                    # پیدا کردن اولین عدد در متن (نرخ خرید)
+                    match = re.search(r'(\d+\.\d+|\d+)', text)
+                    if match:
+                        new_val = match.group(1)
                         
                         if site_key not in data["rates"]:
-                            data["rates"][site_key] = {"history": [], "status": "same", "percent": "0.00%"}
+                            data["rates"][site_key] = {"current": "---", "status": "same", "percent": "0.00%", "history": []}
                         
-                        old_buy = data["rates"][site_key].get("buy", "0")
+                        old_val = data["rates"][site_key].get("current", "0")
                         
-                        # بروزرسانی مقادیر
-                        data["rates"][site_key]["buy"] = buy_val
-                        data["rates"][site_key]["sell"] = sell_val
-                        
-                        # محاسبه وضعیت صعودی/نزولی
-                        nb, ob = float(buy_val), float(old_buy)
-                        if nb > ob: data["rates"][site_key]["status"] = "up"
-                        elif nb < ob: data["rates"][site_key]["status"] = "down"
-                        
-                        if ob != 0:
-                            data["rates"][site_key]["percent"] = f"{((nb-ob)/ob)*100:+.2f}%"
+                        # محاسبه وضعیت صourcedی/نزولی
+                        try:
+                            ov, nv = float(old_val), float(new_val)
+                            if nv > ov: data["rates"][site_key]["status"] = "up"
+                            elif nv < ov: data["rates"][site_key]["status"] = "down"
+                            if ov != 0:
+                                data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
+                        except: pass
 
-                        # بروزرسانی تاریخچه نمودار
+                        data["rates"][site_key]["current"] = new_val
+                        
+                        # بروزرسانی تاریخچه برای نمودار
                         hist = data["rates"][site_key].get("history", [])
-                        if not hist or hist[-1] != nb:
-                            hist.append(nb)
+                        if not hist or hist[-1] != float(new_val):
+                            hist.append(float(new_val))
                         if len(hist) > 10: hist.pop(0)
                         data["rates"][site_key]["history"] = hist
                         
@@ -71,7 +67,7 @@ def get_rates():
 
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"Done: {list(found_keys)}")
+        print(f"Success: {list(found_keys)}")
 
     except Exception as e: print(f"Error: {e}")
 
