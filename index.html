@@ -30,12 +30,12 @@
         .time-en { font-family: sans-serif; font-size: 1.1rem; display: block; }
 
         .container { padding: 5px 15px; display: grid; gap: 10px; }
-        .list-view { grid-template-columns: 1fr; width: 92%; margin: 0 auto; }
+        .list-view { grid-template-columns: 1fr; width: 96%; margin: 0 auto; }
 
         /* بزرگ‌تر کردن کارت‌ها برای فیکس شدن در صفحه */
         .card { 
             background: var(--card); backdrop-filter: blur(15px); border-radius: 20px; 
-            padding: 15px; height: 95px; display: flex; flex-direction: column; 
+            padding: 15px; height: 115px; display: flex; flex-direction: column; 
             justify-content: space-between; border: 1px solid var(--border); 
             -webkit-tap-highlight-color: transparent; cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -62,7 +62,18 @@
         .btn-group button { flex: 1; border: none; background: none; color: var(--text); padding: 10px; border-radius: 10px; font-family: 'Vazirmatn'; cursor: pointer; }
         .btn-group button.active { background: var(--accent); color: #000; font-weight: bold; }
         
-        button, i, .card { -webkit-tap-highlight-color: transparent; outline: none !important; }
+    button, i, .card { -webkit-tap-highlight-color: transparent; outline: none !important; }
+        /* این را قبل از سطر ۶۶ اضافه کن */
+.grid-view { 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 10px !important; 
+}
+.grid-view .card { 
+    height: 140px !important; /* ارتفاع بیشتر در حالت جدولی */
+}
+.grid-view .price-val { 
+    font-size: 1.5rem !important; 
+                  }
     </style>
 </head>
 <body class="dark-mode">
@@ -142,12 +153,13 @@
             document.getElementById('nav-status').innerText = lang === 'fa' ? 'نرخ زنده' : 'LIVE RATES';
             load();
         }
-
-        function toggleView() {
-            const cont = document.getElementById('main-container');
-            cont.classList.toggle('grid-view');
-            document.getElementById('viewToggle').className = cont.classList.contains('grid-view') ? 'fas fa-th-large' : 'fas fa-list';
-        }
+function toggleView() {
+    const cont = document.getElementById('main-container');
+    const icon = document.getElementById('viewToggle');
+    cont.classList.toggle('grid-view');
+    // تغییر آیکون متناسب با حالت
+    icon.className = cont.classList.contains('grid-view') ? 'fas fa-th-large' : 'fas fa-list';
+                }        }
 
         async function load() {
             try {
