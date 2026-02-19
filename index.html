@@ -30,68 +30,62 @@
         .date-time { text-align: right; font-size: 0.9rem; font-weight: 800; line-height: 1.2; }
         .time-en { font-family: sans-serif; font-size: 1rem; display: block; margin-top: 2px; }
 
-        .container { 
-            display: grid; gap: 10px; padding: 10px 15px; width: 100%; 
-            box-sizing: border-box; padding-bottom: 120px;
-        }
+        .container { display: grid; gap: 10px; padding: 10px 15px; width: 100%; box-sizing: border-box; padding-bottom: 120px; }
         .list-view { grid-template-columns: 1fr; }
         .grid-view { grid-template-columns: 1fr 1fr; }
 
+        /* اصلاح کارت برای قابلیت باز شدن */
         .card { 
             background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px; padding: 12px 15px; height: 90px; display: flex; flex-direction: column; 
-            justify-content: space-between; border: 1px solid var(--border); 
-            box-sizing: border-box; transition: 0.3s; position: relative;
+            border-radius: 20px; padding: 15px; display: flex; flex-direction: column; 
+            border: 1px solid var(--border); box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow: hidden; cursor: pointer;
         }
+        .card.active { background: rgba(255, 255, 255, 0.08); }
 
-        .circle-icon { 
-            width: 36px !important; height: 36px !important; 
-            border-radius: 50%; overflow: hidden; background: rgba(150,150,150,0.1); flex-shrink: 0;
+        .circle-icon { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+        .circle-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* باکس درصد تغییرات شبیه Necha */
+        .badge { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 800; }
+        .up-badge { background: rgba(50, 215, 75, 0.15); color: #32d74b; }
+        .down-badge { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
+        .neutral-badge { background: rgba(142, 142, 147, 0.15); color: #8e8e93; }
+
+        .price-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; }
+        .price-val { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+
+        /* پنل نوسان ۳ روزه */
+        .extra-panel { 
+            max-height: 0; opacity: 0; transition: all 0.3s ease; 
+            border-top: 0px solid var(--border); margin-top: 0; padding-top: 0;
         }
-        .circle-icon img { width: 100% !important; height: 100% !important; object-fit: cover; }
-
-        .grid-view .card { height: 110px; padding: 10px; }
-        .grid-view .card b { font-size: 0.85rem; }
-        .grid-view .price-val { font-size: 1.35rem; }
-        .grid-view .circle-icon { width: 30px !important; height: 30px !important; }
-
-        .card b { font-size: 1.05rem; font-weight: 700; }
-
-        .price-row { display: flex; justify-content: space-between; align-items: flex-end; }
-        .price-val { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+        .card.active .extra-panel { 
+            max-height: 80px; opacity: 1; border-top-width: 1px; margin-top: 15px; padding-top: 15px; 
+        }
 
         .bottom-nav { 
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
-            width: 88%; background: var(--card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            width: 88%; background: var(--card); backdrop-filter: blur(30px);
             border-radius: 28px; padding: 12px 22px; display: flex; 
-            justify-content: space-between; align-items: center; border: 1px solid var(--border); 
-            z-index: 1000; box-sizing: border-box;
+            justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; 
         }
         
-        .live-dot { 
-            width: 8px; height: 8px; background: #32d74b; 
-            border-radius: 50%; display: inline-block; margin-left: 8px; 
-            box-shadow: 0 0 10px #32d74b; animation: pulse 1.5s infinite; 
-        }
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+        .live-dot { width: 8px; height: 8px; background: #32d74b; border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* استایل منوی شیشه‌ای شفاف */
         .full-modal { 
-            position: fixed; inset: 0; 
-            background: var(--modal-bg); 
-            backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
-            display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; box-sizing: border-box; 
+            position: fixed; inset: 0; background: var(--modal-bg); 
+            backdrop-filter: blur(20px) saturate(180%); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; 
         }
-        .full-modal.active { display: flex; animation: modalFade 0.3s ease; }
-        @keyframes modalFade { from { opacity: 0; transform: scale(1.05); } to { opacity: 1; transform: scale(1); } }
+        .full-modal.active { display: flex; }
         
         .setting-box { background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 18px; display: flex; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 14px; border-radius: 14px; font-family: 'Vazirmatn'; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .setting-box button.active { background: var(--accent); color: #000; font-weight: 800; box-shadow: 0 4px 12px rgba(50, 215, 75, 0.3); }
+        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 14px; border-radius: 14px; font-weight: 600; cursor: pointer; }
+        .setting-box button.active { background: var(--accent); color: #000; font-weight: 800; }
 
-        .dev-card { background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 20px; margin-top: 10px; border: 1px solid var(--border); text-decoration: none; display: block; transition: 0.2s; }
-        .dev-card:active { transform: scale(0.98); }
-
+        .dev-card { background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 20px; margin-top: 10px; border: 1px solid var(--border); text-decoration: none; display: block; }
+        
         i, button, .card { outline: none !important; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
@@ -108,12 +102,12 @@
     <div id="main-container" class="container list-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
-        <div style="display: flex; align-items: center;">
+        <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.7; cursor:pointer;"></i>
+        <div style="display: flex; align-items: center; gap: 8px;">
             <span class="live-dot"></span>
-            <span id="nav-status" style="font-size: 0.95rem; font-weight: 900;">نرخ زنده</span>
+            <span id="nav-status" style="font-weight: 900;">نرخ زنده</span>
         </div>
-        <i class="fas fa-list" id="viewToggle" onclick="toggleView()" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
+        <i class="fas fa-list" id="viewToggle" onclick="toggleView()" style="opacity: 0.7; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
@@ -121,28 +115,21 @@
             <b style="font-size:1.8rem;">تنظیمات</b>
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer; opacity: 0.5;"></i>
         </div>
-        
-        <label style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 8px; display: block;">تم ظاهری</label>
         <div class="setting-box">
             <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
             <button id="tLight" onclick="setTheme('light')">روشن</button>
         </div>
-
-        <label style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 8px; display: block;">زبان برنامه</label>
         <div class="setting-box">
             <button id="lFa" class="active" onclick="setLang('fa')">فارسی</button>
             <button id="lEn" onclick="setLang('en')">English</button>
         </div>
 
-        <a href="https://www.instagram.com/safi.tech.ai?igsh=MXJydDR0aWJjazVtOA==" target="_blank" class="dev-card">
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="dev-card">
             <p style="margin:0; font-weight:900; color:var(--accent); font-size: 1.1rem;">Developer: Safi-Bahadori</p>
-            <p style="margin:5px 0 0 0; font-size:0.85rem; opacity:0.8; color: var(--text);">نسخه نهایی ۲.۱</p>
-            <p style="margin:8px 0 0 0; font-size:0.75rem; color: #e1306c;">
-                <i class="fab fa-instagram"></i> مشاهده در اینستاگرام
-            </p>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; opacity:0.8; color: var(--text);">نسخه نهایی ۳.۰</p>
+            <p style="margin:8px 0 0 0; font-size:0.75rem; color: #e1306c;"><i class="fab fa-instagram"></i> مشاهده در اینستاگرام</p>
         </a>
-
-        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--text); border:none; border-radius:22px; color:var(--bg); font-weight:900; font-size: 1.1rem;">بستن</button>
+        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--text); border:none; border-radius:22px; color:var(--bg); font-weight:900;">بستن</button>
     </div>
 
     <script>
@@ -188,24 +175,34 @@
                 cont.innerHTML = '';
                 
                 config.forEach((item) => {
-                    const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                    const color = rate.status === "up" ? 'var(--accent)' : (rate.status === "down" ? 'var(--down)' : 'var(--sub)');
+                    const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%", diff_3d: "0.00%"};
+                    const badgeClass = rate.status === "up" ? 'up-badge' : (rate.status === "down" ? 'down-badge' : 'neutral-badge');
+                    const arrow = rate.status === "up" ? '↑' : (rate.status === "down" ? '↓' : '•');
+                    
                     const card = document.createElement('div');
                     card.className = 'card';
+                    card.onclick = function() { this.classList.toggle('active'); };
+                    
                     card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; gap:10px; align-items:center;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                            <div style="display:flex; gap:12px; align-items:center;">
                                 <div class="circle-icon"><img src="${item.icon}"></div>
                                 <div>
-                                    <b>${currentLang === 'fa' ? item.name : item.nameEn}</b>
-                                    <br><small style="opacity:0.6;">${item.sub}</small>
+                                    <b style="display:block; font-size:1.1rem;">${currentLang === 'fa' ? item.name : item.nameEn}</b>
+                                    <small style="opacity:0.5; font-weight:600;">${item.sub}</small>
                                 </div>
                             </div>
-                            <div style="color:${color}; font-weight:900; font-size:0.85rem;">${rate.status === "up" ? '▲' : '▼'} ${rate.percent}</div>
+                            <div class="badge ${badgeClass}">${arrow} ${rate.percent}</div>
                         </div>
                         <div class="price-row">
                             <div class="price-val">${rate.current}</div>
-                            <i class="fas fa-chart-line" style="opacity:0.1; font-size:1.4rem;"></i>
+                            <i class="fas fa-chart-line" style="opacity:0.15; font-size:1.4rem;"></i>
+                        </div>
+                        <div class="extra-panel">
+                            <div style="display:flex; justify-content:space-between; font-weight:800;">
+                                <span style="opacity:0.6; font-size:0.85rem;">نوسان ۳ روز اخیر:</span>
+                                <span style="color:${rate.diff_3d?.includes('-') ? 'var(--down)' : 'var(--accent)'}">${rate.diff_3d || '+0.00%'}</span>
+                            </div>
                         </div>`;
                     cont.appendChild(card);
                 });
@@ -222,4 +219,4 @@
         load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-        </html>
+    </html>
