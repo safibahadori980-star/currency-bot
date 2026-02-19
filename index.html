@@ -11,9 +11,13 @@
         :root { 
             --bg: #000; --card: #1c1c1e; --text: #fff; 
             --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; 
-            --border: rgba(255,255,255,0.1);
+            --border: rgba(255,255,255,0.1); --modal-bg: rgba(30, 30, 35, 0.8);
         }
-        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; }
+        .light-mode {
+            --bg: #f2f2f7; --card: #ffffff; --text: #000; 
+            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.8);
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; }
         
         .container { display: grid; gap: 12px; padding: 15px; padding-bottom: 120px; }
         .list-view { grid-template-columns: 1fr; }
@@ -24,13 +28,9 @@
             border: 1px solid var(--border); transition: 0.3s; 
             overflow: hidden; cursor: pointer; height: auto;
         }
-        .card.active { background: #2c2c2e; }
+        .card.active { background: rgba(142, 142, 147, 0.15); }
 
-        /* استایل فلش‌ها دقیقاً شبیه تصویر */
-        .badge { 
-            display: flex; align-items: center; gap: 4px; padding: 6px 12px; 
-            border-radius: 12px; font-size: 0.85rem; font-weight: 900; 
-        }
+        .badge { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 900; }
         .up-badge { background: var(--accent); color: #000; }
         .down-badge { background: var(--down); color: #fff; }
         .neutral-badge { background: #3a3a3c; color: #8e8e93; }
@@ -41,10 +41,17 @@
         .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease; }
         .card.active .extra-panel { max-height: 250px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
 
-        .chart-container { position: relative; width: 100%; height: 100px; margin-top: 15px; }
+        .chart-container { position: relative; width: 100%; height: 90px; margin-top: 10px; }
         .chart-svg { width: 100%; height: 100%; overflow: visible; }
 
-        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(28,28,30,0.8); backdrop-filter: blur(20px); border-radius: 30px; padding: 15px; display: flex; justify-content: space-between; border: 1px solid var(--border); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(20px); border-radius: 30px; padding: 15px 22px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; }
+        
+        /* Modal Styles */
+        .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(30px); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; }
+        .full-modal.active { display: flex; }
+        .setting-box { background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 18px; display: flex; margin-bottom: 20px; border: 1px solid var(--border); }
+        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; }
+        .setting-box button.active { background: var(--accent); color: #000; }
     </style>
 </head>
 <body>
@@ -52,9 +59,21 @@
     <div id="main-container" class="container list-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" style="opacity: 0.6;"></i>
-        <span style="font-weight: 900;">نرخ زنده</span>
-        <i class="fas fa-th-large" onclick="toggleView()" style="opacity: 0.6;"></i>
+        <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.6; cursor:pointer;"></i>
+        <span style="font-weight: 900; font-size: 0.9rem;">نرخ زنده بازار</span>
+        <i class="fas fa-th-large" id="vIcon" onclick="toggleView()" style="opacity: 0.6; cursor:pointer;"></i>
+    </div>
+
+    <div id="sMod" class="full-modal">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <b style="font-size:1.8rem;">تنظیمات</b>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer;"></i>
+        </div>
+        <div class="setting-box">
+            <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
+            <button id="tLight" onclick="setTheme('light')">روشن</button>
+        </div>
+        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--text); border:none; border-radius:22px; color:var(--bg); font-weight:900;">بستن</button>
     </div>
 
     <script>
@@ -62,12 +81,24 @@
             { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
             { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
             { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
+            { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
             { key: "کلدار", name: "کلدار پاکستان", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
-        function toggleView() { document.getElementById('main-container').classList.toggle('grid-view'); }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function setTheme(m) { 
+            document.body.className = m === 'light' ? 'light-mode' : ''; 
+            document.getElementById('tDark').classList.toggle('active', m === 'dark');
+            document.getElementById('tLight').classList.toggle('active', m === 'light');
+        }
 
-        // تابع رسم منحنی نرم
+        function toggleView() {
+            const c = document.getElementById('main-container');
+            c.classList.toggle('grid-view');
+            document.getElementById('vIcon').className = c.classList.contains('grid-view') ? 'fas fa-list' : 'fas fa-th-large';
+        }
+
         function getCurvePath(pts) {
             if (pts.length < 2) return "";
             let d = `M ${pts[0].x},${pts[0].y}`;
@@ -97,12 +128,12 @@
                     const range = (max - min) || 1;
                     const points = history.map((p, i) => ({
                         x: i * (100 / (history.length - 1)),
-                        y: 45 - ((p - min) / range) * 40
+                        y: 40 - ((p - min) / range) * 35
                     }));
 
                     const curveD = getCurvePath(points);
                     const areaD = `${curveD} L 100,50 L 0,50 Z`;
-                    const gradId = `grad-${idx}`;
+                    const gId = `g-${idx}`;
 
                     const card = document.createElement('div');
                     card.className = 'card';
@@ -111,30 +142,22 @@
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; gap:12px; align-items:center;">
                                 <img src="${item.icon}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
-                                <div><b style="display:block;">${item.name}</b><small style="opacity:0.5;">${item.sub}</small></div>
+                                <div><b>${item.name}</b><br><small style="opacity:0.5;">${item.sub}</small></div>
                             </div>
                             <div class="badge ${badgeClass}">${arrow} ${rate.percent}</div>
                         </div>
                         <div class="price-val">${rate.current}</div>
-                        
                         <div class="extra-panel">
-                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:bold; margin-bottom:10px;">
-                                <span style="opacity:0.6;">روند نوسانات:</span>
-                                <span style="color:${chartColor}">${rate.diff_3d}</span>
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:bold; margin-bottom:5px;">
+                                <span style="opacity:0.6;">تغییر ۳ روز:</span><span style="color:${chartColor}">${rate.diff_3d || '0%'}</span>
                             </div>
                             <div class="chart-container">
-                                <svg class="chart-svg" viewBox="0 0 100 50" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stop-color="${chartColor}" stop-opacity="0.5"/>
-                                            <stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="${areaD}" fill="url(#${gradId})" />
-                                    <path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
+                                <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="chart-svg">
+                                    <defs><linearGradient id="${gId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${chartColor}" stop-opacity="0.4"/><stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/></linearGradient></defs>
+                                    <path d="${areaD}" fill="url(#${gId})" /><path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
                                 </svg>
                             </div>
-                            <div style="display:flex; justify-content:space-between; opacity:0.6; font-size:0.7rem; margin-top:10px; font-family:sans-serif;">
+                            <div style="display:flex; justify-content:space-between; opacity:0.5; font-size:0.65rem; margin-top:8px; font-family:sans-serif;">
                                 ${history.map(h => `<span>${h}</span>`).join('')}
                             </div>
                         </div>`;
@@ -142,8 +165,7 @@
                 });
             } catch (e) { console.error(e); }
         }
-        load();
-        setInterval(load, 30000);
+        load(); setInterval(load, 30000);
     </script>
 </body>
-</html>
+            </html>
