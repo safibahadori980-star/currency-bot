@@ -19,79 +19,64 @@
         }
         body { 
             background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; 
-            margin: 0; overflow-x: hidden; min-height: 100vh; transition: 0.3s;
+            margin: 0; padding: 0; overflow-x: hidden; width: 100%; min-height: 100vh; transition: 0.3s;
         }
         
-        .top-bar { padding: 25px 20px 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar { padding: 25px 15px 10px 15px; display: flex; justify-content: space-between; align-items: center; }
         .logo-area { display: flex; flex-direction: column; line-height: 1; }
-        .logo-text { font-size: 2rem; font-weight: 600; letter-spacing: -1.5px; margin: 0; }
-        .sub-logo { font-size: 1.3rem; font-weight: 600; margin: 0; margin-top: -2px; }
+        .logo-text { font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin: 0; }
+        .sub-logo { font-size: 1.8rem; font-weight: 800; margin: 0; margin-top: -2px; }
         
-        .date-time { text-align: right; font-size: 1.2rem; font-weight: 800; line-height: 1.3; }
-        .time-en { font-family: sans-serif; font-size: 1.15rem; display: block; margin-top: 2px; }
+        .date-time { text-align: right; font-size: 0.9rem; font-weight: 800; line-height: 1.2; }
+        .time-en { font-family: sans-serif; font-size: 1rem; display: block; margin-top: 2px; }
 
-        /* اصلاح نهایی برای فیکس شدن عرض و فونت‌ها */
-.container { 
-    padding: 10px; 
-    display: grid; 
-    gap: 8px; /* فاصله کمتر بین کارت‌ها */
-    transition: 0.4s; 
-    padding-bottom: 110px; 
-    width: 100%; /* استفاده از تمام عرض */
-    box-sizing: border-box;
-}
+        .container { 
+            display: grid; gap: 10px; padding: 10px 15px; width: 100%; 
+            box-sizing: border-box; padding-bottom: 120px;
+        }
+        .list-view { grid-template-columns: 1fr; }
+        .grid-view { grid-template-columns: 1fr 1fr; }
 
-.list-view { grid-template-columns: 1fr; }
-
-.grid-view { 
-    grid-template-columns: 1fr 1fr; /* دو ستون مساوی */
-}
-
-.card { 
-    background: var(--card); 
-    backdrop-filter: blur(20px); 
-    border-radius: 18px; 
-    padding: 12px; 
-    height: 90px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-    border: 1px solid var(--border); 
-    box-sizing: border-box; /* جلوگیری از بیرون زدگی */
-}
-
-/* تنظیمات اختصاصی حالت جدولی */
-.grid-view .card { 
-    height: 105px; 
-    padding: 10px; 
-}
-
-.grid-view .card b { 
-    font-size: 0.9rem; /* کوچک کردن نام ارز */
-}
-
-.grid-view .price-val { 
-    font-size: 1.3rem; /* کوچک کردن قیمت در جدول */
-}
-
-.grid-view .circle-icon {
-    width: 30px; /* کوچک کردن آیکون */
-    height: 30px;
-}
-
-.grid-view .closed-text {
-    font-size: 0.55rem;
-    display: block; /* رفتن به خط بعدی در صورت نیاز */
+        .card { 
+            background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 12px 15px; height: 90px; display: flex; flex-direction: column; 
+            justify-content: space-between; border: 1px solid var(--border); 
+            box-sizing: border-box; transition: 0.3s; position: relative;
         }
 
-        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 88%; background: var(--card); backdrop-filter: blur(30px); border-radius: 28px; padding: 12px 22px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; }
+        .circle-icon { 
+            width: 36px !important; height: 36px !important; 
+            border-radius: 50%; overflow: hidden; background: rgba(150,150,150,0.1); flex-shrink: 0;
+        }
+        .circle-icon img { width: 100% !important; height: 100% !important; object-fit: cover; }
+
+        .grid-view .card { height: 110px; padding: 10px; }
+        .grid-view .card b { font-size: 0.85rem; }
+        .grid-view .price-val { font-size: 1.35rem; }
+        .grid-view .circle-icon { width: 30px !important; height: 30px !important; }
+
+        .card b { font-size: 1.05rem; font-weight: 700; }
+        .closed-text { font-size: 0.6rem; color: var(--down); font-weight: 800; margin-right: 5px; }
+
+        .price-row { display: flex; justify-content: space-between; align-items: flex-end; }
+        .price-val { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+
+        .bottom-nav { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            width: 88%; background: var(--card); backdrop-filter: blur(30px); 
+            border-radius: 28px; padding: 12px 22px; display: flex; 
+            justify-content: space-between; align-items: center; border: 1px solid var(--border); 
+            z-index: 1000; box-sizing: border-box;
+        }
         
-        .full-modal { position: fixed; inset: 0; background: var(--modal); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; animation: fadeIn 0.3s ease; }
+        .full-modal { 
+            position: fixed; inset: 0; background: var(--modal); display: none; 
+            z-index: 2000; padding: 40px 30px; flex-direction: column; box-sizing: border-box; 
+        }
         .full-modal.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .setting-box { background: rgba(150,150,150,0.08); padding: 5px; border-radius: 15px; display: flex; margin-bottom: 25px; }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 12px; border-radius: 12px; font-family: 'Vazirmatn'; font-weight: 500; cursor: pointer; }
+        .setting-box { background: rgba(150,150,150,0.1); padding: 5px; border-radius: 15px; display: flex; margin-bottom: 25px; }
+        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 12px; border-radius: 12px; font-family: 'Vazirmatn'; font-weight: 600; cursor: pointer; }
         .setting-box button.active { background: var(--accent); color: #000; font-weight: 800; }
 
         i, button, .card { outline: none !important; -webkit-tap-highlight-color: transparent; }
@@ -111,14 +96,14 @@
 
     <div class="bottom-nav">
         <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
-        <span id="nav-status" style="font-size: 1rem; font-weight: 900;">نرخ‌یاب خراسان</span>
+        <span id="nav-status" style="font-size: 0.95rem; font-weight: 900;">نرخ زنده</span>
         <i class="fas fa-list" id="viewToggle" onclick="toggleView()" style="font-size: 1.4rem; opacity: 0.7; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
             <b style="font-size:1.8rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.8rem; cursor:pointer;"></i>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer;"></i>
         </div>
         <div class="setting-box">
             <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
@@ -129,8 +114,8 @@
             <button id="lEn" onclick="setLang('en')">English</button>
         </div>
         <div style="background:rgba(150,150,150,0.1); padding:20px; border-radius:15px; margin-top:10px;">
-            <p style="margin:0; font-weight:900; color:var(--accent);">Developer: Safi-Bahadori توسعه دهنده: صفی‌الله بهادری</p>
-            <p style="margin:5px 0 0 0; font-size:0.85rem; opacity:0.8;">نسخه نهایی ۱.۸</p>
+            <p style="margin:0; font-weight:900; color:var(--accent);">Developer: Safi-Bahadori</p>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; opacity:0.8;">نسخه نهایی ۱.۹</p>
         </div>
         <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--accent); border:none; border-radius:20px; color:#000; font-weight:900;">بستن</button>
     </div>
@@ -159,7 +144,7 @@
             currentLang = lang;
             document.getElementById('lFa').classList.toggle('active', lang === 'fa');
             document.getElementById('lEn').classList.toggle('active', lang === 'en');
-            document.getElementById('nav-status').innerText = lang === 'fa' ? 'نرخیاب خراسان' : 'LIVE RATES';
+            document.getElementById('nav-status').innerText = lang === 'fa' ? 'نرخ زنده' : 'LIVE RATES';
             load();
         }
 
@@ -167,7 +152,6 @@
             const cont = document.getElementById('main-container');
             const icon = document.getElementById('viewToggle');
             cont.classList.toggle('grid-view');
-            cont.classList.toggle('list-view');
             icon.className = cont.classList.contains('grid-view') ? 'fas fa-th-large' : 'fas fa-list';
         }
 
@@ -180,26 +164,26 @@
                 
                 const isClosed = new Date().getHours() >= 17;
 
-                config.forEach((item, index) => {
+                config.forEach((item) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
                     const color = rate.status === "up" ? 'var(--accent)' : (rate.status === "down" ? 'var(--down)' : 'var(--sub)');
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; gap:12px; align-items:center;">
+                            <div style="display:flex; gap:10px; align-items:center;">
                                 <div class="circle-icon"><img src="${item.icon}"></div>
                                 <div>
                                     <b>${currentLang === 'fa' ? item.name : item.nameEn}</b>
                                     ${isClosed ? '<span class="closed-text">Closed Market</span>' : ''}
-                                    <br><small>${item.sub}</small>
+                                    <br><small style="opacity:0.6;">${item.sub}</small>
                                 </div>
                             </div>
-                            <div style="color:${color}; font-weight:900; font-size:0.9rem;">${rate.status === "up" ? '▲' : '▼'} ${rate.percent}</div>
+                            <div style="color:${color}; font-weight:900; font-size:0.85rem;">${rate.status === "up" ? '▲' : '▼'} ${rate.percent}</div>
                         </div>
                         <div class="price-row">
                             <div class="price-val">${rate.current}</div>
-                            <i class="fas fa-chart-line" style="opacity:0.2; font-size:1.4rem;"></i>
+                            <i class="fas fa-chart-line" style="opacity:0.1; font-size:1.4rem;"></i>
                         </div>`;
                     cont.appendChild(card);
                 });
@@ -216,4 +200,4 @@
         load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
     </script>
 </body>
-        </html>
+            </html>
