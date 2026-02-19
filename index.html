@@ -9,162 +9,73 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
         :root { 
-            --bg: #000; --card: rgba(255, 255, 255, 0.06); --text: #fff; 
-            --sub: #919196; --accent: #32d74b; --down: #ff453a; 
-            --modal-bg: rgba(20, 20, 25, 0.5); --border: rgba(255,255,255,0.1);
+            --bg: #000; --card: #1c1c1e; --text: #fff; 
+            --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; 
+            --border: rgba(255,255,255,0.1);
         }
-        .light-mode {
-            --bg: #f2f2f7; --card: #ffffff; --text: #000; 
-            --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255,255,255,0.5);
-        }
-        body { 
-            background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; 
-            margin: 0; padding: 0; overflow-x: hidden; min-height: 100vh; transition: 0.3s;
-        }
+        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; }
         
-        .top-bar { padding: 25px 15px 10px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-area { display: flex; flex-direction: column; line-height: 1; }
-        .logo-text { font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin: 0; }
-        .sub-logo { font-size: 1.8rem; font-weight: 800; margin: 0; margin-top: -2px; }
-        
-        .date-time { text-align: right; font-size: 0.9rem; font-weight: 800; line-height: 1.2; }
-        .time-en { font-family: sans-serif; font-size: 1rem; display: block; margin-top: 2px; }
-
-        .container { display: grid; gap: 10px; padding: 10px 15px; width: 100%; box-sizing: border-box; padding-bottom: 120px; }
+        .container { display: grid; gap: 12px; padding: 15px; padding-bottom: 120px; }
         .list-view { grid-template-columns: 1fr; }
-        .grid-view { grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid-view { grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .card { 
-            background: var(--card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 22px; padding: 15px; display: flex; flex-direction: column; 
-            border: 1px solid var(--border); box-sizing: border-box; 
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
-            overflow: hidden; cursor: pointer; height: auto; min-height: 100px;
+            background: var(--card); border-radius: 24px; padding: 16px; 
+            border: 1px solid var(--border); transition: 0.3s; 
+            overflow: hidden; cursor: pointer; height: auto;
         }
-        .card.active { background: rgba(255, 255, 255, 0.1); }
+        .card.active { background: #2c2c2e; }
 
-        .circle-icon { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
-        .circle-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-        .badge { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 800; }
-        .up-badge { background: rgba(50, 215, 75, 0.15); color: #32d74b; }
-        .down-badge { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
-        .neutral-badge { background: rgba(142, 142, 147, 0.15); color: #8e8e93; }
-
-        .price-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; }
-        .price-val { font-size: 1.85rem; font-weight: 900; letter-spacing: -0.5px; line-height: 1; }
-        .grid-view .price-val { font-size: 1.4rem; }
-
-        .extra-panel { 
-            max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; 
-            border-top: 0px solid var(--border); margin-top: 0; padding-top: 0;
+        /* استایل فلش‌ها دقیقاً شبیه تصویر */
+        .badge { 
+            display: flex; align-items: center; gap: 4px; padding: 6px 12px; 
+            border-radius: 12px; font-size: 0.85rem; font-weight: 900; 
         }
-        .card.active .extra-panel { 
-            max-height: 160px; opacity: 1; border-top-width: 1px; margin-top: 15px; padding-top: 12px; 
-        }
+        .up-badge { background: var(--accent); color: #000; }
+        .down-badge { background: var(--down); color: #fff; }
+        .neutral-badge { background: #3a3a3c; color: #8e8e93; }
 
-        .chart-svg { width: 100%; height: 50px; margin-top: 10px; }
+        .price-val { font-size: 2rem; font-weight: 900; margin-top: 15px; letter-spacing: -1px; }
+        .grid-view .price-val { font-size: 1.6rem; }
 
-        .bottom-nav { 
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
-            width: 88%; background: var(--card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border-radius: 28px; padding: 12px 22px; display: flex; 
-            justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; 
-        }
-        
-        .live-dot { width: 8px; height: 8px; background: #32d74b; border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease; }
+        .card.active .extra-panel { max-height: 250px; opacity: 1; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
 
-        .full-modal { 
-            position: fixed; inset: 0; background: var(--modal-bg); 
-            backdrop-filter: blur(30px) saturate(180%); display: none; z-index: 2000; padding: 40px 30px; flex-direction: column; 
-        }
-        .full-modal.active { display: flex; }
-        
-        .setting-box { background: rgba(255, 255, 255, 0.05); padding: 5px; border-radius: 18px; display: flex; margin-bottom: 20px; border: 1px solid var(--border); }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; }
-        .setting-box button.active { background: var(--accent); color: #000; }
+        .chart-container { position: relative; width: 100%; height: 100px; margin-top: 15px; }
+        .chart-svg { width: 100%; height: 100%; overflow: visible; }
 
-        .dev-card { background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 20px; margin-top: 10px; border: 1px solid var(--border); text-decoration: none; display: block; }
-        
-        i, button, .card { outline: none !important; -webkit-tap-highlight-color: transparent; }
+        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(28,28,30,0.8); backdrop-filter: blur(20px); border-radius: 30px; padding: 15px; display: flex; justify-content: space-between; border: 1px solid var(--border); z-index: 1000; }
     </style>
 </head>
-<body class="dark-mode">
-
-    <div class="top-bar">
-        <div class="date-time" id="dt">--/--/--<br><span class="time-en">00:00 AM</span></div>
-        <div class="logo-area">
-            <h1 class="logo-text">NERKHYAB</h1>
-            <h2 class="sub-logo">KHORASAN</h2>
-        </div>
-    </div>
+<body>
 
     <div id="main-container" class="container list-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.2rem; opacity: 0.7; cursor:pointer;"></i>
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="live-dot"></span>
-            <span id="nav-status" style="font-weight: 900;">نرخ زنده</span>
-        </div>
-        <i class="fas fa-list" id="viewToggle" onclick="toggleView()" style="font-size: 1.2rem; opacity: 0.7; cursor:pointer;"></i>
-    </div>
-
-    <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <b style="font-size:1.8rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:2rem; cursor:pointer; opacity: 0.5;"></i>
-        </div>
-        <div class="setting-box">
-            <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
-            <button id="tLight" onclick="setTheme('light')">روشن</button>
-        </div>
-        <div class="setting-box">
-            <button id="lFa" class="active" onclick="setLang('fa')">فارسی</button>
-            <button id="lEn" onclick="setLang('en')">English</button>
-        </div>
-
-        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="dev-card">
-            <p style="margin:0; font-weight:900; color:var(--accent); font-size: 1.1rem;">Developer: Safi-Bahadori</p>
-            <p style="margin:8px 0 0 0; font-size:0.75rem; color: #e1306c;"><i class="fab fa-instagram"></i> مشاهده در اینستاگرام</p>
-        </a>
-        <button onclick="closeModal('sMod')" style="margin-top:auto; padding:20px; background:var(--text); border:none; border-radius:22px; color:var(--bg); font-weight:900;">بستن</button>
+        <i class="fas fa-cog" style="opacity: 0.6;"></i>
+        <span style="font-weight: 900;">نرخ زنده</span>
+        <i class="fas fa-th-large" onclick="toggleView()" style="opacity: 0.6;"></i>
     </div>
 
     <script>
         const config = [
-            { key: "دالر هرات", name: "دالر هرات", nameEn: "USD Herat", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
-            { key: "یورو هرات", name: "یورو هرات", nameEn: "Euro Herat", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
-            { key: "تومان چک", name: "تومان چک", nameEn: "Toman Check", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
-            { key: "تومان بانکی", name: "تومان بانکی", nameEn: "Toman Bank", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334627.png" },
-            { key: "کلدار", name: "کلدار پاکستان", nameEn: "PKR Pakistan", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
+            { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
+            { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
+            { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
+            { key: "کلدار", name: "کلدار پاکستان", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
-        let currentLang = 'fa';
+        function toggleView() { document.getElementById('main-container').classList.toggle('grid-view'); }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        function setTheme(mode) {
-            document.body.className = mode === 'light' ? 'light-mode' : 'dark-mode';
-            document.getElementById('tDark').classList.toggle('active', mode === 'dark');
-            document.getElementById('tLight').classList.toggle('active', mode === 'light');
-        }
-
-        function setLang(lang) {
-            currentLang = lang;
-            document.getElementById('lFa').classList.toggle('active', lang === 'fa');
-            document.getElementById('lEn').classList.toggle('active', lang === 'en');
-            document.getElementById('nav-status').innerText = lang === 'fa' ? 'نرخ زنده' : 'LIVE RATES';
-            load();
-        }
-
-        function toggleView() {
-            const cont = document.getElementById('main-container');
-            const icon = document.getElementById('viewToggle');
-            cont.classList.toggle('grid-view');
-            icon.className = cont.classList.contains('grid-view') ? 'fas fa-th-large' : 'fas fa-list';
+        // تابع رسم منحنی نرم
+        function getCurvePath(pts) {
+            if (pts.length < 2) return "";
+            let d = `M ${pts[0].x},${pts[0].y}`;
+            for (let i = 0; i < pts.length - 1; i++) {
+                let cp1x = pts[i].x + (pts[i+1].x - pts[i].x) / 2;
+                d += ` C ${cp1x},${pts[i].y} ${cp1x},${pts[i+1].y} ${pts[i+1].x},${pts[i+1].y}`;
+            }
+            return d;
         }
 
         async function load() {
@@ -174,47 +85,56 @@
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
                 
-                config.forEach((item) => {
-                    const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%", diff_3d: "0.00%", history: [0,0,0,0]};
+                config.forEach((item, idx) => {
+                    const rate = data.rates[item.key] || {current: "---", status: "same", history: [0,0,0,0], percent: "0%"};
                     const history = rate.history || [0,0,0,0];
-                    const badgeClass = rate.status === "up" ? 'up-badge' : (rate.status === "down" ? 'down-badge' : 'neutral-badge');
-                    const arrow = rate.status === "up" ? '↑' : (rate.status === "down" ? '↓' : '•');
                     const chartColor = rate.status === "down" ? '#ff453a' : '#32d74b';
+                    const badgeClass = rate.status === "up" ? 'up-badge' : (rate.status === "down" ? 'down-badge' : 'neutral-badge');
+                    const arrow = rate.status === "up" ? '↑' : (rate.status === "down" ? '↓' : '');
 
-                    // محاسبه نقاط نمودار واقعی
                     const min = Math.min(...history);
                     const max = Math.max(...history);
-                    const range = max - min || 1;
-                    const points = history.map((p, i) => `${i * 33.3},${30 - ((p - min) / range) * 25}`).join(' ');
+                    const range = (max - min) || 1;
+                    const points = history.map((p, i) => ({
+                        x: i * (100 / (history.length - 1)),
+                        y: 45 - ((p - min) / range) * 40
+                    }));
+
+                    const curveD = getCurvePath(points);
+                    const areaD = `${curveD} L 100,50 L 0,50 Z`;
+                    const gradId = `grad-${idx}`;
 
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.onclick = function() { this.classList.toggle('active'); };
-                    
                     card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; gap:12px; align-items:center;">
-                                <div class="circle-icon"><img src="${item.icon}"></div>
-                                <div>
-                                    <b style="display:block; font-size:1.05rem;">${currentLang === 'fa' ? item.name : item.nameEn}</b>
-                                    <small style="opacity:0.5; font-weight:700;">${item.sub}</small>
-                                </div>
+                                <img src="${item.icon}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                                <div><b style="display:block;">${item.name}</b><small style="opacity:0.5;">${item.sub}</small></div>
                             </div>
                             <div class="badge ${badgeClass}">${arrow} ${rate.percent}</div>
                         </div>
-                        <div class="price-row">
-                            <div class="price-val">${rate.current}</div>
-                            <i class="fas fa-chart-line" style="opacity:0.1; font-size:1.3rem;"></i>
-                        </div>
+                        <div class="price-val">${rate.current}</div>
+                        
                         <div class="extra-panel">
-                            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.8rem;">
-                                <span style="opacity:0.6;">نوسان ۳ روز اخیر:</span>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:bold; margin-bottom:10px;">
+                                <span style="opacity:0.6;">روند نوسانات:</span>
                                 <span style="color:${chartColor}">${rate.diff_3d}</span>
                             </div>
-                            <svg class="chart-svg" viewBox="0 0 100 30" preserveAspectRatio="none">
-                                <polyline points="${points}" fill="none" stroke="${chartColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <div style="display:flex; justify-content:space-between; opacity:0.6; font-size:0.65rem; margin-top:8px; font-family:sans-serif; font-weight:bold;">
+                            <div class="chart-container">
+                                <svg class="chart-svg" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="${chartColor}" stop-opacity="0.5"/>
+                                            <stop offset="100%" stop-color="${chartColor}" stop-opacity="0"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="${areaD}" fill="url(#${gradId})" />
+                                    <path d="${curveD}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; opacity:0.6; font-size:0.7rem; margin-top:10px; font-family:sans-serif;">
                                 ${history.map(h => `<span>${h}</span>`).join('')}
                             </div>
                         </div>`;
@@ -222,15 +142,8 @@
                 });
             } catch (e) { console.error(e); }
         }
-
-        function upDT() {
-            const n = new Date(); const j = jalaali.toJalaali(n);
-            let h = n.getHours(); const m = String(n.getMinutes()).padStart(2, '0');
-            const ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
-            document.getElementById('dt').innerHTML = `${j.jy}/${String(j.jm).padStart(2,'0')}/${String(j.jd).padStart(2,'0')}<br><span class="time-en">${h}:${m} ${ampm}</span>`;
-        }
-
-        load(); setInterval(load, 30000); setInterval(upDT, 1000); upDT();
+        load();
+        setInterval(load, 30000);
     </script>
 </body>
-                </html>
+</html>
