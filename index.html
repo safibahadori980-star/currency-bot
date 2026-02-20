@@ -15,7 +15,7 @@
 
         /* هدر فشرده و حرفه‌ای */
         .header { 
-            padding: 7px 20px; 
+            padding: 7px 15px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -33,24 +33,24 @@
 }
 
 .main-logo {
-    width: 60px;         /* اندازه لوگو را اینجا تنظیم کن */
+    width: 47px;         /* اندازه لوگو را اینجا تنظیم کن */
     height: auto;
-    border-radius: 114px;
+    border-radius: 110px;
               }
 
-        .date-time { text-align: right; font-weight: 900; font-size: 1.5rem; opacity: 1; flex: 1; z-index: 6; }
+        .date-time { text-align: right; font-weight: 750; font-size: 1.3rem; opacity: 1; flex: 1; z-index: 6; }
 
         .container { display: grid; gap: 8px; padding: 10px; padding-bottom: 100px; }
         .list-view { grid-template-columns: 1fr; }
         .grid-view { grid-template-columns: repeat(2, 1fr); }
 
         .card { background: var(--card); border-radius: 18px; padding: 11px; border: 1px solid var(--border); transition: 0.2s; position: relative; }
-        .price-val { font-size: 1.6rem; font-weight: 900; margin-top: 5px; }
-        .closed-tag { font-size: 0.6rem; color: var(--down); border: 1px solid var(--down); padding: 0 5px; border-radius: 4px; margin-right: 5px; display: inline-block; vertical-align: middle; }
+        .price-val { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
+        .closed-tag { font-size: 0.4rem; color: var(--down); border: 1px solid var(--down); padding: 0 4px; border-radius: 4px; margin-right: 4px; display: inline-block; vertical-align: middle; }
 
         /* منوی پایین */
-        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; background: var(--card); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); z-index: 1000; }
-        .bottom-nav i { font-size: 1.4rem; opacity: 0.8; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; background: var(--card); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); z-index: 1000; }
+        .bottom-nav i { font-size: 1.3rem; opacity: 0.8; cursor: pointer; }
         
         /* تنظیمات */
         .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(20px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
@@ -68,13 +68,13 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            gap: 8px; 
+            gap: 7px; 
             background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%); 
-            padding: 11px; 
-            border-radius: 12px; 
+            padding: 9px; 
+            border-radius: 10px; 
             color: #fff; 
             font-weight: bold; 
-            font-size: 1rem;
+            font-size: 0.8rem;
         }
     </style>
 </head>
@@ -98,12 +98,12 @@
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <b style="font-size:1.2rem;">تنظیمات</b>
+            <b style="font-size:1rem;">تنظیمات</b>
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.4rem;"></i>
         </div>
         
         <div class="setting-item">
-            <label>انتخاب پوسته</label>
+            <label>حالت</label>
             <div class="setting-box">
                 <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
                 <button id="tLight" onclick="setTheme('light')">روشن</button>
