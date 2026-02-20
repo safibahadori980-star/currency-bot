@@ -2,159 +2,184 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نرخ یاب خراسان</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NERKHYAB KHORASAN</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #000; color: #fff; padding: 20px; }
+        :root { --bg: #000; --card: #1c1c1e; --text: #fff; --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; --border: rgba(255,255,255,0.1); --modal-bg: rgba(20, 20, 20, 0.98); }
+        .light-mode { --bg: #f2f2f7; --card: #ffffff; --text: #000; --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.98); }
+        
+        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
 
-        /* هدر اصلی */
+        /* هدر فشرده و حرفه‌ای */
         .header { 
-            padding: 20px 0; 
+            padding: 5px 15px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            position: relative; 
-            margin-bottom: 30px;
-            border-bottom: 1px solid #333;
+            position: relative;
+            height: 70px; 
+            border-bottom: 1px solid var(--border);
         }
 
-        /* نام برند - سمت چپ */
-        .brand { 
-            font-size: 1.1rem; 
-            font-weight: 900; 
-            line-height: 1.2; 
-            text-align: left; 
-            flex: 1;
-        }
-
-        /* لوگوی وسط - شناور */
+        .brand { font-size: 1rem; font-weight: 900; line-height: 1.1; text-align: left; flex: 1; z-index: 5; }
+        
         .logo-wrapper {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            z-index: 100;
+            z-index: 10;
         }
+        .main-logo { width: 55px; height: auto; border-radius: 10px; }
 
-        .main-logo {
-            width: 75px; 
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-        }
+        .date-time { text-align: right; font-weight: 800; font-size: 1rem; opacity: 0.9; flex: 1; z-index: 5; }
 
-        /* تاریخ و ساعت - سمت راست */
-        .date-time { 
-            text-align: right; 
-            font-weight: 900; 
-            font-size: 1.2rem; 
-            opacity: 0.9;
-            flex: 1;
-        }
+        .container { display: grid; gap: 8px; padding: 10px; padding-bottom: 100px; }
+        .list-view { grid-template-columns: 1fr; }
+        .grid-view { grid-template-columns: repeat(2, 1fr); }
 
-        /* کارت‌های نرخ */
-        .card { background: #111; border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
-        .info { display: flex; align-items: center; gap: 12px; }
-        .flag { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
-        .name-container { display: flex; flex-direction: column; }
-        .name { font-weight: bold; font-size: 1rem; }
-        .symbol { font-size: 0.75rem; color: #666; }
-        .price-container { text-align: right; }
-        .price { font-size: 1.5rem; font-weight: bold; display: block; margin-top: 4px; }
-        .change { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
-        .up { color: #00ff88; }
-        .down { color: #ff4444; }
-        .same { color: #888; }
+        .card { background: var(--card); border-radius: 18px; padding: 12px; border: 1px solid var(--border); transition: 0.2s; position: relative; }
+        .price-val { font-size: 1.6rem; font-weight: 900; margin-top: 5px; }
+        .closed-tag { font-size: 0.6rem; color: var(--down); border: 1px solid var(--down); padding: 0 5px; border-radius: 4px; margin-right: 5px; display: inline-block; vertical-align: middle; }
+
+        /* منوی پایین */
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; background: var(--card); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); z-index: 1000; }
+        .bottom-nav i { font-size: 1.4rem; opacity: 0.8; cursor: pointer; }
         
-        .closed-tag {
-            background: rgba(255, 68, 68, 0.15);
-            color: #ff4444;
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 68, 68, 0.3);
-            margin-top: 4px;
-            display: inline-block;
+        /* تنظیمات */
+        .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(20px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
+        .full-modal.active { display: flex; }
+        
+        .setting-item { margin-bottom: 25px; }
+        .setting-box { background: rgba(120,120,120,0.1); padding: 4px; border-radius: 12px; display: flex; margin-top: 10px; }
+        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 8px; border-radius: 10px; font-weight: 700; cursor: pointer; opacity: 0.5; }
+        .setting-box button.active { background: rgba(255,255,255,0.2); opacity: 1; }
+
+        /* دکمه اینستاگرام */
+        .insta-btn { 
+            margin-top: auto; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%); 
+            padding: 15px; 
+            border-radius: 15px; 
+            color: #fff; 
+            font-weight: bold; 
+            font-size: 1.1rem;
         }
     </style>
 </head>
-<body>
+<body class="dark-mode">
 
     <div class="header">
-        <div class="date-time" id="dt"></div>
-
+        <div class="brand">NERKHYAB<br>KHORASAN</div>
         <div class="logo-wrapper">
             <img src="logo.png" alt="logo" class="main-logo">
         </div>
-
-        <div class="brand" id="b-title">NERKHYAB<br>KHORASAN</div>
+        <div class="date-time" id="dt"></div>
     </div>
 
-    <div id="rates-container"></div>
+    <div id="main-container" class="container list-view"></div>
+
+    <div class="bottom-nav">
+        <i class="fas fa-th-large" id="vIcon" onclick="toggleView()"></i>
+        <span id="nav-text" style="font-weight: 800; font-size: 0.8rem;">بروزرسانی: لحظاتی پیش</span>
+        <i class="fas fa-cog" onclick="openModal('sMod')"></i>
+    </div>
+
+    <div id="sMod" class="full-modal">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <b style="font-size:1.6rem;">تنظیمات</b>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.6rem;"></i>
+        </div>
+        
+        <div class="setting-item">
+            <label>انتخاب پوسته</label>
+            <div class="setting-box">
+                <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
+                <button id="tLight" onclick="setTheme('light')">روشن</button>
+            </div>
+        </div>
+
+        <a href="https://instagram.com/YOUR_USERNAME" target="_blank" class="insta-btn">
+            <i class="fab fa-instagram" style="font-size: 1.8rem;"></i>
+            <span>اینستاگرام ما</span>
+        </a>
+    </div>
 
     <script>
-        async function fetchRates() {
+        const config = [
+            { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
+            { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
+            { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
+            { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334443.png" },
+            { key: "کلدار", name: "کلدار", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
+        ];
+
+        function updateDT() {
+            const now = new Date();
+            const j = jalaali.toJalaali(now);
+            document.getElementById('dt').innerHTML = `${j.jy}/${j.jm}/${j.jd}<br>${now.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'})}`;
+        }
+        setInterval(updateDT, 1000); updateDT();
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function setTheme(m) {
+            document.body.className = m === 'light' ? 'light-mode' : '';
+            document.getElementById('tDark').classList.toggle('active', m === 'dark');
+            document.getElementById('tLight').classList.toggle('active', m === 'light');
+        }
+
+        function toggleView() {
+            const c = document.getElementById('main-container');
+            c.classList.toggle('grid-view');
+            c.classList.toggle('list-view');
+            document.getElementById('vIcon').className = c.classList.contains('grid-view') ? 'fas fa-list' : 'fas fa-th-large';
+        }
+
+        async function load() {
             try {
-                const response = await fetch('last_rates.json');
-                const data = await response.json();
-                const container = document.getElementById('rates-container');
-                const dt = document.getElementById('dt');
-                
-                const now = new Date();
-                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-                const jDate = new Intl.DateTimeFormat('fa-IR', options).format(now);
-                const jTime = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', hour12: false });
-                dt.innerHTML = `${jDate}<br>${jTime}`;
+                const res = await fetch('last_rates.json?v=' + Date.now());
+                const data = await res.json();
+                const cont = document.getElementById('main-container');
+                cont.innerHTML = '';
+                const isClosed = new Date().getHours() >= 17;
 
-                container.innerHTML = '';
-                
-                const flags = {
-                    "دالر هرات": "https://flagcdn.com/us.svg",
-                    "یورو هرات": "https://flagcdn.com/eu.svg",
-                    "تومان چک": "https://flagcdn.com/ir.svg",
-                    "کلدار": "https://flagcdn.com/pk.svg",
-                    "تومان بانکی": "https://flagcdn.com/ir.svg"
-                };
+                config.forEach((item) => {
+                    const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
+                    const trendColor = rate.status === "up" ? "#32d74b" : (rate.status === "down" ? "#ff453a" : "#888");
 
-                const symbols = {
-                    "دالر هرات": "USD/AFN",
-                    "یورو هرات": "EUR/AFN",
-                    "تومان چک": "IRT/AFN",
-                    "کلدار": "PKR/AFN",
-                    "تومان بانکی": "IRT/AFN"
-                };
-
-                for (const [name, info] of Object.entries(data.rates)) {
                     const card = document.createElement('div');
                     card.className = 'card';
-                    const statusClass = info.status || 'same';
-                    const isClosed = now.getHours() >= 17;
-
                     card.innerHTML = `
-                        <div class="info">
-                            <img src="${flags[name] || ''}" class="flag">
-                            <div class="name-container">
-                                <span class="name">${name}</span>
-                                <span class="symbol">${symbols[name] || ''}</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="color:${trendColor}; font-weight:700; direction:ltr;">${rate.percent}</div>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <div style="text-align:right;">
+                                    <b style="font-size:0.9rem; display:block;">${item.name}</b>
+                                    <small style="opacity:0.5; font-size:0.6rem;">${item.sub}</small>
+                                </div>
+                                <img src="${item.icon}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
                             </div>
                         </div>
-                        <div class="price-container">
-                            <span class="change ${statusClass}">
-                                <i class="fas fa-circle" style="font-size: 0.4rem;"></i>
-                                ${info.percent || '0.00%'}
-                            </span>
-                            <span class="price">${info.current}</span>
+                        <div class="price-val">
+                            ${rate.current}
                             ${isClosed ? '<span class="closed-tag">Closed Market</span>' : ''}
                         </div>
                     `;
-                    container.appendChild(card);
-                }
-            } catch (e) { console.error(e); }
+                    cont.appendChild(card);
+                });
+            } catch (e) { console.log(e); }
         }
-        fetchRates();
-        setInterval(fetchRates, 60000);
+        load(); setInterval(load, 30000);
     </script>
 </body>
 </html>
