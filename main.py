@@ -8,7 +8,7 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
-    # مپینگ ساده و مستقیم
+    # مپینگ بسیار ساده برای جلوگیری از خطا
     mapping = {
         "دالر هرات": ["دالر", "دلار"],
         "یورو هرات": ["یورو"],
@@ -17,13 +17,16 @@ def get_rates():
         "تومان بانکی": ["بانکی"]
     }
 
-    # خواندن داده‌های قبلی برای جلوگیری از حذف
+    # ۱. خواندن دیتای قدیمی (بسیار مهم برای نپریدن ارزها)
     if os.path.exists(file_name):
         try:
             with open(file_name, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-        except: data = {"rates": {}}
-    else: data = {"rates": {}}
+            print("Old data loaded successfully.")
+        except: 
+            data = {"rates": {}}
+    else: 
+        data = {"rates": {}}
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
@@ -33,41 +36,36 @@ def get_rates():
 
         found_in_this_run = set()
         
-        # بررسی ۱۰۰ پیام اخیر
+        # بررسی ۱۰۰ پیام آخر
         for msg in reversed(messages[-100:]):
             text = msg.get_text(separator=" ").replace('\n', ' ')
             
             for site_key, keywords in mapping.items():
-                # اگر ارز پیدا نشده و یکی از کلمات کلیدی در متن هست
                 if site_key not in found_in_this_run and any(k in text for k in keywords):
-                    
-                    # استخراج تمام اعداد موجود در آن پیام (با پشتیبانی از نقطه و کاما)
-                    # خروجی مثلا می‌شود: ['73.20', '73.50']
+                    # پیدا کردن اعداد (پشتیبانی از 73,20 و 214.00)
                     numbers = re.findall(r'\d+[.,]\d+|\d+', text)
-                    
                     if numbers:
-                        # طبق درخواست شما: فقط اولین عدد (نرخ خرید) را بردار
                         buy_val = numbers[0].replace(',', '.')
                         
+                        # اگر ارز از قبل نبود، ساختارش را بساز
                         if site_key not in data["rates"]:
                             data["rates"][site_key] = {"history": [], "status": "same", "percent": "0.00%"}
                         
                         old_val = data["rates"][site_key].get("current", "0")
                         
-                        # بروزرسانی مقدار فعلی
+                        # آپدیت مقادیر
                         data["rates"][site_key]["current"] = buy_val
                         data["rates"][site_key]["buy"] = buy_val
                         
-                        # محاسبه نوسان نسبت به نرخ قبلی
+                        # محاسبه نوسان
                         try:
-                            ov = float(old_val) if old_val not in ["---", "0"] else 0
-                            nv = float(buy_val)
+                            ov, nv = float(old_val if old_val not in ["---", "0"] else 0), float(buy_val)
                             if ov != 0 and nv != ov:
                                 data["rates"][site_key]["status"] = "up" if nv > ov else "down"
                                 data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
                         except: pass
 
-                        # اضافه کردن به تاریخچه نمودار
+                        # آپدیت هیستوری
                         hist = data["rates"][site_key].get("history", [])
                         if not hist or hist[-1] != float(buy_val):
                             hist.append(float(buy_val))
@@ -76,14 +74,15 @@ def get_rates():
                         
                         found_in_this_run.add(site_key)
 
-        # ذخیره نهایی در فایل (خارج از حلقه برای جلوگیری از پریدن داده‌ها)
+        # ۲. ذخیره نهایی (تراز شده در بیرونی‌ترین لایه برای امنیت کامل)
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-            
-        print(f"آپدیت موفقیت‌آمیز بود. موارد پیدا شده: {list(found_in_this_run)}")
+        
+        print(f"Update Success. Found: {list(found_in_this_run)}")
+        print(f"Current file keys: {list(data['rates'].keys())}")
 
     except Exception as e: 
-        print(f"خطا در اجرای اسکریپت: {e}")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     get_rates()
