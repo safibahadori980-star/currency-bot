@@ -26,16 +26,19 @@
 
         .brand { font-size: 1rem; font-weight: 900; line-height: 1.1; text-align: left; flex: 1; z-index: 5; }
         
-        .logo-wrapper {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-        }
-        .main-logo { width: 55px; height: auto; border-radius: 10px; }
+.logo-wrapper {
+    flex: 1;             /* فضای مساوی اشغال می‌کند */
+    display: flex;
+    justify-content: flex-start; /* لوگو را به ابتدای سمت چپ می‌چسباند */
+}
 
-        .date-time { text-align: right; font-weight: 800; font-size: 1rem; opacity: 0.9; flex: 1; z-index: 5; }
+.main-logo {
+    width: 55px;         /* اندازه لوگو را اینجا تنظیم کن */
+    height: auto;
+    border-radius: 10px;
+              }
+
+        .date-time { text-align: right; font-weight: 900; font-size: 1.4rem; opacity: 0.9; flex: 1; z-index: 5; }
 
         .container { display: grid; gap: 8px; padding: 10px; padding-bottom: 100px; }
         .list-view { grid-template-columns: 1fr; }
