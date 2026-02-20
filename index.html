@@ -58,14 +58,14 @@
 
     <div class="bottom-nav">
         <i class="fas fa-th-large" id="vIcon" onclick="toggleView()" style="opacity: 0.8; cursor:pointer;"></i>
-        <span id="nav-text" style="font-weight: 900; font-size: 0.85rem;">نرخ زنده بازار</span>
+        <span id="nav-text" style="font-weight: 980; font-size: 0.95rem;">لحظاتی پیش</span>
         <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.8; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <b id="set-title" style="font-size:1.5rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem; cursor:pointer;"></i>
+            <b id="set-title" style="font-size:1.8rem;">تنظیمات</b>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.8rem; cursor:pointer;"></i>
         </div>
 
         <div class="setting-item">
@@ -79,14 +79,14 @@
         <div class="setting-item">
             <span class="setting-label" id="l-lang">زبان</span>
             <div class="setting-box">
-                <button id="lnFa" class="active" onclick="setLang('fa')">Farsi</button>
+                <button id="lnFa" class="active" onclick="setLang('fa')">فارسی</button>
                 <button id="lnEn" onclick="setLang('en')">English</button>
             </div>
         </div>
 
         <a href="https://www.instagram.com/safi.tech.ai?igsh=MXJydDR0aWJjazVtOA==" target="_blank" class="dev-card">
             <i class="fab fa-instagram"></i>
-            <span id="dev-text">درباره سازنده</span>
+            <span id="dev-text">سازنده</span>
         </a>
         
         <button onclick="closeModal('sMod')" id="btn-close" style="margin-top:15px; padding:15px; background:var(--text); border:none; border-radius:15px; color:var(--bg); font-weight:900; cursor:pointer;">بستن</button>
