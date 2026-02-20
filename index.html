@@ -172,10 +172,6 @@
     <span>${rate.percent}</span>
 </div>   
                                        <div><b style="font-size:0.95rem; display:block;">${item.name}</b><small style="opacity:0.5; font-size:0.65rem;">${item.sub}</small></div>
-                            </div>
-                            <div class="${trendClass}" style="font-weight:900; direction:ltr; font-size:0.8rem;">
-                                ${rate.status==='up'?'↑':(rate.status==='down'?'↓':'')} ${rate.percent}
-                            </div>
                         </div>
                         <div class="price-val">
                             ${rate.current || rate.buy || '---'}
