@@ -167,10 +167,11 @@
                    card.className = 'card';
                     card.onclick = function() { this.classList.toggle('active'); };
                     card.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; gap:10px; align-items:center;">
-                                <img src="${item.icon}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
-                                <div><b style="font-size:0.95rem; display:block;">${item.name}</b><small style="opacity:0.5; font-size:0.65rem;">${item.sub}</small></div>
+                     <div class="${trendClass}" style="font-weight:900; direction:ltr; font-size:1.4rem; display:flex; align-items:center; gap:5px;">
+    <span style="font-size:1.2rem;">${rate.status === "up" ? '▲' : (rate.status === "down" ? '▼' : '')}</span>
+    <span>${rate.percent}</span>
+</div>   
+                                       <div><b style="font-size:0.95rem; display:block;">${item.name}</b><small style="opacity:0.5; font-size:0.65rem;">${item.sub}</small></div>
                             </div>
                             <div class="${trendClass}" style="font-weight:900; direction:ltr; font-size:0.8rem;">
                                 ${rate.status==='up'?'↑':(rate.status==='down'?'↓':'')} ${rate.percent}
