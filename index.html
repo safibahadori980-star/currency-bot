@@ -33,16 +33,55 @@
         .closed-tag { font-size: 0.6rem; color: var(--down); border: 1px solid var(--down); padding: 0 4px; border-radius: 4px; font-weight: 800; }
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--card); border-radius: 20px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
-        
-        .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(20px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
+        /* Modal Settings - Glassmorphism Design */
+        .full-modal { 
+            position: fixed; inset: 0; 
+            background: rgba(0, 0, 0, 0.7); /* پس‌زمینه تیره شفاف */
+            backdrop-filter: blur(25px) saturate(180%); /* افکت شیشه‌ای قوی */
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            display: none; z-index: 2000; padding: 40px 30px; 
+            flex-direction: column; 
+        }
         .full-modal.active { display: flex; }
-        .setting-item { margin-bottom: 25px; }
-        .setting-label { display: block; margin-bottom: 10px; font-weight: 800; opacity: 0.6; font-size: 0.8rem; }
-        .setting-box { background: rgba(150, 150, 150, 0.1); padding: 4px; border-radius: 12px; display: flex; }
-        .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 10px; border-radius: 10px; font-weight: 800; cursor: pointer; }
-        .setting-box button.active { background: var(--accent); color: #000; }
-        .dev-card { background: var(--accent); color: #000; padding: 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; margin-top: auto; }
         
+        .setting-item { margin-bottom: 30px; }
+        .setting-label { display: block; margin-bottom: 12px; font-weight: 800; opacity: 0.5; font-size: 0.85rem; letter-spacing: 1px; }
+        
+        /* جعبه دکمه‌ها */
+        .setting-box { 
+            background: rgba(255, 255, 255, 0.08); 
+            padding: 5px; border-radius: 16px; display: flex; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .setting-box button { 
+            flex: 1; border: none; background: none; color: var(--text); 
+            padding: 12px; border-radius: 12px; font-weight: 800; 
+            cursor: pointer; transition: 0.3s; opacity: 0.6;
+        }
+        /* استایل جدید برای دکمه فعال (به جای سبز تند) */
+        .setting-box button.active { 
+            background: rgba(255, 255, 255, 0.2); 
+            color: #fff; opacity: 1; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* دکمه سازنده و بستن */
+        .dev-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            color: #fff; padding: 18px; border-radius: 18px; 
+            text-decoration: none; display: flex; align-items: center; 
+            justify-content: center; gap: 10px; font-weight: 900; 
+            margin-top: auto; border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+        .dev-card:active { transform: scale(0.98); background: rgba(255, 255, 255, 0.15); }
+
+        #btn-close {
+            margin-top: 15px; padding: 18px; 
+            background: #fff; border: none; border-radius: 18px; 
+            color: #000; font-weight: 900; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }    
         .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease-out; }
         .card.active .extra-panel { max-height: 120px; opacity: 1; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
     </style>
