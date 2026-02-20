@@ -19,9 +19,9 @@
         }
         body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
         
-        .header { padding: 15px 20px 0; display: flex; justify-content: space-between; align-items: center; }
+        .header { padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: center; }
         .brand { font-size: 1.3rem; font-weight: 900; line-height: 1.2; }
-        .date-time { text-align: left; font-weight: 800; font-size: 0.7rem; opacity: 0.7; }
+        .date-time { text-align: left; font-weight: 900; font-size: 1.4rem; opacity: 0.7; }
 
         .container { display: grid; gap: 8px; padding: 10px; padding-bottom: 90px; }
         .list-view { grid-template-columns: 1fr; }
@@ -58,7 +58,7 @@
 
     <div class="bottom-nav">
         <i class="fas fa-th-large" id="vIcon" onclick="toggleView()" style="opacity: 0.8; cursor:pointer;"></i>
-        <span id="nav-text" style="font-weight: 900; font-size: 0.85rem;">نرخ زنده بازار</span>
+        <span id="nav-text" style="font-weight: 900; font-size: 0.85rem;">لحظاتی پیش</span>
         <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.8; cursor:pointer;"></i>
     </div>
 
@@ -68,7 +68,7 @@
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem; cursor:pointer;"></i>
         </div>
         <div class="setting-item">
-            <span class="setting-label" id="l-theme">پوسته</span>
+            <span class="setting-label" id="l-theme">حالت</span>
             <div class="setting-box">
                 <button id="tDark" class="active" onclick="setTheme('dark')">تیره</button>
                 <button id="tLight" onclick="setTheme('light')">روشن</button>
@@ -83,7 +83,7 @@
         </div>
         <a href="https://www.instagram.com/safi.tech.ai?igsh=MXJydDR0aWJjazVtOA==" target="_blank" class="dev-card">
             <i class="fab fa-instagram"></i>
-            <span id="dev-text">درباره سازنده</span>
+            <span id="dev-text">سازنده</span>
         </a>
         <button onclick="closeModal('sMod')" id="btn-close" style="margin-top:15px; padding:15px; background:var(--text); border:none; border-radius:15px; color:var(--bg); font-weight:900; cursor:pointer;">بستن</button>
     </div>
@@ -91,7 +91,7 @@
     <script>
         let currentLang = 'fa';
         const translations = {
-            fa: { nav: "نرخ زنده بازار", set: "تنظیمات", theme: "پوسته", lang: "زبان", dark: "تیره", light: "روشن", close: "بستن", dev: "درباره سازنده", closed: "Closed Market" },
+            fa: { nav:"لحظاتی پیش", set: "تنظیمات", theme: "پوسته", lang: "زبان", dark: "تیره", light: "روشن", close: "بستن", dev: "سازنده", closed: "Closed Market" },
             en: { nav: "Live Market Rates", set: "Settings", theme: "Appearance", lang: "Language", dark: "Dark", light: "Light", close: "Close", dev: "Developer Info", closed: "Closed Market" }
         };
 
