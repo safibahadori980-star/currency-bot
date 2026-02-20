@@ -8,6 +8,7 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
+    # کلمات کلیدی دقیق بر اساس فرمت کانال شما
     mapping = {
         "دالر هرات": ["دالر", "دلار"],
         "یورو هرات": ["یورو"],
@@ -16,6 +17,7 @@ def get_rates():
         "تومان بانکی": ["تومان بانکی", "تومان ایران"]
     }
 
+    # ۱. بارگذاری داده‌های قبلی (برای جلوگیری از حذف شدن ارزهای غایب)
     if os.path.exists(file_name):
         try:
             with open(file_name, 'r', encoding='utf-8') as f:
@@ -31,24 +33,28 @@ def get_rates():
 
         found_in_this_run = set()
         
-        # بررسی ۱۰۰ پیام آخر از جدید به قدیم
+        # ۲. بررسی ۱۰۰ پیام اخیر از جدید به قدیم
         for msg in reversed(messages[-100:]):
-            # تبدیل کاما به نقطه و تمیز کردن متن برای پیدا کردن بهتر اعداد
-            text = msg.get_text(separator=" ").replace(',', '.')
+            # تمیزکاری متن: تبدیل کاما به نقطه و ایجاد فاصله بین اعداد و حروف چسبیده
+            raw_text = msg.get_text(separator=" ").replace(',', '.')
+            text = re.sub(r'(\d+)([^\d\s\.])', r'\1 \2', raw_text)
             
             for site_key, keywords in mapping.items():
+                # اگر این ارز را در این دور هنوز پیدا نکردیم و کلمه کلیدی در متن هست
                 if site_key not in found_in_this_run and any(k in text for k in keywords):
-                    # پیدا کردن اعداد (حتی آن‌هایی که به کلمات چسبیده‌اند)
-                    numbers = re.findall(r'(\d+\.\d+|\d+)', text)
+                    # استخراج اعداد اعشاری یا صحیح
+                    numbers = re.findall(r'\d+\.\d+|\d+', text)
                     if numbers:
-                        # آخرین عدد در متن پیام‌های شما معمولاً قیمت است
+                        # در فرمت پیام‌های شما، اولین عدد نرخ خرید است
                         buy_val = numbers[0]
                         
+                        # ایجاد ساختار اگر قبلاً وجود نداشته باشد
                         if site_key not in data["rates"]:
                             data["rates"][site_key] = {"history": [], "status": "same", "percent": "0.00%"}
                         
                         old_val = data["rates"][site_key].get("current", "0")
                         
+                        # ۳. فقط اگر قیمت تغییر کرده باشد آپدیت کن
                         if old_val != buy_val:
                             data["rates"][site_key]["current"] = buy_val
                             data["rates"][site_key]["buy"] = buy_val
@@ -62,6 +68,7 @@ def get_rates():
                                     data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
                             except: pass
 
+                            # آپدیت نمودار
                             hist = data["rates"][site_key].get("history", [])
                             if not hist or hist[-1] != float(buy_val):
                                 hist.append(float(buy_val))
@@ -70,11 +77,15 @@ def get_rates():
                         
                         found_in_this_run.add(site_key)
 
+        # ۴. ذخیره نهایی (ارزهایی که پیدا نشدند، با قیمت قبلی در فایل می‌مانند)
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"Update Success. Found: {list(found_in_this_run)}")
+        
+        print(f"Update Success. Found now: {list(found_in_this_run)}")
+        print(f"Total currencies in file: {list(data['rates'].keys())}")
 
-    except Exception as e: print(f"Error: {e}")
+    except Exception as e: 
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     get_rates()
