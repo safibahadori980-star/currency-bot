@@ -24,7 +24,7 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .brand { font-size: 1rem; font-weight: 900; line-height: 1.1; text-align: left; flex: 1; z-index: 5; }
+        .brand { font-size: 1.3rem; font-weight: 900; line-height: 1.1; text-align: left; flex: 1; z-index: 5; }
         
 .logo-wrapper {
     flex: 1;             /* فضای مساوی اشغال می‌کند */
@@ -33,7 +33,7 @@
 }
 
 .main-logo {
-    width: 47px;         /* اندازه لوگو را اینجا تنظیم کن */
+    width: 55px;         /* اندازه لوگو را اینجا تنظیم کن */
     height: auto;
     border-radius: 95px;
               }
@@ -199,7 +199,8 @@
                         </div>
                         <div class="price-val">
                             ${rate.current}
-                            ${isClosed ? '<span class="closed-tag">Closed Market</span>' : ''}
+                            // فقط قیمت را نگه دار
+${rate.current}
                         </div>
                     `;
                     cont.appendChild(card);
