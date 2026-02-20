@@ -43,11 +43,29 @@
         .container { display: grid; gap: 8px; padding: 10px; padding-bottom: 100px; }
         .list-view { grid-template-columns: 1fr; }
         .grid-view { grid-template-columns: repeat(2, 1fr); }
+.card {
+    /* شیشه‌ای مات و باوقار */
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(12px); /* تاری پشت کارت */
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* لبه‌های بسیار نازک شیشه‌ای */
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 12px;
+    
+    /* حذف درخشش زیاد و جایگزینی با سایه بسیار نرم */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+    
+    transition: 0.3s ease;
+}
 
-        .card { background: var(--card); border-radius: 18px; padding: 11px; border: 1px solid var(--border); transition: 0.2s; position: relative; }
-        .price-val { font-size: 1.5rem; font-weight: 800; margin-top: 5px; }
-        .closed-tag { font-size: 0.4rem; color: var(--down); border: 1px solid var(--down); padding: 0 4px; border-radius: 4px; margin-right: 4px; display: inline-block; vertical-align: middle; }
-
+/* درخشش خیلی محو فقط وقتی روی کارت لمس شود */
+.card:active {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
         /* منوی پایین */
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; background: var(--card); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); z-index: 1000; }
         .bottom-nav i { font-size: 1.3rem; opacity: 0.8; cursor: pointer; }
