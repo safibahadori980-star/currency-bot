@@ -9,62 +9,73 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #000; color: #fff; padding: 20px; }
 
-        /* بخش هدر اصلاح شده برای لوگو */
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 10px 10px;
-            position: relative;
-            margin-bottom: 20px;
+        /* هدر اصلی */
+        .header { 
+            padding: 20px 0; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: relative; 
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
         }
 
-        /* استایل لوگوی وسط */
+        /* نام برند - سمت چپ */
+        .brand { 
+            font-size: 1.1rem; 
+            font-weight: 900; 
+            line-height: 1.2; 
+            text-align: left; 
+            flex: 1;
+        }
+
+        /* لوگوی وسط - شناور */
         .logo-wrapper {
             position: absolute;
-            top: -20px; /* تنظیم ارتفاع لوگو */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             z-index: 100;
         }
 
         .main-logo {
-            width: 90px; /* اندازه لوگو */
+            width: 75px; 
             height: auto;
-            border-radius: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
         }
 
-        .header-content {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+        /* تاریخ و ساعت - سمت راست */
+        .date-time { 
+            text-align: right; 
+            font-weight: 900; 
+            font-size: 1.2rem; 
+            opacity: 0.9;
+            flex: 1;
         }
 
-        .brand { font-size: 1.3rem; font-weight: 900; line-height: 1.2; text-align: right; }
-        .date-time { text-align: left; font-weight: 900; font-size: 1.4rem; opacity: 0.8; }
-
-        /* سایر استایل‌های قبلی شما بدون تغییر */
-        .card { background: #1a1a1a; border-radius: 15px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .info { display: flex; align-items: center; gap: 15px; }
-        .flag { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        /* کارت‌های نرخ */
+        .card { background: #111; border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        .info { display: flex; align-items: center; gap: 12px; }
+        .flag { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
         .name-container { display: flex; flex-direction: column; }
-        .name { font-weight: bold; font-size: 1.1rem; }
-        .symbol { font-size: 0.8rem; color: #888; }
+        .name { font-weight: bold; font-size: 1rem; }
+        .symbol { font-size: 0.75rem; color: #666; }
         .price-container { text-align: right; }
-        .price { font-size: 1.6rem; font-weight: bold; display: block; }
-        .change { font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
-        .up { color: #4caf50; }
-        .down { color: #f44336; }
+        .price { font-size: 1.5rem; font-weight: bold; display: block; margin-top: 4px; }
+        .change { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+        .up { color: #00ff88; }
+        .down { color: #ff4444; }
         .same { color: #888; }
         
-        /* استایل Closed Market */
         .closed-tag {
-            background: rgba(255, 68, 68, 0.2);
+            background: rgba(255, 68, 68, 0.15);
             color: #ff4444;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 5px;
-            border: 1px solid #ff4444;
-            margin-top: 5px;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            margin-top: 4px;
             display: inline-block;
         }
     </style>
@@ -72,18 +83,16 @@
 <body>
 
     <div class="header">
+        <div class="date-time" id="dt"></div>
+
         <div class="logo-wrapper">
             <img src="logo.png" alt="logo" class="main-logo">
         </div>
-        
-        <div class="header-content">
-            <div class="date-time" id="dt"></div>
-            <div class="brand" id="b-title">NERKHYAB<br>KHORASAN</div>
-        </div>
+
+        <div class="brand" id="b-title">NERKHYAB<br>KHORASAN</div>
     </div>
 
-    <div id="rates-container">
-        </div>
+    <div id="rates-container"></div>
 
     <script>
         async function fetchRates() {
@@ -93,7 +102,6 @@
                 const container = document.getElementById('rates-container');
                 const dt = document.getElementById('dt');
                 
-                // تنظیم تاریخ و ساعت
                 const now = new Date();
                 const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
                 const jDate = new Intl.DateTimeFormat('fa-IR', options).format(now);
@@ -121,9 +129,8 @@
                 for (const [name, info] of Object.entries(data.rates)) {
                     const card = document.createElement('div');
                     card.className = 'card';
-                    
                     const statusClass = info.status || 'same';
-                    const isClosed = now.getHours() >= 17; // بعد از ساعت ۵ عصر
+                    const isClosed = now.getHours() >= 17;
 
                     card.innerHTML = `
                         <div class="info">
@@ -135,7 +142,7 @@
                         </div>
                         <div class="price-container">
                             <span class="change ${statusClass}">
-                                <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+                                <i class="fas fa-circle" style="font-size: 0.4rem;"></i>
                                 ${info.percent || '0.00%'}
                             </span>
                             <span class="price">${info.current}</span>
@@ -144,9 +151,8 @@
                     `;
                     container.appendChild(card);
                 }
-            } catch (e) { console.error("Error fetching rates:", e); }
+            } catch (e) { console.error(e); }
         }
-
         fetchRates();
         setInterval(fetchRates, 60000);
     </script>
