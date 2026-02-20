@@ -119,7 +119,12 @@
         <span id="nav-text" style="font-weight: 750; font-size: 1rem;">لحظاتی پیش</span>
         <i class="fas fa-cog" onclick="openModal('sMod')"></i>
     </div>
-
+width: 35px;
+    height: 35px;
+    border-radius: 8px; /* کمی حالت مربعی نرم به جای دایره کامل */
+    object-fit: cover;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); /* یک هاله نوری خیلی ضعیف دور آیکون */
+}
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
             <b style="font-size:1rem;">تنظیمات</b>
@@ -145,7 +150,13 @@
             { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
             { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
             { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
-            { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://cdn-icons-png.flaticon.com/512/9334/9334443.png" },
+            { 
+    key: "تومان بانکی", 
+    name: "تومان بانکی", 
+    sub: "IRR/AFN", 
+    // آیکون کارت بانکی با استایل فلت و جذاب
+    icon: "https://cdn-icons-png.flaticon.com/512/9334/9334443.png" 
+},
             { key: "کلدار", name: "کلدار", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
