@@ -10,13 +10,15 @@
     <style>
 :root { 
     --bg: #000; 
-    --card-glass: rgba(255, 255, 255, 0.08); /* کارت روشن‌تر در حالت تاریک */
+    --card-glass: rgba(255, 255, 255, 0.08); 
     --card-border: rgba(255, 255, 255, 0.12);
-    --text: #fff; --sub: #8e8e93; --accent: #32d74b; --down: #ff453a; --border: rgba(255,255,255,0.1); --modal-bg: rgba(20, 20, 20, 0.98); 
+    --text: #fff; --sub: #8e8e93; 
+    --accent: #32d74b; --down: #ff453a; 
+    --border: rgba(255,255,255,0.1); --modal-bg: rgba(20, 20, 20, 0.98); 
 }
 .light-mode { 
     --bg: #f2f2f7; 
-    --card-glass: rgba(0, 0, 0, 0.05); /* کارت تیره‌تر در حالت روشن */
+    --card-glass: rgba(0, 0, 0, 0.05); 
     --card-border: rgba(0, 0, 0, 0.08);
     --text: #000; --sub: #8e8e93; --border: rgba(0,0,0,0.1); --modal-bg: rgba(255, 255, 255, 0.98); 
 }
@@ -45,54 +47,32 @@
     width: 100px;         /* اندازه لوگو را اینجا تنظیم کن */
     .card {
     background: var(--card-glass); 
-    backdrop-filter: blur(15px); 
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--card-border); 
-    border-radius: 18px;
-    padding: 12px;
-    margin-bottom: 5px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
-    transition: 0.3s ease;
+    border-radius: 18px; padding: 12px; margin-bottom: 5px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); transition: 0.4s all ease;
 }
 
-/* این بخش را از داخل کارت بیرون بیاور */
+/* رنگ نئونی وقتی قیمت بالا می‌رود */
+.card.up {
+    background: rgba(50, 215, 75, 0.15) !important;
+    border: 1px solid rgba(50, 215, 75, 0.4);
+}
+
+/* رنگ نئونی وقتی قیمت پایین می‌آید */
+.card.down {
+    background: rgba(255, 69, 58, 0.15) !important;
+    border: 1px solid rgba(255, 69, 58, 0.4);
+}
+
 .price-val {
-    font-size: 2.5rem; /* بزرگ و درشت */
-    font-weight: 900;
-    color: var(--text);
-    margin-top: 10px;
-    display: block;
-    text-align: left;
-    letter-spacing: -1px;
-}
-    
-    /* لبه‌های بسیار نازک شیشه‌ای */
-    border: 1px solid rgba(255, 255, 255, 0.04); 
-    border-radius: 18px;
-    padding: 13px;
-    margin-bottom: 5px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 
-                inset 0 0 10px rgba(255, 255, 255, 0.02);
-                  }
-    .price-val {
-    font-size: 1.7rem; /* درشت کردن عدد قیمت */
-    font-weight: 700;   /* حداکثر ضخامت */
-    display: green;
-    margin-top: 8px;
-    letter-spacing: -1px;
+    font-size: 2.5rem; font-weight: 950; color: var(--text);
+    margin-top: 10px; display: block; text-align: left; letter-spacing: -1px;
               }
-    /* حذف درخشش زیاد و جایگزینی با سایه بسیار نرم */
-    box-shadow: 0 4px 35px rgba(0, 0, 0, 0.1); 
-    
     transition: 0.3s ease;
 }
 
-/* درخشش خیلی محو فقط وقتی روی کارت لمس شود */
-.card:active {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 215, 235, 0.15); /* هاله سبز نئونی */
-    box-shadow: 0 0 15px rgba(50, 215, 75, 0.2);
-    transform: scale(0.98);
+
     
 }
         /* منوی پایین */
@@ -204,10 +184,9 @@
                 cont.innerHTML = '';
                 const isClosed = new Date().getHours() >= 17;
 
-                config.forEach((item) => {
-                    const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                    const trendColor = rate.status === "up" ? "#32d74b" : (rate.status === "down" ? "#ff453a" : "#888");
-
+                const card = document.createElement('div');
+// این خط باعث تغییر رنگ کل کارت می‌شود
+card.className = `card ${rate.status}`;
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
