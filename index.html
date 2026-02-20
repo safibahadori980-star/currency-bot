@@ -27,14 +27,13 @@
         .list-view { grid-template-columns: 1fr; }
         .grid-view { grid-template-columns: 1fr 1fr; }
 
-        .card { background: var(--card); border-radius: 18px; padding: 10px; border: 1px solid var(--border); cursor: pointer; }
-        .price-val { font-size: 1.7rem; font-weight: 800; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
-        .grid-view .price-val { font-size: 1.2rem; }
-        .closed-tag { font-size: 0.6rem; color: var(--down); border: 1px solid var(--down); padding: 0 4px; border-radius: 4px; }
+        .card { background: var(--card); border-radius: 18px; padding: 10px 12px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .price-val { font-size: 1.9rem; font-weight: 900; margin-top: 2px; display: flex; align-items: center; gap: 8px; }
+        .grid-view .price-val { font-size: 1.3rem; }
+        .closed-tag { font-size: 0.6rem; color: var(--down); border: 1px solid var(--down); padding: 0 4px; border-radius: 4px; font-weight: 800; }
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--card); border-radius: 20px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); z-index: 1000; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
         
-        /* Modal Settings */
         .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(20px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
         .full-modal.active { display: flex; }
         .setting-item { margin-bottom: 25px; }
@@ -42,9 +41,10 @@
         .setting-box { background: rgba(150, 150, 150, 0.1); padding: 4px; border-radius: 12px; display: flex; }
         .setting-box button { flex: 1; border: none; background: none; color: var(--text); padding: 10px; border-radius: 10px; font-weight: 800; cursor: pointer; }
         .setting-box button.active { background: var(--accent); color: #000; }
-    .dev-card { background: var(--accent); color: #000; padding: 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; margin-top: auto; }
-  .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s; }
-.card.active .extra-panel { max-height: 100px; opacity: 1; margin-top: 10px; border-top: 1px solid var(--border); }
+        .dev-card { background: var(--accent); color: #000; padding: 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; margin-top: auto; }
+        
+        .extra-panel { max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease-out; }
+        .card.active .extra-panel { max-height: 120px; opacity: 1; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -58,16 +58,15 @@
 
     <div class="bottom-nav">
         <i class="fas fa-th-large" id="vIcon" onclick="toggleView()" style="opacity: 0.8; cursor:pointer;"></i>
-        <span id="nav-text" style="font-weight: 980; font-size: 0.95rem;">لحظاتی پیش</span>
+        <span id="nav-text" style="font-weight: 900; font-size: 0.85rem;">نرخ زنده بازار</span>
         <i class="fas fa-cog" onclick="openModal('sMod')" style="opacity: 0.8; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <b id="set-title" style="font-size:1.8rem;">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.8rem; cursor:pointer;"></i>
+            <b id="set-title" style="font-size:1.5rem;">تنظیمات</b>
+            <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem; cursor:pointer;"></i>
         </div>
-
         <div class="setting-item">
             <span class="setting-label" id="l-theme">پوسته</span>
             <div class="setting-box">
@@ -75,28 +74,25 @@
                 <button id="tLight" onclick="setTheme('light')">روشن</button>
             </div>
         </div>
-
         <div class="setting-item">
             <span class="setting-label" id="l-lang">زبان</span>
             <div class="setting-box">
-                <button id="lnFa" class="active" onclick="setLang('fa')">فارسی</button>
+                <button id="lnFa" class="active" onclick="setLang('fa')">Farsi</button>
                 <button id="lnEn" onclick="setLang('en')">English</button>
             </div>
         </div>
-
         <a href="https://www.instagram.com/safi.tech.ai?igsh=MXJydDR0aWJjazVtOA==" target="_blank" class="dev-card">
             <i class="fab fa-instagram"></i>
-            <span id="dev-text">سازنده</span>
+            <span id="dev-text">درباره سازنده</span>
         </a>
-        
         <button onclick="closeModal('sMod')" id="btn-close" style="margin-top:15px; padding:15px; background:var(--text); border:none; border-radius:15px; color:var(--bg); font-weight:900; cursor:pointer;">بستن</button>
     </div>
 
     <script>
         let currentLang = 'fa';
         const translations = {
-            fa: { nav: "نرخ زنده بازار", set: "تنظیمات", theme: "پوسته", lang: "زبان", dark: "تیره", light: "روشن", close: "بستن", dev: "درباره سازنده", closed: "بازار بسته" },
-            en: { nav: "Live Market Rates", set: "Settings", theme: "Appearance", lang: "Language", dark: "Dark", light: "Light", close: "Close", dev: "Developer Info", closed: "Closed" }
+            fa: { nav: "نرخ زنده بازار", set: "تنظیمات", theme: "پوسته", lang: "زبان", dark: "تیره", light: "روشن", close: "بستن", dev: "درباره سازنده", closed: "Closed Market" },
+            en: { nav: "Live Market Rates", set: "Settings", theme: "Appearance", lang: "Language", dark: "Dark", light: "Light", close: "Close", dev: "Developer Info", closed: "Closed Market" }
         };
 
         const config = [
@@ -157,29 +153,38 @@
                 config.forEach((item, idx) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", history: [0,0], percent: "0.00%"};
                     const history = rate.history || [0,0];
-                    const chartColor = rate.status === "down" ? '#ff453a' : '#32d74b';
-                    const trendClass = rate.status === "up" ? 'trend-up' : (rate.status === "down" ? 'trend-down' : '');
+                    
+                    // رنگ‌بندی سه‌گانه هوشمند
+                    const trendColor = rate.status === "up" ? '#32d74b' : (rate.status === "down" ? '#ff453a' : '#bf5af2');
+                    const arrowIcon = rate.status === "up" ? '▲' : (rate.status === "down" ? '▼' : '●');
 
                     const min = Math.min(...history), max = Math.max(...history), range = (max - min) || 1;
                     const pts = history.map((p, i) => `${i * (100/(history.length-1))},${40 - ((p-min)/range)*35}`).join(' ');
 
                     const card = document.createElement('div');
-                   card.className = 'card';
+                    card.className = 'card';
                     card.onclick = function() { this.classList.toggle('active'); };
                     card.innerHTML = `
-                     <div class="${trendClass}" style="font-weight:900; direction:ltr; font-size:1.4rem; display:flex; align-items:center; gap:5px;">
-    <span style="font-size:1.2rem;">${rate.status === "up" ? '▲' : (rate.status === "down" ? '▼' : '')}</span>
-    <span>${rate.percent}</span>
-</div>   
-                                       <div><b style="font-size:0.95rem; display:block;">${item.name}</b><small style="opacity:0.5; font-size:0.65rem;">${item.sub}</small></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="color:${trendColor}; font-weight:900; font-size:1.1rem; direction:ltr; display:flex; align-items:center; gap:5px;">
+                                <span>${arrowIcon}</span>
+                                <span>${rate.percent}</span>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div style="text-align:left;">
+                                    <b style="font-size:0.95rem; display:block; line-height:1.2;">${item.name}</b>
+                                    <small style="opacity:0.5; font-size:0.65rem;">${item.sub}</small>
+                                </div>
+                                <img src="${item.icon}" style="width:35px; height:35px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
+                            </div>
                         </div>
                         <div class="price-val">
                             ${rate.current || rate.buy || '---'}
                             ${isClosed ? `<span class="closed-tag">${translations[currentLang].closed}</span>` : ''}
                         </div>
                         <div class="extra-panel">
-                            <svg viewBox="0 0 100 50" preserveAspectRatio="none" style="width:100%; height:100%;">
-                                <polyline points="${pts}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                            <svg viewBox="0 0 100 40" preserveAspectRatio="none" style="width:100%; height:50px;">
+                                <polyline points="${pts}" fill="none" stroke="${trendColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>`;
                     cont.appendChild(card);
@@ -189,4 +194,4 @@
         load(); setInterval(load, 30000);
     </script>
 </body>
-                </html>
+</html>
