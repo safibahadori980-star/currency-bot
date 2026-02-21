@@ -164,7 +164,22 @@
                 config.forEach((item) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
                     const trendColor = rate.status === "up" ? "#32d74b" : (rate.status === "down" ? "#ff453a" : "#888");
-
+function toggleView() {
+    const c = document.getElementById('main-container');
+    const vIcon = document.querySelector('.fa-th-large') || document.querySelector('.fa-list');
+    
+    // جابجایی بین حالت لیست و جدول
+    c.classList.toggle('grid-view');
+    
+    // تغییر آیکون دکمه
+    if (c.classList.contains('grid-view')) {
+        vIcon.className = 'fas fa-list';
+        document.getElementById('nav-text').innerText = 'نمای لیستی';
+    } else {
+        vIcon.className = 'fas fa-th-large';
+        document.getElementById('nav-text').innerText = 'نمای جدولی';
+    }
+                }
                     const card = document.createElement('div');
                     card.className = `card ${rate.status}`;
                     card.innerHTML = `
