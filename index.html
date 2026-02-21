@@ -16,7 +16,7 @@
         .header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 90px; border-bottom: 1px solid var(--border); }
         .logo-wrapper { flex: 1; } .main-logo { width: 50px; border-radius: 12px; }
         .date-time { flex: 2; text-align: center; font-family: -apple-system, sans-serif; font-weight: bold; }
-        .date-time b { font-size: 1.5rem; display: block; color: var(--text); }
+        .date-time b { font-size: 1.4rem; display: block; color: var(--text); }
         .date-time span { font-size: 0.85rem; opacity: 0.7; display: block; }
 
         .container { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px; padding-bottom: 100px; }
@@ -32,6 +32,16 @@
         .full-modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 25px; flex-direction: column; }
         .full-modal.active { display: flex; }
         .chart-container { width: 100%; height: 260px; background: var(--card-glass); border-radius: 20px; padding: 15px; margin-top: 15px; }
+        .percent-text { 
+    font-weight: 300; 
+    font-size: 0.85rem; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 4px; 
+    font-family: sans-serif;
+}
+.up-arrow { color: #32d74b; font-size: 0.75rem; }
+.down-arrow { color: #ff453a; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -73,7 +83,7 @@
             <b>درباره برنامه</b>
             <i class="fas fa-times" onclick="closeModal('aboutMod')" style="font-size:1.5rem;"></i>
         </div>
-        <p>تمامی قیمت‌ها از معتبرترین منابع اتحادیه صرافان هرات استخراج شده و به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
+        <p>تمامی قیمت‌ها از معتبرترین منابع اتحادیه صرافان هرات جمع آوری و به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
     </div>
 
     <script>
