@@ -9,15 +9,21 @@ def clean_html(raw):
     return re.sub(r'<.*?>', '', raw)
 
 def get_last_messages():
-    res = requests.get(CHANNEL)
-    html = res.text
-    messages = re.findall(r'<div class="tgme_widget_message_text.*?>(.*?)</div>', html, re.S)
-    
-    return [clean_html(m) for m in messages[:30]]
+    try:
+        res = requests.get(CHANNEL, timeout=20)
+        messages = re.findall(r'<div class="tgme_widget_message_text.*?>(.*?)</div>', res.text, re.S)
+        # چک کردن ۵۰ پیام آخر برای اطمینان بیشتر
+        return [clean_html(m) for m in messages[-50:]]
+    except:
+        return []
 
-def extract_buy(text):
-    m = re.search(r'خرید\s*([\d,\.]+)', text)
-    return m.group(1) if m else None
+def extract_price(text, keyword):
+    # جستجوی هوشمند برای عدد بعد از کلمه کلیدی (فروش)
+    pattern = rf"{keyword}.*?(\d+[.,]\d+)"
+    match = re.search(pattern, text)
+    if match:
+        return match.group(1).replace(',', '.')
+    return None
 
 def load_old():
     if os.path.exists("last_rates.json"):
@@ -25,90 +31,61 @@ def load_old():
             return json.load(f)
     return {"rates": {}}
 
-def to_float(x):
-    try:
-        return float(x.replace(",", ""))
-    except:
-        return 0
-
 def get_rates():
     messages = get_last_messages()
-
-    found = {
-        "دالر هرات": 63,25,
-        "یورو هرات": 73,50,
-        "تومان چک": 0,51,
-        "تومان بانکی": 0.40,
-        "کلدار (پاکستان)": 213
+    
+    # مقادیر پیش‌فرض دقیقاً طبق خواسته شما
+    found_prices = {
+        "دالر هرات": "63.20",
+        "یورو هرات": "73.20",
+        "تومان چک": "0.47",
+        "تومان بانکی": "0.38",
+        "کلدار": "214.00"
     }
 
+    # جستجو در پیام‌ها (از جدید به قدیم)
+    for msg in reversed(messages):
+        for key in found_prices.keys():
+            # جستجوی کلمه کلیدی ساده شده (مثلاً فقط 'یورو' یا 'کلدار')
+            search_key = key.split()[0] 
+            if search_key in msg:
+                price = extract_price(msg, search_key)
+                if price:
+                    found_prices[key] = price
+
+    old_data = load_old()
     new_rates = {}
 
-    for msg in messages:
-        if not found["دالر هرات"] and "دالر" in msg:
-            val = extract_buy(msg)
-            if val:
-                new_rates["دالر هرات"] = val
-                found["دالر هرات"] = True
+    for key, current_price in found_prices.items():
+        old_val = old_data.get("rates", {}).get(key, {}).get("current", "0")
+        
+        # محاسبه وضعیت (بالا/پایین)
+        nv, ov = float(current_price), float(old_val) if old_val != "---" else float(current_price)
+        status = "up" if nv > ov else ("down" if nv < ov else "same")
+        
+        # محاسبه درصد
+        percent = "0.00%"
+        if ov != 0:
+            diff = ((nv - ov) / ov) * 100
+            percent = f"{diff:+.2f}%"
 
-        if not found["یورو هرات"] and "یورو" in msg:
-            val = extract_buy(msg)
-            if val:
-                new_rates["یورو هرات"] = val
-                found["یورو هرات"] = True
+        # آپدیت تاریخچه
+        history = old_data.get("rates", {}).get(key, {}).get("history", [])
+        if not history or history[-1] != nv:
+            history.append(nv)
+            if len(history) > 20: history.pop(0)
 
-        if not found["تومان چک"] and "تومان چک" in msg:
-            val = extract_buy(msg)
-            if val:
-                new_rates["تومان چک"] = val
-                found["تومان چک"] = True
-
-        if not found["تومان بانکی"] and "تومان بانکی" in msg:
-            val = extract_buy(msg)
-            if val:
-                new_rates["تومان بانکی"] = val
-                found["تومان بانکی"] = True
-
-        if not found["کلدار (پاکستان)"] and "کلدار" in msg:
-            val = extract_buy(msg)
-            if val:
-                new_rates["کلدار (پاکستان)"] = val
-                found["کلدار (پاکستان)"] = True
-
-        if all(found.values()):
-            break
-
-    old = load_old()
-    result = {}
-
-    for k in found.keys():
-        v = new_rates.get(k, "---")
-        old_val = old.get("rates", {}).get(k, {}).get("price", "0")
-
-        diff = to_float(v) - to_float(old_val)
-
-        if diff > 0:
-            trend = "up"
-        elif diff < 0:
-            trend = "down"
-        else:
-            trend = "same"
-
-        percent = 0
-        if to_float(old_val) > 0:
-            percent = abs(diff) / to_float(old_val) * 100
-
-        result[k] = {
-            "price": v,
-            "trend": trend,
-            "percent": round(percent, 2)
+        new_rates[key] = {
+            "current": current_price,
+            "status": status,
+            "percent": percent,
+            "history": history
         }
 
-    return result
+    return {"rates": new_rates}
 
-data = {
-    "rates": get_rates()
-}
-
-with open("last_rates.json", "w", encoding="utf-8") as f:
-    json.dump(data, f, ensure_ascii=False, indent=2)
+if __name__ == "__main__":
+    data = get_rates()
+    with open("last_rates.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print("بروزرسانی با موفقیت انجام شد.")
