@@ -1,3 +1,28 @@
 {
-  "rates": {}
+    "rates": {
+        "دالر هرات": {
+            "history": [
+                63.2
+            ],
+            "status": "same",
+            "percent": "+0.00%",
+            "current": "63.20"
+        },
+        "تومان بانکی": {
+            "history": [
+                0.39
+            ],
+            "status": "same",
+            "percent": "+0.00%",
+            "current": "0.39"
+        },
+        "تومان چک": {
+            "history": [
+                0.48
+            ],
+            "status": "same",
+            "percent": "+0.00%",
+            "current": "0.48"
+        }
+    }
 }
