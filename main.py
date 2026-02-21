@@ -33,7 +33,7 @@ def get_rates():
         messages = soup.find_all('div', class_='tgme_widget_message_text')
 
         # بررسی پیام‌ها از آخر به اول (جدیدترین پیام اولویت دارد)
-        for msg in reversed(messages[-50:]):
+        for msg in reversed(messages[-100:]):
             text = msg.get_text(separator=" ").replace('\n', ' ')
             
             for site_key, pattern in mapping.items():
