@@ -1,7 +1,7 @@
 {
     "rates": {
         "دالر هرات": {
-            "current": "63.15",
+            "current": "65.15",
             "status": "up",
             "percent": "+0.08%",
             "buy": "63.15",
@@ -24,12 +24,12 @@
             ]
         },
         "یورو هرات": {
-            "current": "73.20",
+            "current": "75.20",
             "status": "up",
             "percent": "+0.20%"
         },
         "تومان چک": {
-            "current": "0.47",
+            "current": "0.55",
             "status": "down",
             "percent": "-6.00%",
             "buy": "0.47",
@@ -38,7 +38,7 @@
             ]
         },
         "تومان بانکی": {
-            "current": "0.38",
+            "current": "0.55",
             "status": "down",
             "percent": "-2.56%",
             "buy": "0.38",
@@ -47,7 +47,7 @@
             ]
         },
         "کلدار": {
-            "current": "213.00",
+            "current": "220.00",
             "status": "up",
             "percent": "+0.10%"
         }
