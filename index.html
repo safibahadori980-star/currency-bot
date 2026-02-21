@@ -44,35 +44,35 @@
         .brand { flex: 1; text-align: right; font-size: 0.9rem; font-weight: 900; line-height: 1.1; }
 
         .container { display: grid; gap: 10px; padding: 15px 30px; padding-bottom: 100px; }
+.card {
+    background: var(--card-glass); 
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--card-border); 
+    border-radius: 16px; padding: 10px 15px; /* پدینگ کمتر */
+    margin-bottom: 8px; transition: 0.3s;
+}
 
-        /* استایل کارت شیشه‌ای نئونی */
-        .card {
-            background: var(--card-glass); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border); 
-            border-radius: 20px; padding: 15px; 
-            transition: 0.4s all ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
+/* حالت گرید (جدولی) */
+.grid-view { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+.grid-view .price-val { font-size: 1.6rem !important; }
+.grid-view .card { padding: 8px; }
 
-        /* هوشمندسازی رنگ کارت */
-        .card.up { 
-            background: rgba(50, 215, 75, 0.15) !important; 
-            border-color: rgba(50, 215, 75, 0.4); 
-        }
-        .card.down { 
-            background: rgba(255, 69, 58, 0.15) !important; 
-            border-color: rgba(255, 69, 58, 0.4); 
-        }
+.card-top { display: flex; justify-content: space-between; align-items: center; }
 
-        .price-val {
-            font-size: 2.6rem; 
-            font-weight: 950; 
-            margin-top: 10px; 
-            display: block; 
-            text-align: left; 
-            letter-spacing: -1px;
-        }
+.price-row { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: baseline; 
+    margin-top: 5px; 
+}
+
+.price-val {
+    font-size: 2.1rem; /* اندازه متعادل */
+    font-weight: 900; 
+    color: var(--text);
+    letter-spacing: -1px;
+            }
+        
 
         /* منوی پایین */
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--card-glass); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); z-index: 1000; }
