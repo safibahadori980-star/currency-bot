@@ -44,34 +44,39 @@
         .brand { flex: 1; text-align: right; font-size: 0.9rem; font-weight: 900; line-height: 1.1; }
 
         .container { display: grid; gap: 10px; padding: 15px 30px; padding-bottom: 100px; }
+/* کم کردن ارتفاع و پدینگ برای جمع‌وجور شدن */
 .card {
     background: var(--card-glass); 
     backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--card-border); 
-    border-radius: 16px; padding: 10px 15px; /* پدینگ کمتر */
-    margin-bottom: 8px; transition: 0.3s;
+    border-radius: 18px; padding: 10px 15px; 
+    margin-bottom: 8px; transition: 0.4s ease;
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: 90px; /* ارتفاع کنترل شده */
 }
 
-/* حالت گرید (جدولی) */
-.grid-view { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
-.grid-view .price-val { font-size: 1.6rem !important; }
-.grid-view .card { padding: 8px; }
+/* رنگ نئونی کل کارت بر اساس وضعیت */
+.card.up { 
+    background: rgba(50, 215, 75, 0.1) !important; 
+    border-color: rgba(50, 215, 75, 0.4) !important; 
+}
+.card.down { 
+    background: rgba(255, 69, 58, 0.1) !important; 
+    border-color: rgba(255, 69, 58, 0.4) !important; 
+}
 
-.card-top { display: flex; justify-content: space-between; align-items: center; }
+.card-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
 .price-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: baseline; 
-    margin-top: 5px; 
+    display: flex; justify-content: space-between; align-items: flex-end; 
+    margin-top: 2px; width: 100%;
 }
 
 .price-val {
-    font-size: 2.1rem; /* اندازه متعادل */
-    font-weight: 900; 
-    color: var(--text);
-    letter-spacing: -1px;
-            }
+    font-size: 2.2rem; /* اندازه متناسب */
+    font-weight: 900; color: var(--text);
+    letter-spacing: -1px; line-height: 1;
+                }
         
 
         /* منوی پایین */
