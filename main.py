@@ -97,3 +97,4 @@ def get_rates():
 
 if __name__ == "__main__":
     get_rates()
+    .
