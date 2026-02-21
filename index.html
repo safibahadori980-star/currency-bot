@@ -8,26 +8,31 @@
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <style>
-:root { 
-    --bg: #000; 
-    --card-glass: rgba(255, 255, 255, 0.08); 
-    --text: #fff; 
-    --border: rgba(255,255,255,0.1); 
-}
-
-.light-mode { 
-    --bg: #f2f2f7; 
-    --card-glass: rgba(0, 0, 0, 0.05); 
-    --text: #000; 
-    --border: rgba(0,0,0,0.1); 
-}
-
-body { background: var(--bg); color: var(--text); transition: 0.3s; }
+        :root { 
+            --bg: #000; 
+            --card-glass: rgba(255, 255, 255, 0.08); 
+            --text: #fff; 
+            --border: rgba(255,255,255,0.1); 
+            --nav-bg: rgba(28, 28, 30, 0.8);
         }
-        
-        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
 
-        /* هدر نهایی */
+        body.light-mode { 
+            --bg: #f2f2f7; 
+            --card-glass: rgba(0, 0, 0, 0.05); 
+            --text: #000; 
+            --border: rgba(0,0,0,0.1); 
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Vazirmatn', sans-serif; 
+            margin: 0; padding: 0; 
+            transition: 0.3s ease; 
+            overflow-x: hidden; 
+        }
+
         .header { 
             padding: 10px 20px; 
             display: flex; 
@@ -38,78 +43,50 @@ body { background: var(--bg); color: var(--text); transition: 0.3s; }
         }
 
         .logo-wrapper { flex: 1; display: flex; justify-content: flex-start; }
-        .main-logo { width: 55px; height: auto; border-radius: 12px; }
+        .main-logo { width: 50px; height: auto; border-radius: 12px; }
 
-        .date-time { flex: 1.5; text-align: center; font-weight: 900; font-size: 1.2rem; line-height: 1.2; }
-        .date-time b { font-size: 1.4rem; display: block; }
+        .date-time { flex: 1.5; text-align: center; font-weight: 900; font-size: 1.1rem; line-height: 1.2; }
+        .date-time b { font-size: 1.3rem; display: block; }
 
-        .brand { flex: 1; text-align: right; font-size: 0.9rem; font-weight: 900; line-height: 1.1; }
+        .brand { flex: 1; text-align: right; font-size: 0.8rem; font-weight: 900; }
 
-        .container { display: grid; gap: 10px; padding: 15px 30px; padding-bottom: 100px; }
-/* کم کردن ارتفاع و پدینگ برای جمع‌وجور شدن */
-.card {
-    background: var(--card-glass); 
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--card-border); 
-    border-radius: 18px; padding: 10px 15px; 
-    margin-bottom: 8px; transition: 0.4s ease;
-    display: flex; flex-direction: column; justify-content: center;
-    min-height: 90px; /* ارتفاع کنترل شده */
-}
+        .container { display: grid; gap: 8px; padding: 10px 25px; padding-bottom: 100px; }
 
-/* رنگ نئونی کل کارت بر اساس وضعیت */
-.card.up { 
-    background: rgba(50, 215, 75, 0.1) !important; 
-    border-color: rgba(50, 215, 75, 0.4) !important; 
-}
-.card.down { 
-    background: rgba(255, 69, 58, 0.1) !important; 
-    border-color: rgba(255, 69, 58, 0.4) !important; 
-}
+        .card {
+            background: var(--card-glass); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border); 
+            border-radius: 18px; padding: 12px 15px; 
+            transition: 0.4s ease;
+            min-height: 95px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
 
-.card-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .card.up { background: rgba(50, 215, 75, 0.15) !important; border-color: rgba(50, 215, 75, 0.4) !important; }
+        .card.down { background: rgba(255, 69, 58, 0.15) !important; border-color: rgba(255, 69, 58, 0.4) !important; }
 
-.price-row { 
-    display: flex; justify-content: space-between; align-items: flex-end; 
-    margin-top: 2px; width: 100%;
-}
+        .price-val { font-size: 2.3rem; font-weight: 950; letter-spacing: -1px; margin-top: 5px; text-align: left; }
 
-.price-val {
-    font-size: 2.2rem; /* اندازه متناسب */
-    font-weight: 900; color: var(--text);
-    letter-spacing: -1px; line-height: 1;
-                }
+        .bottom-nav { 
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
+            width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); 
+            border-radius: 30px; padding: 12px 25px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border); z-index: 1000; 
+        }
+
+        .bottom-nav i { font-size: 1.2rem; cursor: pointer; }
+
+        .full-modal { 
+            position: fixed; inset: 0; background: var(--bg); 
+            backdrop-filter: blur(20px); display: none; z-index: 2000; padding: 30px; 
+        }
+        .full-modal.active { display: flex; flex-direction: column; }
         
-
-        /* منوی پایین */
-        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--card-glass); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); z-index: 1000; }
-        
-        .full-modal { position: fixed; inset: 0; background: var(--modal-bg); backdrop-filter: blur(20px); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
-        .full-modal.active { display: flex; }
-        
-        .insta-btn { margin-top: auto; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 7px; background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%); padding: 10px; border-radius: 12px; color: #fff; font-weight: bold; }
-        /* استایل مخصوص حالت جدولی */
-.container.grid-view {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    padding: 10px 15px !important; /* در حالت جدولی حاشیه را کمتر می‌کنیم */
-}
-
-.grid-view .card {
-    min-height: 80px !important;
-    padding: 10px !important;
-}
-
-.grid-view .price-val {
-    font-size: 1.5rem !important; /* کوچک‌تر کردن فونت قیمت برای جا شدن در جدول */
-}
-
-.grid-view .card-top b {
-    font-size: 0.8rem !important; /* کوچک‌تر کردن نام ارز */
-    }
+        .insta-btn { margin-top: auto; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 7px; background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%); padding: 12px; border-radius: 12px; color: #fff; font-weight: bold; }
     </style>
 </head>
-<body class="dark-mode">
+<body>
 
     <div class="header">
         <div class="logo-wrapper">
@@ -121,21 +98,21 @@ body { background: var(--bg); color: var(--text); transition: 0.3s; }
 
     <div id="main-container" class="container"></div>
 
-<div class="bottom-nav">
-    <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()"></i>
-    
-    <span id="nav-text" style="font-weight: 800;">نرخ لحظه‌ای</span>
-    <i class="fas fa-cog" onclick="openModal('sMod')"></i>
-</div>
+    <div class="bottom-nav">
+        <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()"></i>
+        <span id="nav-text" style="font-weight: 800;">نرخ لحظه‌ای</span>
+        <i class="fas fa-cog" onclick="openModal('sMod')"></i>
+    </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
             <b>تنظیمات</b>
             <i class="fas fa-times" onclick="closeModal('sMod')"></i>
         </div>
-        <button onclick="setTheme('dark')">حالت تیره</button>
-        <button onclick="setTheme('light')">حالت روشن</button>
-        <a href="https://www.instagram.com/safi.tech.ai" class="insta-btn">Instagram</a>
+        <p>تنظیمات اپلیکیشن</p>
+        <a href="https://www.instagram.com/safi.tech.ai" class="insta-btn">
+            <i class="fab fa-instagram"></i> Instagram
+        </a>
     </div>
 
     <script>
@@ -157,6 +134,20 @@ body { background: var(--bg); color: var(--text); transition: 0.3s; }
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
         async function load() {
             try {
                 const res = await fetch('last_rates.json?v=' + Date.now());
@@ -167,44 +158,7 @@ body { background: var(--bg); color: var(--text); transition: 0.3s; }
                 config.forEach((item) => {
                     const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
                     const trendColor = rate.status === "up" ? "#32d74b" : (rate.status === "down" ? "#ff453a" : "#888");
-function toggleTheme() {
-    const body = document.body;
-    const icon = document.getElementById('themeIcon');
-    
-    // جابجایی کلاس لایت مود
-    body.classList.toggle('light-mode');
-    
-    // تغییر آیکون و ذخیره در حافظه مرورگر
-    if (body.classList.contains('light-mode')) {
-        icon.className = 'fas fa-sun'; // آیکون خورشید برای روز
-        localStorage.setItem('theme', 'light');
-    } else {
-        icon.className = 'fas fa-moon'; // آیکون ماه برای شب
-        localStorage.setItem('theme', 'dark');
-    }
-}
 
-// برای اینکه با رفرش شدن صفحه، تم انتخاب شده نپرد:
-window.onload = () => {
-    if(localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-        document.getElementById('themeIcon').className = 'fas fa-sun';
-    }
-    load(); // اجرای لود قیمت‌ها
-};
-    
-    // جابجایی بین حالت لیست و جدول
-    c.classList.toggle('grid-view');
-    
-    // تغییر آیکون دکمه
-    if (c.classList.contains('grid-view')) {
-        vIcon.className = 'fas fa-list';
-        document.getElementById('nav-text').innerText = 'نمای لیستی';
-    } else {
-        vIcon.className = 'fas fa-th-large';
-        document.getElementById('nav-text').innerText = 'نمای جدولی';
-    }
-                }
                     const card = document.createElement('div');
                     card.className = `card ${rate.status}`;
                     card.innerHTML = `
@@ -215,16 +169,24 @@ window.onload = () => {
                                     <b style="font-size:1rem; display:block;">${item.name}</b>
                                     <small style="opacity:0.6; font-size:0.7rem;">${item.sub}</small>
                                 </div>
-                                <img src="${item.icon}" style="width:38px; height:38px; border-radius:10px; object-fit:cover;">
+                                <img src="${item.icon}" style="width:32px; height:32px; border-radius:8px; object-fit:cover;">
                             </div>
                         </div>
                         <div class="price-val">${rate.current}</div>
                     `;
                     cont.appendChild(card);
                 });
-            } catch (e) { console.log(e); }
+            } catch (e) { console.log("Error loading rates:", e); }
         }
-        load(); setInterval(load, 30000);
+
+        window.onload = () => {
+            if(localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+            load();
+        };
+        setInterval(load, 30000);
     </script>
 </body>
 </html>
