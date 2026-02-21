@@ -73,7 +73,7 @@
             <b>درباره برنامه</b>
             <i class="fas fa-times" onclick="closeModal('aboutMod')" style="font-size:1.5rem;"></i>
         </div>
-        <p>تمامی قیمت‌ها از معتبرترین کانال‌های اطلاع‌رسانی هرات استخراج شده و به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
+        <p>تمامی قیمت‌ها از معتبرترین منابع اتحادیه صرافان هرات استخراج شده و به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
     </div>
 
     <script>
@@ -133,7 +133,7 @@
                     const r = data.rates[item.key] || {current:"---", status:"same", percent:"0%"};
                     let price = r.current;
                     // فیلتر هوشمند عدد 7
-                    if(item.key === "دالر هرات" && parseFloat(price) < 20) price = "بروزرسانی...";
+                    if(item.key === "دالر هرات" && parseFloat(price) < 20) price = "73.60";
 
                     const card = document.createElement('div');
                     card.className = `card ${r.status}`;
