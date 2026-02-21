@@ -8,15 +8,15 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
+    # مپینگ دقیق برای پیدا کردن کلمه و عدد بعد از آن
     mapping = {
-        "دالر هرات": ["دالر", "دلار"],
-        "یورو هرات": ["یورو"],
-        "تومان چک": ["چک"],
-        "کلدار": ["کلدار"],
-        "تومان بانکی": ["بانکی"]
+        "دالر هرات": r"دالر.*?(\d+[.,]\d+)",
+        "یورو هرات": r"یورو.*?(\d+[.,]\d+)",
+        "تومان چک": r"چک.*?(\d+[.,]\d+)",
+        "تومان بانکی": r"بانکی.*?(\d+[.,]\d+)",
+        "کلدار": r"کلدار.*?(\d+[.,]\d+)"
     }
 
-    # ۱. خواندن دیتای موجود
     if os.path.exists(file_name):
         try:
             with open(file_name, 'r', encoding='utf-8') as f:
@@ -32,44 +32,48 @@ def get_rates():
         soup = BeautifulSoup(response.text, 'html.parser')
         messages = soup.find_all('div', class_='tgme_widget_message_text')
 
-        # ۲. بررسی ۳۰۰ پیام اخیر (برای پیدا کردن یورو و کلدار قدیمی)
-        for msg in messages[-300:]:
+        # بررسی پیام‌ها از آخر به اول (جدیدترین پیام اولویت دارد)
+        for msg in reversed(messages[-50:]):
             text = msg.get_text(separator=" ").replace('\n', ' ')
             
-            for site_key, keywords in mapping.items():
-                if any(k in text for k in keywords):
-                    numbers = re.findall(r'\d+[.,]\d+|\d+', text)
-                    if numbers:
-                        buy_val = numbers[0].replace(',', '.')
-                        
-                        if site_key not in data["rates"]:
-                            data["rates"][site_key] = {"history": [], "status": "same", "percent": "0.00%"}
-                        
-                        old_val = data["rates"][site_key].get("current", "0")
-                        
-                        if old_val != buy_val:
-                            data["rates"][site_key]["current"] = buy_val
-                            data["rates"][site_key]["buy"] = buy_val
-                            
-                            try:
-                                ov = float(old_val) if old_val not in ["---", "0"] else 0
-                                nv = float(buy_val)
-                                if ov != 0:
-                                    data["rates"][site_key]["status"] = "up" if nv > ov else "down"
-                                    data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
-                            except: pass
+            for site_key, pattern in mapping.items():
+                # جستجوی عدد دقیقا بعد از کلمه کلیدی
+                match = re.search(pattern, text)
+                if match:
+                    # استخراج عدد و اصلاح فرمت (تبدیل کاما به نقطه برای ریاضیات)
+                    buy_val = match.group(1).replace(',', '.')
+                    
+                    # جلوگیری از برداشتن اعداد بسیار کوچک (مثل عدد 7 اشتباه)
+                    if (site_key == "دالر هرات" or site_key == "یورو هرات") and float(buy_val) < 10:
+                        continue
 
-                            hist = data["rates"][site_key].get("history", [])
-                            if not hist or (hist and hist[-1] != float(buy_val)):
-                                hist.append(float(buy_val))
-                                if len(hist) > 15: hist.pop(0)
-                            data["rates"][site_key]["history"] = hist
+                    if site_key not in data["rates"]:
+                        data["rates"][site_key] = {"history": [], "status": "same", "percent": "0.00%"}
+                    
+                    old_val = data["rates"][site_key].get("current", "0")
+                    
+                    if old_val != buy_val:
+                        data["rates"][site_key]["current"] = buy_val
+                        data["rates"][site_key]["buy"] = buy_val
+                        
+                        try:
+                            ov = float(old_val) if old_val not in ["---", "0"] else 0
+                            nv = float(buy_val)
+                            if ov != 0:
+                                data["rates"][site_key]["status"] = "up" if nv > ov else "down"
+                                data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
+                        except: pass
 
-        # ۳. ذخیره نهایی
+                        hist = data["rates"][site_key].get("history", [])
+                        if not hist or (hist and hist[-1] != float(buy_val)):
+                            hist.append(float(buy_val))
+                            if len(hist) > 15: hist.pop(0)
+                        data["rates"][site_key]["history"] = hist
+
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
         
-        print(f"Update Success. Current keys: {list(data['rates'].keys())}")
+        print(f"Update Success. Updated keys: {list(data['rates'].keys())}")
 
     except Exception as e:
         print(f"Error: {e}")
