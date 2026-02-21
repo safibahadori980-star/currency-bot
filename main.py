@@ -8,15 +8,17 @@ def get_rates():
     url = "https://t.me/s/NerkhYab_Khorasan"
     file_name = 'last_rates.json'
 
-    # مپینگ دقیق برای پیدا کردن کلمه و عدد بعد از آن
+    # مپینگ هوشمند: کلمه را پیدا کن، کلمات اضافی را نادیده بگیر و عدد دوم (فروش) را بردار
+    # الگو: کلمه کلیدی + هر چیزی تا عدد اول + هر چیزی تا عدد دوم
     mapping = {
-        "دالر هرات": r"دالر.*?(\d+[.,]\d+)",
-        "یورو هرات": r"یورو.*?(\d+[.,]\d+)",
-        "تومان چک": r"چک.*?(\d+[.,]\d+)",
-        "تومان بانکی": r"بانکی.*?(\d+[.,]\d+)",
-        "کلدار": r"کلدار.*?(\d+[.,]\d+)"
+        "دالر هرات": r"دالر.*?(\d+[.,]\d+).*?(\d+[.,]\d+)",
+        "یورو هرات": r"یورو.*?(\d+[.,]\d+).*?(\d+[.,]\d+)",
+        "تومان چک": r"چک.*?(\d+[.,]\d+).*?(\d+[.,]\d+)",
+        "تومان بانکی": r"بانکی.*?(\d+[.,]\d+).*?(\d+[.,]\d+)",
+        "کلدار": r"کلدار.*?(\d+[.,]\d+).*?(\d+[.,]\d+)"
     }
 
+    # خواندن دیتای قبلی
     if os.path.exists(file_name):
         try:
             with open(file_name, 'r', encoding='utf-8') as f:
@@ -32,19 +34,27 @@ def get_rates():
         soup = BeautifulSoup(response.text, 'html.parser')
         messages = soup.find_all('div', class_='tgme_widget_message_text')
 
-        # بررسی پیام‌ها از آخر به اول (جدیدترین پیام اولویت دارد)
-        for msg in reversed(messages[-100:]):
+        # انتخاب ۱۰۰ پیام آخر و پیمایش از جدیدترین به قدیمی‌ترین
+        recent_messages = list(reversed(messages[-100:]))
+        
+        updated_in_this_run = set()
+
+        for msg in recent_messages:
             text = msg.get_text(separator=" ").replace('\n', ' ')
             
             for site_key, pattern in mapping.items():
-                # جستجوی عدد دقیقا بعد از کلمه کلیدی
+                # اگر در این دور اجرا، این ارز قبلاً با قیمت جدیدتر پیدا شده، دیگر جستجو نکن
+                if site_key in updated_in_this_run:
+                    continue
+                
                 match = re.search(pattern, text)
                 if match:
-                    # استخراج عدد و اصلاح فرمت (تبدیل کاما به نقطه برای ریاضیات)
-                    buy_val = match.group(1).replace(',', '.')
-                    
-                    # جلوگیری از برداشتن اعداد بسیار کوچک (مثل عدد 7 اشتباه)
-                    if (site_key == "دالر هرات" or site_key == "یورو هرات") and float(buy_val) < 10:
+                    # انتخاب عدد دوم (قیمت فروش) - اگر نبود عدد اول را برمی‌دارد
+                    val_str = match.group(2) if match.group(2) else match.group(1)
+                    new_val = val_str.replace(',', '.')
+
+                    # فیلتر برای جلوگیری از ثبت اعداد پرت و اشتباه
+                    if (site_key == "دالر هرات" or site_key == "یورو هرات") and float(new_val) < 10:
                         continue
 
                     if site_key not in data["rates"]:
@@ -52,31 +62,38 @@ def get_rates():
                     
                     old_val = data["rates"][site_key].get("current", "0")
                     
-                    if old_val != buy_val:
-                        data["rates"][site_key]["current"] = buy_val
-                        data["rates"][site_key]["buy"] = buy_val
+                    if old_val != new_val:
+                        nv = float(new_val)
+                        ov = float(old_val) if old_val not in ["0", "---"] else nv
                         
-                        try:
-                            ov = float(old_val) if old_val not in ["---", "0"] else 0
-                            nv = float(buy_val)
-                            if ov != 0:
-                                data["rates"][site_key]["status"] = "up" if nv > ov else "down"
-                                data["rates"][site_key]["percent"] = f"{((nv-ov)/ov)*100:+.2f}%"
-                        except: pass
-
+                        # تعیین وضعیت صعودی/نزولی
+                        if nv > ov: data["rates"][site_key]["status"] = "up"
+                        elif nv < ov: data["rates"][site_key]["status"] = "down"
+                        
+                        # محاسبه درصد نوسان
+                        if ov != 0:
+                            diff = ((nv - ov) / ov) * 100
+                            data["rates"][site_key]["percent"] = f"{diff:+.2f}%"
+                        
+                        data["rates"][site_key]["current"] = new_val
+                        
+                        # آپدیت تاریخچه نمودار
                         hist = data["rates"][site_key].get("history", [])
-                        if not hist or (hist and hist[-1] != float(buy_val)):
-                            hist.append(float(buy_val))
+                        if not hist or hist[-1] != nv:
+                            hist.append(nv)
                             if len(hist) > 15: hist.pop(0)
                         data["rates"][site_key]["history"] = hist
+                    
+                    updated_in_this_run.add(site_key)
 
+        # ذخیره در فایل
         with open(file_name, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
         
-        print(f"Update Success. Updated keys: {list(data['rates'].keys())}")
+        print("بروزرسانی با موفقیت انجام شد.")
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"خطا در اجرای اسکرپر: {e}")
 
 if __name__ == "__main__":
     get_rates()
