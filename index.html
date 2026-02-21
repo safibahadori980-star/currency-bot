@@ -3,214 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NERKHYAB KHORASAN</title>
+    <title>NERKHYAB PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <style>
         :root { 
-            --bg: #000; 
-            --card-glass: rgba(255, 255, 255, 0.08); 
-            --text: #fff; 
-            --border: rgba(255,255,255,0.1); 
-            --nav-bg: rgba(28, 28, 30, 0.8);
+            --bg: #000; --card-glass: rgba(255, 255, 255, 0.08); --text: #fff; 
+            --border: rgba(255,255,255,0.1); --nav-bg: rgba(28, 28, 30, 0.8);
         }
         body.light-mode { 
-            --bg: #f2f2f7; 
-            --card-glass: rgba(0, 0, 0, 0.05); 
-            --text: #000; 
-            --border: rgba(0,0,0,0.1); 
-            --nav-bg: rgba(255, 255, 255, 0.8);
+            --bg: #f2f2f7; --card-glass: rgba(0, 0, 0, 0.05); --text: #000; 
+            --border: rgba(0,0,0,0.1); --nav-bg: rgba(255, 255, 255, 0.8);
         }
-        body { 
-            background: var(--bg); color: var(--text); 
-            font-family: 'Vazirmatn', sans-serif; 
-            margin: 0; padding: 0; transition: 0.3s ease; overflow-x: hidden; 
-        }
-        .header { 
-            padding: 10px 20px; display: flex; justify-content: space-between; 
-            align-items: center; height: 80px; border-bottom: 1px solid var(--border);
-        }
-        .logo-wrapper { flex: 1; display: flex; justify-content: flex-start; }
-        .main-logo { width: 50px; height: auto; border-radius: 12px; }
-        .date-time { flex: 1.5; text-align: center; font-weight: 900; font-size: 1.1rem; line-height: 1.2; }
-        .date-time b { font-size: 1.3rem; display: block; }
-        .brand { flex: 1; text-align: right; font-size: 0.8rem; font-weight: 900; }
+        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
         
-        .container { display: grid; gap: 8px; padding: 10px 25px; padding-bottom: 100px; transition: 0.3s ease; }
+        /* هدر */
+        .header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 90px; border-bottom: 1px solid var(--border); }
+        .logo-wrapper { flex: 1; } .main-logo { width: 50px; border-radius: 12px; }
+        .date-time { flex: 2; text-align: center; font-family: sans-serif; font-weight: bold; }
+        .date-time b { font-size: 1.4rem; display: block; color: var(--text); }
+        .date-time span { font-size: 0.8rem; opacity: 0.7; font-family: 'Vazirmatn'; }
+        .brand { flex: 1; text-align: right; font-size: 0.75rem; font-weight: 900; }
 
-        /* حالت لیستی (پیش‌فرض) */
+        .container { display: grid; gap: 10px; padding: 10px 20px; padding-bottom: 100px; }
         .list-view { display: flex !important; flex-direction: column !important; }
-        .list-view .card { 
-            min-height: 65px !important; flex-direction: row !important; 
-            justify-content: space-between !important; align-items: center !important; 
-            padding: 10px 18px !important; 
-        }
-        .list-view .price-val { font-size: 1.7rem !important; margin: 0 !important; order: 1; }
+        .list-view .card { flex-direction: row !important; justify-content: space-between !important; min-height: 70px; }
+        .list-view .price-val { font-size: 1.6rem !important; margin: 0 !important; order: 1; font-family: sans-serif; }
         .list-view .card-top-row { order: 2; width: auto !important; }
 
-        .card {
-            background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 18px; padding: 12px 15px; 
-            transition: 0.3s ease; min-height: 95px; display: flex; flex-direction: column; justify-content: center;
-            cursor: pointer;
-        }
-        .card:active { transform: scale(0.98); }
-        .card.up { border-right: 4px solid #32d74b; }
-        .card.down { border-right: 4px solid #ff453a; }
-        
-        .card-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .price-val { font-size: 2.1rem; font-weight: 950; letter-spacing: -1px; margin-top: 5px; text-align: left; }
+        .card { background: var(--card-glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 15px; display: flex; flex-direction: column; cursor: pointer; }
+        .card.up { border-right: 5px solid #32d74b; } .card.down { border-right: 5px solid #ff453a; }
+        .price-val { font-size: 2rem; font-weight: 900; margin-top: 5px; text-align: left; font-family: sans-serif; }
 
-        .bottom-nav { 
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
-            width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); 
-            border-radius: 30px; padding: 12px 25px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border); z-index: 1000; 
+        /* دکمه تنظیمات کوچک شده */
+        .setting-btn { 
+            padding: 8px 15px; border-radius: 10px; border: 1px solid var(--border); 
+            background: var(--card-glass); color: var(--text); font-size: 0.85rem; cursor: pointer;
+            margin-bottom: 10px; width: 100%;
         }
-        .full-modal { 
-            position: fixed; inset: 0; background: var(--bg); display: none; 
-            z-index: 2000; padding: 30px; flex-direction: column; overflow-y: auto;
-        }
+
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid var(--border); }
+        .full-modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 30px; flex-direction: column; }
         .full-modal.active { display: flex; }
-        
-        .setting-btn {
-            flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); 
-            background: var(--card-glass); color: var(--text); font-family: inherit; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-        }
-
-        .chart-container {
-            width: 100%; height: 250px; margin-top: 20px;
-            background: var(--card-glass); border-radius: 20px; padding: 15px;
-        }
+        .chart-container { width: 100%; height: 250px; background: var(--card-glass); border-radius: 20px; padding: 15px; margin-top: 15px; }
     </style>
 </head>
-<body>
+<body class="list-view">
 
     <div class="header">
-        <div class="logo-wrapper"><img src="logo.png" alt="logo" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'"></div>
+        <div class="logo-wrapper"><img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'"></div>
         <div class="date-time" id="dt"></div>
         <div class="brand">NERKHYAB<br>KHORASAN</div>
     </div>
 
-    <div id="main-container" class="container"></div>
+    <div id="main-container" class="container list-view"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()" style="cursor:pointer;"></i>
-        <span id="nav-text" style="font-weight: 800;">نرخ لحظه‌ای</span>
-        <i class="fas fa-cog" onclick="openModal('sMod')" style="cursor:pointer;"></i>
+        <i class="fas fa-cog" onclick="openModal('sMod')"></i>
+        <span id="nav-text" style="font-weight: 800;">لحظاتی پیش</span>
+        <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()"></i>
     </div>
 
     <div id="sMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <b id="txt-settings">تنظیمات</b>
-            <i class="fas fa-times" onclick="closeModal('sMod')" style="cursor:pointer; font-size:1.5rem;"></i>
+        <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
+            <b>تنظیمات</b>
+            <i class="fas fa-times" onclick="closeModal('sMod')"></i>
         </div>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
             <button class="setting-btn" onclick="changeLang('fa')">فارسی</button>
             <button class="setting-btn" onclick="changeLang('en')">English</button>
         </div>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <button class="setting-btn" onclick="setView('list')"><i class="fas fa-bars"></i> لیستی</button>
-            <button class="setting-btn" onclick="setView('grid')"><i class="fas fa-th-large"></i> جدولی</button>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button class="setting-btn" onclick="setView('list')">لیستی</button>
+            <button class="setting-btn" onclick="setView('grid')">جدولی</button>
         </div>
-        <button onclick="openAbout()" class="setting-btn" style="width:100%; margin-bottom:20px;">درباره برنامه</button>
-        <a href="https://www.instagram.com/safi.tech.ai" style="text-decoration:none; color:#fff; background:linear-gradient(45deg, #f09433, #bc1888); padding:15px; border-radius:12px; text-align:center; font-weight:bold;">Instagram</a>
+        <button onclick="openAbout()" class="setting-btn" style="font-size: 0.75rem; opacity: 0.8;">درباره برنامه</button>
     </div>
 
     <div id="chartMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <b id="chart-title">نمودار نوسانات</b>
-            <i class="fas fa-times" onclick="closeModal('chartMod')" style="cursor:pointer; font-size:1.5rem;"></i>
+        <div style="display:flex; justify-content:space-between;">
+            <b id="chart-title">نمودار</b>
+            <i class="fas fa-times" onclick="closeModal('chartMod')"></i>
         </div>
-        <div id="chart-info" style="margin-bottom:15px; font-weight: bold;"></div>
-        <div class="chart-container">
-            <canvas id="rateChart"></canvas>
-        </div>
+        <div class="chart-container"><canvas id="rateChart"></canvas></div>
     </div>
 
     <div id="aboutMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <b id="txt-about-title">درباره برنامه</b>
-            <i class="fas fa-times" onclick="closeModal('aboutMod')" style="cursor:pointer; font-size:1.5rem;"></i>
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <b>درباره برنامه</b>
+            <i class="fas fa-times" onclick="closeModal('aboutMod')"></i>
         </div>
-        <div id="about-text-container" style="line-height:1.8; text-align:justify;"></div>
+        <p id="about-text" style="font-size: 0.9rem; line-height: 1.7; text-align: justify;"></p>
     </div>
 
     <script>
+        // آپدیت ساعت به انگلیسی با AM/PM
+        function updateDT() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const j = jalaali.toJalaali(now);
+            document.getElementById('dt').innerHTML = `<b>${timeStr}</b><span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        }
+        setInterval(updateDT, 1000); updateDT();
+
         const config = [
             { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
             { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
             { key: "تومان چک", name: "تومان چک", sub: "IRT/AFN", icon: "https://flagcdn.com/w160/ir.png" },
-            { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://img.icons8.com/fluency/48/bank-card-back-side.png" },    
+            { key: "تومان بانکی", name: "تومان بانکی", sub: "IRR/AFN", icon: "https://img.icons8.com/fluency/48/bank-card-back-side.png" },
             { key: "کلدار", name: "کلدار", sub: "PKR/AFN", icon: "https://flagcdn.com/w160/pk.png" }
         ];
 
-        const langData = {
-            fa: { settings: "تنظیمات", aboutTitle: "درباره برنامه", aboutText: "تمامی قیمت ها همه روزه از ساعت ۸ صبح تا ۶ عصر از منابع معتبر اتحادیه صرافان هرات جمع آوری و منتشر میشود.", navText: "لحظاتی پیش", closed: "Closed Market" },
-            en: { settings: "Settings", aboutTitle: "About App", aboutText: "Prices are collected daily from 8 AM to 6 PM from Herat Exchange Union.", navText: "Live Rates", closed: "Closed Market" }
-        };
-
-        let myChart = null;
-
-        function updateDT() {
-            const now = new Date();
-            const j = jalaali.toJalaali(now);
-            document.getElementById('dt').innerHTML = `<b>${now.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'})}</b>${j.jy}/${j.jm}/${j.jd}`;
-        }
-        setInterval(updateDT, 1000); updateDT();
-
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        function openAbout() { openModal('aboutMod'); }
+        function openAbout() { 
+            document.getElementById('about-text').innerText = "تمامی قیمت ها همه روزه از ساعت ۸ صبح تا ۶ عصر از منابع معتبر اتحادیه صرافان هرات جمع آوری و منتشر میشود.";
+            openModal('aboutMod'); 
+        }
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
             document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
         }
 
-        function setView(mode) { localStorage.setItem('viewMode', mode); applyView(); closeModal('sMod'); }
-        function applyView() {
-            const mode = localStorage.getItem('viewMode') || 'list';
-            document.getElementById('main-container').className = mode === 'list' ? 'container list-view' : 'container';
+        function setView(m) { 
+            const c = document.getElementById('main-container');
+            if(m==='list') c.classList.add('list-view'); else c.classList.remove('list-view');
+            closeModal('sMod');
         }
 
-        function changeLang(lang) { localStorage.setItem('appLang', lang); applyLang(lang); closeModal('sMod'); }
-        function applyLang(lang) {
-            const t = langData[lang] || langData.fa;
-            document.getElementById('txt-settings').innerText = t.settings;
-            document.getElementById('txt-about-title').innerText = t.aboutTitle;
-            document.getElementById('about-text-container').innerText = t.aboutText;
-            document.getElementById('nav-text').innerText = t.navText;
-            document.body.dir = lang === 'fa' ? 'rtl' : 'ltr';
-        }
-
-        function showChart(name, currentPrice, status) {
+        let myChart = null;
+        function showChart(name, current, status) {
             openModal('chartMod');
             document.getElementById('chart-title').innerText = `نوسانات ${name}`;
-            document.getElementById('chart-info').innerText = `نرخ فعلی: ${currentPrice}`;
             const ctx = document.getElementById('rateChart').getContext('2d');
             if (myChart) myChart.destroy();
             const color = status === "down" ? "#ff453a" : "#32d74b";
-            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-            gradient.addColorStop(0, color + '66');
-            gradient.addColorStop(1, color + '00');
-            const val = parseFloat(currentPrice.replace(/,/g, ''));
+            const val = parseFloat(current.replace(/,/g, ''));
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+                    labels: ['09:00', '11:00', '13:00', '15:00', '17:00'],
                     datasets: [{
-                        data: [val*0.998, val*0.999, val*1.001, val, val*1.002, val*0.997, val*0.999, val],
-                        borderColor: color, borderWidth: 4, fill: true, backgroundColor: gradient, tension: 0.4, pointRadius: 0
+                        data: [val*0.99, val*1.01, val*0.98, val*1.02, val],
+                        borderColor: color, fill: true, tension: 0.4, pointRadius: 0,
+                        backgroundColor: color + '22'
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#888' } } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
             });
         }
 
@@ -221,40 +164,28 @@
                 const cont = document.getElementById('main-container');
                 const isClosed = new Date().getHours() >= 17;
                 cont.innerHTML = '';
-                config.forEach((item) => {
-                    const rate = data.rates[item.key] || {current: "---", status: "same", percent: "0.00%"};
-                    const trendColor = rate.status === "up" ? "#32d74b" : (rate.status === "down" ? "#ff453a" : "#888");
+                config.forEach(item => {
+                    const r = data.rates[item.key] || {current:"---", status:"same", percent:"0%"};
                     const card = document.createElement('div');
-                    card.className = `card ${rate.status}`;
-                    card.onclick = () => showChart(item.name, rate.current, rate.status);
+                    card.className = `card ${r.status}`;
+                    card.onclick = () => showChart(item.name, r.current, r.status);
                     card.innerHTML = `
                         <div class="card-top-row">
-                            <div style="color:${trendColor}; font-weight:900; direction:ltr; text-align:left;">
-                                ${rate.percent}
-                                ${isClosed ? `<br><span style="color:#888;font-size:0.6rem;font-weight:normal;">Closed Market</span>` : ''}
+                            <div style="color:${r.status==='up'?'#32d74b':'#ff453a'}; font-weight:bold; text-align:left;">
+                                ${r.percent}<br>${isClosed ? '<small style="color:#888">Closed Market</small>' : ''}
                             </div>
                             <div style="display:flex; gap:10px; align-items:center;">
-                                <div style="text-align:right;">
-                                    <b style="font-size:1rem; display:block;">${item.name}</b>
-                                    <small style="opacity:0.6; font-size:0.7rem;">${item.sub}</small>
-                                </div>
-                                <img src="${item.icon}" style="width:32px; height:32px; border-radius:8px; object-fit:cover;">
+                                <div style="text-align:right;"><b style="font-size:1rem;display:block;">${item.name}</b><small style="opacity:0.6;">${item.sub}</small></div>
+                                <img src="${item.icon}" style="width:35px; border-radius:8px;">
                             </div>
                         </div>
-                        <div class="price-val">${rate.current}</div>
+                        <div class="price-val">${r.current}</div>
                     `;
                     cont.appendChild(card);
                 });
-            } catch (e) { console.log("Fetch Error"); }
+            } catch(e) {}
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if(localStorage.getItem('theme') === 'light') toggleTheme();
-            applyLang(localStorage.getItem('appLang') || 'fa');
-            applyView();
-            load();
-            setInterval(load, 30000);
-        });
+        load(); setInterval(load, 30000);
     </script>
 </body>
-            </html>
+</html>
