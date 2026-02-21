@@ -5,6 +5,8 @@
             "buy": "63.15",
             "history": [
                 63.2,
+                63.15,
+                63.2,
                 63.15
             ],
             "status": "down",
@@ -56,13 +58,13 @@
             "percent": "-2.56%"
         },
         "کلدار": {
-            "current": "215.00",
+            "current": "214.00",
             "buy": "214.00",
             "history": [
                 214.0
             ],
-            "status": "up",
-            "percent": "+1.60%"
+            "status": "down",
+            "percent": "-0.47%"
         }
     }
 }
