@@ -86,6 +86,25 @@
         .full-modal.active { display: flex; }
         
         .insta-btn { margin-top: auto; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 7px; background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%); padding: 10px; border-radius: 12px; color: #fff; font-weight: bold; }
+        /* استایل مخصوص حالت جدولی */
+.container.grid-view {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    padding: 10px 15px !important; /* در حالت جدولی حاشیه را کمتر می‌کنیم */
+}
+
+.grid-view .card {
+    min-height: 80px !important;
+    padding: 10px !important;
+}
+
+.grid-view .price-val {
+    font-size: 1.5rem !important; /* کوچک‌تر کردن فونت قیمت برای جا شدن در جدول */
+}
+
+.grid-view .card-top b {
+    font-size: 0.8rem !important; /* کوچک‌تر کردن نام ارز */
+    }
     </style>
 </head>
 <body class="dark-mode">
