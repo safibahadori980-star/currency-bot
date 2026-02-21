@@ -1,10 +1,10 @@
 {
     "rates": {
         "دالر هرات": {
-            "current": "7",
+            "current": "65",
             "status": "down",
             "percent": "-88.92%",
-            "buy": "7",
+            "buy": "65",
             "history": [
                 63.15,
                 63.1,
@@ -22,10 +22,10 @@
             "percent": "+0.20%"
         },
         "تومان چک": {
-            "current": "0.47",
+            "current": "0.51",
             "status": "down",
             "percent": "-2.08%",
-            "buy": "0.47",
+            "buy": "0.51",
             "history": [
                 0.47
             ]
