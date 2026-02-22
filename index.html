@@ -20,18 +20,18 @@
         .date-time span { font-size: 0.85rem; opacity: 0.7; }
 
         .container { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px 100px; }
-        .card { background: var(--card-glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 75px; cursor: pointer; }
+        .card { background: var(--card-glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 15px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 85px; cursor: pointer; }
         .card.up { border-right: 5px solid #32d74b; } .card.down { border-right: 5px solid #ff453a; }
-        .price-val { font-size: 1.8rem; font-weight: 900; font-family: sans-serif; }
         
-        /* دایره‌های نوسان گرد */
-        .percent-wrapper { display: flex; align-items: center; justify-content: flex-end; gap: 5px; margin-top: 4px; }
-        .trend-circle { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .trend-circle i { color: white; font-size: 9px; }
+        .price-side { display: flex; flex-direction: column; align-items: flex-start; }
+        .price-val { font-size: 1.9rem; font-weight: 900; font-family: sans-serif; line-height: 1; }
+        
+        /* استایل درصد نوسان (نازک و زیر قیمت) */
+        .percent-wrapper { display: flex; align-items: center; gap: 4px; margin-top: 6px; font-weight: 300; }
+        .trend-circle { width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .trend-circle i { color: white; font-size: 8px; }
 
-        .setting-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-glass); color: var(--text); width: 100%; margin-bottom: 10px; cursor: pointer; }
-        
-        /* دکمه Developer طلایی لوکس */
+        .setting-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-glass); color: var(--text); width: 100%; margin-bottom: 10px; cursor: pointer; font-family: 'Vazirmatn'; }
         .dev-btn { text-decoration: none; color: var(--gold); background: #000; border: 1px solid var(--gold); padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-top: auto; display: block; }
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid var(--border); }
@@ -79,7 +79,7 @@
             <b>درباره برنامه</b>
             <i class="fas fa-times" onclick="closeModal('aboutMod')" style="font-size:1.5rem; cursor:pointer;"></i>
         </div>
-        <p>تمامی قیمت‌ها از معتبرترین منابع اتحادیه صرافان هرات جمع آوری شده است.</p>
+        <p>تمامی قیمت‌ها به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
     </div>
 
     <script>
@@ -102,6 +102,7 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
+        
         function toggleTheme() { 
             document.body.classList.toggle('light-mode');
             document.getElementById('themeIcon').className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
@@ -150,21 +151,24 @@
                     }
 
                     const isClosed = new Date().getHours() >= 17;
-                    const marketTag = isClosed ? '<br><span style="color:orange; font-size:0.7rem;">بازار بسته شد</span>' : '';
+                    const marketTag = isClosed ? '<div style="color:orange; font-size:0.7rem; margin-top:2px;">بازار بسته شد</div>' : '';
 
                     const card = document.createElement('div');
                     card.className = `card ${r.status}`;
                     card.onclick = () => showChart(item.name, r.current, r.status);
                     card.innerHTML = `
-                        <div class="price-val">${r.current}</div>
+                        <div class="price-side">
+                            <div class="price-val">${r.current}</div>
+                            <div class="percent-wrapper">
+                                ${circleHTML}
+                                <span style="color:${color}; font-size:0.85rem; direction:ltr;">${r.percent}</span>
+                            </div>
+                        </div>
                         <div style="display:flex; align-items:center; gap:12px;">
                             <div style="text-align:right;">
                                 <b style="font-size:1.1rem;">${item.name}</b>
-                                <div class="percent-wrapper">
-                                    <span style="color:${color}; font-weight:bold; font-size:0.9rem;">${r.percent}</span>
-                                    ${circleHTML}
-                                </div>
-                                <div style="font-size:0.75rem; opacity:0.6;">${item.sub}${marketTag}</div>
+                                <div style="font-size:0.75rem; opacity:0.6;">${item.sub}</div>
+                                ${marketTag}
                             </div>
                             <img src="${item.icon}" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
                         </div>
@@ -176,4 +180,4 @@
         load(); setInterval(load, 30000);
     </script>
 </body>
-        </html>
+                </html>
