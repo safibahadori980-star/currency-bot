@@ -12,13 +12,15 @@
         :root { --bg: #000; --card-glass: rgba(255, 255, 255, 0.08); --text: #fff; --border: rgba(255,255,255,0.1); --nav-bg: rgba(28, 28, 30, 0.9); --gold: #d4af37; }
         body.light-mode { --bg: #f2f2f7; --card-glass: rgba(0, 0, 0, 0.05); --text: #000; --border: rgba(0,0,0,0.1); --nav-bg: rgba(255, 255, 255, 0.9); }
         
-        /* تغییر فونت کل بدنه */
-        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif !important; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
+        /* قانون طلایی: اعمال فونت وزیر به تمام المان‌ها و حذف فونت‌های پیش‌فرض */
+        * { font-family: 'Vazirmatn', sans-serif !important; }
+
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
         
         .header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 90px; border-bottom: 1px solid var(--border); }
         .main-logo { width: 50px; border-radius: 12px; }
         .date-time { text-align: center; }
-        .date-time b { font-size: 1.4rem; display: block; font-family: 'Vazirmatn', sans-serif; }
+        .date-time b { font-size: 1.4rem; display: block; }
         .date-time span { font-size: 0.85rem; opacity: 0.7; }
 
         .container { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px 100px; }
@@ -27,16 +29,15 @@
         
         .price-side { display: flex; flex-direction: column; align-items: flex-start; }
         
-        /* تغییر فونت قیمت به وزیر */
-        .price-val { font-size: 1.9rem; font-weight: 900; font-family: 'Vazirmatn', sans-serif; line-height: 1; }
+        /* اصلاح بخش قیمت: حذف sans-serif و اعمال وزن فونت بالا */
+        .price-val { font-size: 1.9rem; font-weight: 900; line-height: 1; }
         
-        /* استایل درصد نوسان */
         .percent-wrapper { display: flex; align-items: center; gap: 4px; margin-top: 6px; font-weight: 300; }
         .trend-circle { width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .trend-circle i { color: white; font-size: 8px; }
 
-        .setting-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-glass); color: var(--text); width: 100%; margin-bottom: 10px; cursor: pointer; font-family: 'Vazirmatn', sans-serif; }
-        .dev-btn { text-decoration: none; color: var(--gold); background: #000; border: 1px solid var(--gold); padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-top: auto; display: block; font-family: 'Vazirmatn', sans-serif; }
+        .setting-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-glass); color: var(--text); width: 100%; margin-bottom: 10px; cursor: pointer; }
+        .dev-btn { text-decoration: none; color: var(--gold); background: #000; border: 1px solid var(--gold); padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-top: auto; display: block; }
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid var(--border); }
         .full-modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 25px; flex-direction: column; }
@@ -49,20 +50,20 @@
     <div class="header">
         <div style="flex:1"><img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'"></div>
         <div class="date-time" id="dt"></div>
-        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900; font-family: 'Vazirmatn', sans-serif;">NERKHYAB<br>PRO</div>
+        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900;">NERKHYAB<br>PRO</div>
     </div>
 
     <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
         <i class="fas fa-cog" onclick="openModal('sMod')" style="font-size: 1.3rem; cursor:pointer;"></i>
-        <span style="font-weight: 800; color:var(--gold); font-family: 'Vazirmatn', sans-serif;">نرخ لحظه‌ای</span>
+        <span style="font-weight: 800; color:var(--gold);">نرخ لحظه‌ای</span>
         <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()" style="font-size: 1.3rem; cursor:pointer;"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-            <b style="font-family: 'Vazirmatn', sans-serif;">تنظیمات</b>
+            <b>تنظیمات</b>
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem; cursor:pointer;"></i>
         </div>
         <button class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
@@ -72,7 +73,7 @@
 
     <div id="chartMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <b id="chart-title" style="font-family: 'Vazirmatn', sans-serif;">نمودار نوسانات</b>
+            <b id="chart-title">نمودار نوسانات</b>
             <i class="fas fa-times" onclick="closeModal('chartMod')" style="font-size:1.5rem; cursor:pointer;"></i>
         </div>
         <div class="chart-container"><canvas id="rateChart"></canvas></div>
@@ -80,10 +81,10 @@
 
     <div id="aboutMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <b style="font-family: 'Vazirmatn', sans-serif;">درباره برنامه</b>
+            <b>درباره برنامه</b>
             <i class="fas fa-times" onclick="closeModal('aboutMod')" style="font-size:1.5rem; cursor:pointer;"></i>
         </div>
-        <p style="font-family: 'Vazirmatn', sans-serif;">تمامی قیمت‌ها به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
+        <p>تمامی قیمت‌ها به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
     </div>
 
     <script>
@@ -155,7 +156,7 @@
                     }
 
                     const isClosed = new Date().getHours() >= 17;
-                    const marketTag = isClosed ? '<div style="color:orange; font-size:0.7rem; margin-top:2px; font-family: \'Vazirmatn\', sans-serif;">بازار بسته شد</div>' : '';
+                    const marketTag = isClosed ? '<div style="color:orange; font-size:0.7rem; margin-top:2px;">بازار بسته شد</div>' : '';
 
                     const card = document.createElement('div');
                     card.className = `card ${r.status}`;
@@ -165,13 +166,13 @@
                             <div class="price-val">${r.current}</div>
                             <div class="percent-wrapper">
                                 ${circleHTML}
-                                <span style="color:${color}; font-size:0.85rem; direction:ltr; font-family: 'Vazirmatn', sans-serif;">${r.percent}</span>
+                                <span style="color:${color}; font-size:0.85rem; direction:ltr;">${r.percent}</span>
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:12px;">
                             <div style="text-align:right;">
-                                <b style="font-size:1.1rem; font-family: 'Vazirmatn', sans-serif;">${item.name}</b>
-                                <div style="font-size:0.75rem; opacity:0.6; font-family: 'Vazirmatn', sans-serif;">${item.sub}</div>
+                                <b style="font-size:1.1rem;">${item.name}</b>
+                                <div style="font-size:0.75rem; opacity:0.6;">${item.sub}</div>
                                 ${marketTag}
                             </div>
                             <img src="${item.icon}" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
@@ -184,4 +185,4 @@
         load(); setInterval(load, 30000);
     </script>
 </body>
-</html>
+    </html>
