@@ -23,22 +23,22 @@
                 0.48,
                 0.47
             ],
-            "status": "up",
-            "percent": "+2.22%",
+            "status": "same",
+            "percent": "+0.00%",
             "current": "0.46"
         },
         "کلدار": {
             "current": "214.50",
-            "status": "up",
-            "percent": "+0.23%",
+            "status": "same",
+            "percent": "+0.00%",
             "history": [
                 214.0
             ]
         },
         "یورو هرات": {
             "current": "73.10",
-            "status": "down",
-            "percent": "-0.14%",
+            "status": "same",
+            "percent": "+0.00%",
             "history": [
                 73.2
             ]
