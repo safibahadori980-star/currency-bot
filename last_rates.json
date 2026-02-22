@@ -5,9 +5,9 @@
                 63.2,
                 63.15
             ],
-            "status": "same",
-            "percent": "+0.00%",
-            "current": "63.20"
+            "status": "up",
+            "percent": "+0.08%",
+            "current": "63.25"
         },
         "تومان بانکی": {
             "history": [
@@ -37,8 +37,8 @@
         },
         "یورو هرات": {
             "current": "73.00",
-            "status": "up",
-            "percent": "+0.27%",
+            "status": "same",
+            "percent": "+0.00%",
             "history": [
                 73.2
             ]
