@@ -6,7 +6,7 @@
     <title>NERKHYAB PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/dist/font-face.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/ayandeh-font@v2.0.1/dist/font-face.css" rel="stylesheet" type="text/css">
     
     <style>
@@ -16,48 +16,46 @@
         body { 
             background: var(--bg); 
             color: var(--text); 
-            font-family: 'iranyekan', sans-serif !important; 
+            font-family: 'iranyekan', 'Vazirmatn', sans-serif !important; 
             margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; 
         }
         
         .header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 90px; border-bottom: 1px solid var(--border); }
         .logo-wrapper { flex: 1; } .main-logo { width: 50px; border-radius: 12px; }
-        .date-time { flex: 2; text-align: center; font-family: 'iranyekan', sans-serif; font-weight: bold; }
+        .date-time { flex: 2; text-align: center; font-family: inherit; font-weight: bold; }
         .date-time b { font-size: 1.4rem; display: block; color: var(--text); }
+        .date-time span { font-size: 0.9rem; opacity: 0.8; }
 
         .container { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px; padding-bottom: 100px; transition: 0.4s; }
         
-        /* استایل کارت‌ها */
-        .card { background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 75px; cursor: pointer; }
+        .card { background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 75px; transition: 0.2s; }
         .card.up { border-right: 5px solid #32d74b; } 
         .card.down { border-right: 5px solid #ff453a; }
         
-        .price-val { font-size: 1.9rem; font-weight: 800; font-family: 'iranyekan', sans-serif !important; letter-spacing: -1px; }
+        .price-val { font-size: 1.9rem; font-weight: 800; letter-spacing: -1px; }
         .card-info { display: flex; gap: 12px; align-items: center; }
-        .card-info b { font-family: 'iranyekan', sans-serif !important; font-weight: 500; font-size: 1.05rem; }
+        .card-info b { font-weight: 500; font-size: 1.05rem; }
 
-        /* مدال شیشه‌ای جدید */
         .full-modal { 
             position: fixed; inset: 0; 
-            background: rgba(0, 0, 0, 0.2); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             display: none; z-index: 2000; padding: 25px; flex-direction: column; 
         }
         .full-modal.active { display: flex; }
 
-        /* دکمه‌های شیشه‌ای تنظیمات */
         .setting-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .setting-btn { 
             padding: 12px; border-radius: 12px; border: 1px solid var(--border); 
-            background: rgba(255,255,255,0.05); color: var(--text); 
-            cursor: pointer; width: 100%; font-family: 'iranyekan'; 
+            background: rgba(255,255,255,0.08); color: var(--text); 
+            cursor: pointer; width: 100%; font-family: inherit; font-size: 0.9rem;
         }
         .dev-btn { text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-top: auto; display: block; }
 
-        /* حالت جدولی */
         .grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .grid-mode .card { flex-direction: column; text-align: center; padding: 20px 10px; }
-        .grid-mode .card-info { flex-direction: column; }
+        .grid-mode .card { flex-direction: column; text-align: center; padding: 20px 10px; height: auto; }
+        .grid-mode .card-info { flex-direction: column; gap: 8px; }
+        .grid-mode .price-val { font-size: 1.5rem; }
         
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid var(--border); }
     </style>
@@ -67,7 +65,7 @@
     <div class="header">
         <div class="logo-wrapper"><img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'"></div>
         <div class="date-time" id="dt"></div>
-        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900;">NERKHYAB<br>PRO</div>
+        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900; opacity:0.7;">NERKHYAB<br>PRO</div>
     </div>
 
     <div id="main-container" class="container"></div>
@@ -80,7 +78,7 @@
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-            <b id="txt-settings">تنظیمات</b>
+            <b id="txt-settings" style="font-size:1.2rem;">تنظیمات</b>
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem;"></i>
         </div>
         
@@ -95,10 +93,20 @@
 
         <button class="setting-btn" onclick="location.reload()" id="btn-refresh" style="margin-bottom:10px;">بروزرسانی دستی</button>
         <button class="setting-btn" onclick="openAbout()" id="btn-about" style="margin-bottom:10px;">درباره برنامه</button>
-        <a href="https://www.instagram.com/safi.tech.ai" class="dev-btn">Developer</a>
+        <a href="https://www.instagram.com/safi.tech.ai" class="dev-btn">سازنده</a>
     </div>
 
     <script>
+        // تابع آپدیت زمان و تاریخ (بازگردانده شد)
+        function updateDT() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const j = jalaali.toJalaali(now);
+            document.getElementById('dt').innerHTML = `<b>AM ${timeStr.replace(' AM','').replace(' PM','')}</b><span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        }
+        setInterval(updateDT, 1000); 
+        updateDT();
+
         const config = [
             { key: "دالر هرات", name: "دالر هرات", sub: "USD/AFN", icon: "https://flagcdn.com/w160/us.png" },
             { key: "یورو هرات", name: "یورو هرات", sub: "EUR/AFN", icon: "https://flagcdn.com/w160/eu.png" },
@@ -110,10 +118,18 @@
         let currentLang = 'fa';
         let isGrid = false;
 
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
         function toggleDisplayMode() {
             isGrid = !isGrid;
             const cont = document.getElementById('main-container');
+            const icon = document.getElementById('mode-icon');
             isGrid ? cont.classList.add('grid-mode') : cont.classList.remove('grid-mode');
+            icon.className = isGrid ? 'fas fa-list' : 'fas fa-th-large';
             document.getElementById('btn-mode').innerText = isGrid ? (currentLang === 'fa' ? 'حالت لیستی' : 'List View') : (currentLang === 'fa' ? 'حالت جدولی' : 'Grid View');
         }
 
@@ -121,18 +137,20 @@
             currentLang = currentLang === 'fa' ? 'en' : 'fa';
             document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
             const t = {
-                fa: { set: "تنظیمات", ref: "بروزرسانی دستی", ab: "درباره برنامه", lang: "English", nav: "نرخ لحظه‌ای" },
-                en: { set: "Settings", ref: "Refresh", ab: "About", lang: "فارسی", nav: "Live Rates" }
+                fa: { set: "تنظیمات", ref: "بروزرسانی دستی", ab: "درباره برنامه", lang: "English", nav: "نرخ لحظه‌ای", dev: "سازنده" },
+                en: { set: "Settings", ref: "Refresh", ab: "About", lang: "فارسی", nav: "Live Rates", dev: "Developer" }
             }[currentLang];
             document.getElementById('txt-settings').innerText = t.set;
             document.getElementById('btn-refresh').innerText = t.ref;
             document.getElementById('btn-about').innerText = t.ab;
             document.getElementById('btn-lang').innerText = t.lang;
             document.getElementById('nav-title').innerText = t.nav;
+            document.querySelector('.dev-btn').innerText = t.dev;
         }
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function openAbout() { closeModal('sMod'); alert("تمامی قیمت‌ها از معتبرترین منابع جمع‌آوری می‌شود."); }
 
         async function load() {
             try {
@@ -149,7 +167,7 @@
                         <div class="card-info">
                             <div style="text-align:right;">
                                 <div style="display:flex; align-items:center; gap:5px; justify-content:flex-end;">
-                                    <span style="color:${r.status==='up'?'#32d74b':'#ff453a'}; font-weight:300; font-size:0.85rem;">${r.percent}</span>
+                                    <span style="color:${r.status==='up'?'#32d74b':'#ff453a'}; font-weight:300; font-size:0.85rem;">${r.status==='up'?'+':''}${r.percent}</span>
                                     <b>${item.name}</b>
                                 </div>
                                 <div style="font-size:0.75rem; opacity:0.6;">${item.sub}</div>
@@ -159,9 +177,9 @@
                     `;
                     cont.appendChild(card);
                 });
-            } catch(e) {}
+            } catch(e) { console.log(e); }
         }
         load(); setInterval(load, 30000);
     </script>
 </body>
-    </html>
+</html>
