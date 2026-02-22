@@ -8,11 +8,20 @@
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/dist/font-face.css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/ayandeh-font@v2.0.1/dist/font-face.css" rel="stylesheet">
     <style>
         :root { --bg: #000; --card-glass: rgba(255, 255, 255, 0.08); --text: #fff; --border: rgba(255,255,255,0.1); --nav-bg: rgba(28, 28, 30, 0.9); }
         body.light-mode { --bg: #f2f2f7; --card-glass: rgba(0, 0, 0, 0.05); --text: #000; --border: rgba(0,0,0,0.1); --nav-bg: rgba(255, 255, 255, 0.9); }
-        body { background: var(--bg); color: var(--text); font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; transition: 0.3s; overflow-x: hidden; }
         
+        body { 
+    background: var(--bg); 
+    color: var(--text); 
+    /* اعمال فونت ایران‌یکان به کل بدنه سایت */
+    font-family: 'iranyekan', 'Vazirmatn', sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    transition: 0.3s; 
+            }
         .header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 90px; border-bottom: 1px solid var(--border); }
         .logo-wrapper { flex: 1; } .main-logo { width: 50px; border-radius: 12px; }
         .date-time { flex: 2; text-align: center; font-family: -apple-system, sans-serif; font-weight: bold; }
@@ -23,8 +32,20 @@
         .card { background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 75px; cursor: pointer; transition: 0.2s; }
         .card:active { transform: scale(0.98); }
         .card.up { border-right: 5px solid #32d74b; } .card.down { border-right: 5px solid #ff453a; }
-        .price-val { font-size: 1.8rem; font-weight: 900; font-family: 'Vazirmatn', sans-serif; }
-        .card-info { display: flex; gap: 12px; align-items: center; }
+.price-val { 
+    font-size: 2rem; 
+    font-weight: 800; /* خیلی ضخیم برای اعداد */
+    font-family: 'iranyekan', sans-serif;
+    letter-spacing: -1px; /* فشرده‌سازی برای مدرن شدن */
+}
+
+            .card-info b {
+    font-family: 'iranyekan', sans-serif;
+    font-weight: 500; /* وزن متوسط برای نام ارز */
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 2px;
+            }
 
         /* استایل جدید درصد و فلش */
         .percent-badge { 
