@@ -16,8 +16,8 @@
         .header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 90px; border-bottom: 1px solid var(--border); }
         .logo-wrapper { flex: 1; } .main-logo { width: 50px; border-radius: 12px; }
         .date-time { flex: 2; text-align: center; font-family: -apple-system, sans-serif; font-weight: bold; }
-        .date-time b { font-size: 1.4rem; display: block; color: var(--text); }
-        .date-time span { font-size: 0.85rem; opacity: 0.7; display: block; }
+        .date-time b { font-size: 1.2rem; display: block; color: var(--text); }
+        .date-time span { font-size: 0.95rem; opacity: 0.7; display: block; }
 
         .container { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px; padding-bottom: 100px; }
         .card { background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 75px; cursor: pointer; transition: 0.2s; }
@@ -40,7 +40,19 @@
         .down-arrow { color: #ff453a; font-size: 0.7rem; }
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 85%; background: var(--nav-bg); backdrop-filter: blur(20px); border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid var(--border); }
-        .full-modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 25px; flex-direction: column; }
+        .full-modal { 
+    position: fixed; 
+    inset: 0; 
+    /* تغییر پس‌زمینه به حالت نیمه‌شفاف */
+    background: rgba(0, 0, 0, 0.4); 
+    /* ایجاد تاری بسیار ملایم روی پس‌زمینه اصلی */
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
+    display: none; 
+    z-index: 2000; 
+    padding: 25px; 
+    flex-direction: column; 
+        }
         .full-modal.active { display: flex; }
         .chart-container { width: 100%; height: 260px; background: var(--card-glass); border-radius: 20px; padding: 15px; margin-top: 15px; }
         
@@ -70,7 +82,7 @@
 .setting-row {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 .setting-row .setting-btn {
     margin-bottom: 0;
@@ -84,7 +96,7 @@
     <div class="header">
         <div class="logo-wrapper"><img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'"></div>
         <div class="date-time" id="dt"></div>
-        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900;">NERKHYAB<br>PRO</div>
+        <div style="flex:1; text-align:left; font-size:0.9rem; font-weight:900;">NERKHYAB<br>PRO</div>
     </div>
 
     <div id="main-container" class="container"></div>
@@ -100,7 +112,7 @@
             <b>تنظیمات</b>
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem;"></i>
         </div>
-        <button class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
+        <button class="setting-btn" onclick="location.reload()">بروزرسانی </button>
         <div class="setting-row">
         <button class="setting-btn" onclick="toggleLanguage()">
             <i class="fas fa-language"></i> <span id="btn-lang">English</span>
@@ -110,7 +122,7 @@
         </button>
         </div>
         <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
-        <a href="https://www.instagram.com/safi.tech.ai" class="dev-btn">Developer</a>
+        <a href="https://www.instagram.com/safi.tech.ai" class="dev-btn">سازنده</a>
     </div>
 
     <div id="chartMod" class="full-modal">
@@ -126,7 +138,7 @@
             <b>درباره برنامه</b>
             <i class="fas fa-times" onclick="closeModal('aboutMod')" style="font-size:1.5rem;"></i>
         </div>
-        <p>تمامی قیمت‌ها از معتبرترین منابع اتحادیه صرافان هرات جمع آوری و به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
+        <p>. تمامی قیمت‌ها از معتبرترین منابع اتحادیه صرافان هرات جمع آوری و به صورت لحظه‌ای بروزرسانی می‌گردد.</p>
     </div>
 
     <script>
