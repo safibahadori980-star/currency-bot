@@ -46,6 +46,37 @@
         
         .setting-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-glass); color: var(--text); cursor: pointer; width: 100%; font-family: 'Vazirmatn'; margin-bottom: 10px; }
         .dev-btn { text-decoration: none; color: #fff; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; margin-top: auto; display: block; }
+        /* اضافه شدن حالت جدولی بدون تغییر در لیستی */
+.container.grid-mode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.grid-mode .card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 10px;
+    height: auto;
+}
+.grid-mode .card-info {
+    flex-direction: column;
+    gap: 8px;
+}
+.grid-mode .price-val {
+    font-size: 1.5rem;
+}
+
+/* ردیف دکمه‌های جدید در تنظیمات */
+.setting-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.setting-row .setting-btn {
+    margin-bottom: 0;
+    flex: 1;
+                          }
+        
     </style>
 </head>
 <body>
@@ -70,6 +101,14 @@
             <i class="fas fa-times" onclick="closeModal('sMod')" style="font-size:1.5rem;"></i>
         </div>
         <button class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
+        <div class="setting-row">
+        <button class="setting-btn" onclick="toggleLanguage()">
+            <i class="fas fa-language"></i> <span id="btn-lang">English</span>
+        </button>
+        <button class="setting-btn" onclick="toggleDisplayMode()">
+            <i class="fas fa-th-large" id="mode-icon"></i> <span id="btn-mode">حالت جدولی</span>
+        </button>
+        </div>
         <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
         <a href="https://www.instagram.com/safi.tech.ai" class="dev-btn">Developer</a>
     </div>
@@ -191,6 +230,43 @@
             } catch(e) { console.log(e); }
         }
         load(); setInterval(load, 30000);
+        let currentLang = 'fa';
+let isGrid = false;
+
+function toggleDisplayMode() {
+    const cont = document.getElementById('main-container');
+    const btnText = document.getElementById('btn-mode');
+    const icon = document.getElementById('mode-icon');
+    
+    isGrid = !isGrid;
+    if (isGrid) {
+        cont.classList.add('grid-mode');
+        btnText.innerText = currentLang === 'fa' ? 'حالت لیستی' : 'List View';
+        icon.className = 'fas fa-list';
+    } else {
+        cont.classList.remove('grid-mode');
+        btnText.innerText = currentLang === 'fa' ? 'حالت جدولی' : 'Grid View';
+        icon.className = 'fas fa-th-large';
+    }
+}
+
+function toggleLanguage() {
+    currentLang = currentLang === 'fa' ? 'en' : 'fa';
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+    
+    const t = {
+        fa: { set: "تنظیمات", ref: "بروزرسانی دستی", ab: "درباره برنامه", lang: "English", mode: isGrid ? "حالت لیستی" : "حالت جدولی", nav: "نرخ لحظه‌ای" },
+        en: { set: "Settings", ref: "Refresh", ab: "About", lang: "فارسی", mode: isGrid ? "List View" : "Grid View", nav: "Live Rates" }
+    }[currentLang];
+
+    document.getElementById('txt-settings').innerText = t.set;
+    document.getElementById('btn-refresh').innerText = t.ref;
+    document.getElementById('btn-about').innerText = t.ab;
+    document.getElementById('btn-lang').innerText = t.lang;
+    document.getElementById('btn-mode').innerText = t.mode;
+    document.querySelector('.bottom-nav span').innerText = t.nav;
+}
     </script>
 </body>
     </html>
