@@ -40,7 +40,7 @@ body{
  padding:0 20px;
  border-bottom:1px solid var(--border);
 }
-.logo{width:45px;border-radius:12px}
+.logo{width:55px;border-radius:12px}
 .date{text-align:center;font-weight:bold}
 .container{padding:15px 20px 100px;display:flex;flex-direction:column;gap:12px}
 .card{
@@ -48,7 +48,7 @@ body{
  backdrop-filter:blur(15px);
  border:1px solid var(--border);
  border-radius:20px;
- padding:14px 18px;
+ padding:16px 18px;
  display:flex;
  justify-content:space-between;
  align-items:center;
@@ -129,7 +129,7 @@ body{
 
 <div class="bottom">
  <i class="fas fa-cog" onclick="openModal('settings')"></i>
- <b>نرخ لحظه‌ای</b>
+ <b>لحظاتی پیش</b>
  <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()"></i>
 </div>
 
@@ -252,6 +252,30 @@ async function loadRates(){
 loadRates();
 setInterval(loadRates,30000);
 </script>
+<div id="settings" class="modal">
+  <div style="display:flex;justify-content:space-between;margin-bottom:25px">
+    <b>تنظیمات</b>
+    <i class="fas fa-times" onclick="closeModal('settings')"></i>
+  </div>
 
+  <button onclick="loadRates()" 
+    style="padding:12px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);width:100%;margin-bottom:12px">
+    بروزرسانی دستی
+  </button>
+
+  <button onclick="alert('NERKHYAB PRO\nDeveloped by Safi');" 
+    style="padding:12px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);width:100%;margin-bottom:12px">
+    درباره برنامه
+  </button>
+
+  <a href="https://www.instagram.com/safi.tech.ai" target="_blank"
+     style="display:block;text-align:center;padding:14px;border-radius:15px;
+     background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);
+     color:#fff;font-weight:bold;text-decoration:none;margin-top:20px">
+     Developer
+  </a>
+</div>
 </body>
      </html>
