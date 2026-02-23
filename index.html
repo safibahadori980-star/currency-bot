@@ -202,8 +202,12 @@ input:checked + .slider:before { transform: translateX(22px); }
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
         <div class="switch-wrapper">
-    <span style="font-weight: bold;">نمایش دو ستونه (جدولی)</span>
+    <span style="font-weight: bold;">حالت جدولی</span>      
     <label class="switch">
+        <div class="switch-wrapper">
+    <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
+    <button onclick="toggleLang()" style="background:var(--green); color:#000; border:none; padding:5px 15px; border-radius:10px; font-weight:bold; cursor:pointer;">EN / FA</button>
+        </div>
         <input type="checkbox" id="layoutToggle" onclick="toggleLayout()">
         <span class="slider"></span>
     </label>
@@ -298,6 +302,54 @@ window.addEventListener('DOMContentLoaded', () => {
 });
         load();
 setInterval(load, 30000);
+        let currentLang = localStorage.getItem('lang') || 'fa';
+
+const i18n = {
+    fa: {
+        title: "نرخ‌یاب پرو",
+        settings: "تنظیمات",
+        updateBtn: "بروزرسانی دستی",
+        gridLabel: "نمایش دو ستونه (جدولی)",
+        langLabel: "زبان: فارسی",
+        lastUpdate: "لحظاتی پیش",
+        closed: "( پایان معاملات امروز )"
+    },
+    en: {
+        title: "NERKHYAB PRO",
+        settings: "Settings",
+        updateBtn: "Manual Update",
+        gridLabel: "Grid Layout (2 Columns)",
+        langLabel: "Language: English",
+        lastUpdate: "Just now",
+        closed: "( Market Closed )"
+    }
+};
+
+function toggleLang() {
+    currentLang = currentLang === 'fa' ? 'en' : 'fa';
+    localStorage.setItem('lang', currentLang);
+    applyLang();
+}
+
+function applyLang() {
+    const lang = i18n[currentLang];
+    document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+    
+    // بروزرسانی متون ثابت
+    document.getElementById('lang-text').innerText = lang.langLabel;
+    document.querySelector('.full-modal b').innerText = lang.settings;
+    document.querySelector('.setting-btn').innerText = lang.updateBtn;
+    document.getElementById('update-text').innerText = lang.lastUpdate;
+    
+    // تغییر فونت بر اساس زبان (اختیاری)
+    document.body.style.fontFamily = currentLang === 'fa' ? "'Vazirmatn', sans-serif" : "sans-serif";
+    
+    // رندر مجدد کارت‌ها برای اعمال زبان جدید در متون داخل کارت
+    load(); 
+}
+
+// این خط را داخل window.addEventListener('DOMContentLoaded'...) اضافه کن:
+applyLang();
     </script>
 </body>
 </html>
