@@ -214,43 +214,49 @@
             const container = document.getElementById('main-container');
             container.innerHTML = '';
             
-            // نمایش متن بازار بسته از ساعت 17:00 به بعد
-            const isClosed = new Date().getHours() >= 18;
-            
-            const config = [
-                {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
-                {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
-                {key:"تومان چک",sub:"IRT/AFN",icon:"https://flagcdn.com/w160/ir.png"},
-                {key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-                {key:"کلدار",sub:"PKR/AFN",icon:"https://flagcdn.com/w160/pk.png"}
-            ];
+function render(data) {
+    const container = document.getElementById('main-container');
+    container.innerHTML = '';
+    
+    // دریافت ساعت فعلی سیستم (بین 0 تا 23)
+    const currentHour = new Date().getHours();
+    
+    // شرط: اگر ساعت بزرگتر مساوی 18 (6 عصر) "یا" کوچکتر از 8 صبح بود
+    const isClosed = (currentHour >= 18 || currentHour < 8);
+    
+    const config = [
+        {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
+        {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
+        {key:"تومان چک",sub:"IRT/AFN",icon:"https://flagcdn.com/w160/ir.png"},
+        {key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+        {key:"کلدار",sub:"PKR/AFN",icon:"https://flagcdn.com/w160/pk.png"}
+    ];
 
-            config.forEach(item => {
-                const r = data.rates[item.key] || {current: "---", status: "same", percent: "0%"};
-                const arrow = r.status === 'up' ? 'fa-arrow-up' : r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
-                const card = document.createElement('div');
-                card.className = `card ${r.status}`;
-                card.innerHTML = `
-                    <div class="price-box">
-                        <div class="status-badge">
-                            <span>${r.percent}</span>
-                            <div class="arrow-circle"><i class="fas ${arrow}"></i></div>
-                        </div>
-                        <div class="price-val">${r.current}</div>
-                    </div>
-                    <div class="card-info">
-                        <div style="text-align:right;">
-                            <b>${item.key}</b>
-                            <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                            ${isClosed ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
-                        </div>
-                        <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+    config.forEach(item => {
+        const r = data.rates[item.key] || {current: "---", status: "same", percent: "0%"};
+        const arrow = r.status === 'up' ? 'fa-arrow-up' : r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
+        const card = document.createElement('div');
+        card.className = `card ${r.status}`;
+        card.innerHTML = `
+            <div class="price-box">
+                <div class="status-badge">
+                    <span>${r.percent}</span>
+                    <div class="arrow-circle"><i class="fas ${arrow}"></i></div>
+                </div>
+                <div class="price-val">${r.current}</div>
+            </div>
+            <div class="card-info">
+                <div style="text-align:right;">
+                    <b>${item.key}</b>
+                    <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+                    ${isClosed ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                </div>
+                <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
+            </div>
+        `;
+        container.appendChild(card);
+    });
         }
-
         function toggleLayout() {
             const container = document.getElementById('main-container');
             const isGrid = container.classList.toggle('grid-mode');
