@@ -19,9 +19,21 @@
         .date-time b { font-size: 1.4rem; display: block; color: var(--text); }
         .date-time span { font-size: 0.85rem; opacity: 0.7; display: block; }
 
-        .container { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px; padding-bottom: 100px; }
-        .card { background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 75px; cursor: pointer; }
-        .card.up { border-right: 5px solid #32d74b; } .card.down { border-right: 5px solid #ff453a; }
+        .container { display: flex; flex-direction: column; gap: 12px; padding: 15px 20px; padding-bottom: 100px; }
+        .card { background: var(--card-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 80px; cursor: pointer; transition: transform 0.2s; }
+        .card:active { transform: scale(0.98); }
+        
+        /* استایل جدید برای وضعیت قیمت */
+        .status-badge { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 50px; font-size: 0.85rem; font-weight: bold; direction: ltr; }
+        .arrow-circle { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+        
+        .up .status-badge { color: #32d74b; background: rgba(50, 215, 75, 0.15); }
+        .up .arrow-circle { background: #32d74b; color: #000; }
+        .down .status-badge { color: #ff453a; background: rgba(255, 69, 58, 0.15); }
+        .down .arrow-circle { background: #ff453a; color: #fff; }
+        .same .status-badge { color: #8e8e93; background: rgba(142, 142, 147, 0.1); }
+        .same .arrow-circle { background: #8e8e93; color: #fff; }
+
         .price-val { font-size: 1.8rem; font-weight: 900; font-family: sans-serif; }
         .card-info { display: flex; gap: 12px; align-items: center; }
 
@@ -32,24 +44,14 @@
         .full-modal { position: fixed; inset: 0; background: var(--bg); display: none; z-index: 2000; padding: 25px; flex-direction: column; }
         .full-modal.active { display: flex; }
         .chart-container { width: 100%; height: 260px; background: var(--card-glass); border-radius: 20px; padding: 15px; margin-top: 15px; }
-        .percent-text { 
-    font-weight: 300; 
-    font-size: 0.85rem; 
-    display: inline-flex; 
-    align-items: center; 
-    gap: 4px; 
-    font-family: sans-serif;
-}
-.up-arrow { color: #32d74b; font-size: 0.45rem; }
-.down-arrow { color: #ff453a; font-size: 0.45rem; }
     </style>
 </head>
-<body>
+<body class="dark-mode">
 
     <div class="header">
         <div class="logo-wrapper"><img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'"></div>
         <div class="date-time" id="dt"></div>
-        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900;">NERKHYAB<br>PRO</div>
+        <div style="flex:1; text-align:left; font-size:0.7rem; font-weight:900; line-height: 1.2;">NERKHYAB<br>PRO</div>
     </div>
 
     <div id="main-container" class="container"></div>
@@ -106,9 +108,11 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
+        
         function toggleTheme() { 
             document.body.classList.toggle('light-mode');
-            document.getElementById('themeIcon').className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
         }
 
         let myChart = null;
@@ -139,11 +143,14 @@
                 const data = await res.json();
                 const cont = document.getElementById('main-container');
                 cont.innerHTML = '';
+                
                 config.forEach(item => {
                     const r = data.rates[item.key] || {current:"---", status:"same", percent:"0%"};
                     let price = r.current;
-                    // فیلتر هوشمند عدد 7
                     if(item.key === "دالر هرات" && parseFloat(price) < 20) price = "73.60";
+
+                    // منطق آیکون فلش
+                    const arrowIcon = r.status === 'up' ? 'fa-arrow-up' : (r.status === 'down' ? 'fa-arrow-down' : 'fa-minus');
 
                     const card = document.createElement('div');
                     card.className = `card ${r.status}`;
@@ -152,13 +159,18 @@
                         <div class="price-val">${price}</div>
                         <div class="card-info">
                             <div style="text-align:right;">
-                                <div style="display:flex; align-items:center; gap:5px; justify-content:flex-end;">
-                                    <span style="color:${r.status==='up'?'#32d74b':'#ff453a'}; font-weight:bold; font-size:0.9rem;">${r.percent}</span>
-                                    <b style="font-size:1rem;">${item.name}</b>
+                                <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-bottom: 4px;">
+                                    <div class="status-badge">
+                                        <span>${r.percent}</span>
+                                        <div class="arrow-circle">
+                                            <i class="fas ${arrowIcon}"></i>
+                                        </div>
+                                    </div>
+                                    <b style="font-size:1.1rem;">${item.name}</b>
                                 </div>
                                 <div style="font-size:0.75rem; opacity:0.6;">${item.sub}</div>
                             </div>
-                            <img src="${item.icon}" style="width:38px; height:38px; border-radius:10px; object-fit:cover;">
+                            <img src="${item.icon}" style="width:40px; height:40px; border-radius:10px; object-fit:cover;">
                         </div>
                     `;
                     cont.appendChild(card);
