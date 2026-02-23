@@ -2,307 +2,296 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NERKHYAB PRO</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 
 <style>
-:root{
---bg:#000;
---card:rgba(255,255,255,0.07);
---text:#fff;
---border:rgba(255,255,255,0.1);
---nav:rgba(28,28,30,0.85);
---up:#32d74b;
---down:#ff453a;
-}
-body.light-mode{
---bg:#f2f2f7;
---card:rgba(0,0,0,0.05);
---text:#000;
---border:rgba(0,0,0,0.1);
---nav:rgba(255,255,255,0.85);
-}
-body{
-margin:0;
-background:var(--bg);
-color:var(--text);
-font-family:'Vazirmatn',sans-serif;
-transition:.3s;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:tahoma}
+body{background:#000;color:#fff}
 
-/* header */
-.header{
+header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-height:85px;
-padding:10px 20px;
-border-bottom:1px solid var(--border);
-}
-.main-logo{width:50px;border-radius:12px}
-
-.date-time{
-text-align:center;
-}
-.date-time b{
-font-size:1.3rem;
-display:block;
-line-height:1.4;
-}
-.ampm{
-font-size:.5rem;
-opacity:.7;
-margin-left:3px;
-}
-.date-line{
-font-size:1rem;
-opacity:.8;
-margin-top:2px;
+padding:15px;
+border-bottom:1px solid #222;
 }
 
-.brand{
-font-size:.8rem;
-font-weight:900;
-text-align:right;
-}
+.logo{font-size:18px;font-weight:bold}
 
-/* container modes */
+.time-box{text-align:center}
+.time{font-size:28px;font-weight:bold}
+.time span{font-size:12px;opacity:.7;margin-right:4px}
+.date{font-size:14px;opacity:.6}
+
 .container{
-display:grid;
-gap:12px;
-padding:16px 20px 120px;
-transition:.3s;
-}
-.container.list-mode{
-grid-template-columns:1fr;
-}
-.container.grid-mode{
-grid-template-columns:repeat(2,1fr);
-}
-
-/* cards */
-.card{
-background:var(--card);
-backdrop-filter:blur(15px);
-border:1px solid var(--border);
-border-radius:20px;
-padding:8px;
-min-height:100px;   /* کمتر شد */
+padding:15px;
 display:flex;
 flex-direction:column;
-justify-content:center;
+gap:14px;
+}
+
+.container.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.card{
+background:#111;
+border-radius:18px;
+padding:16px;
+min-height:120px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
 cursor:pointer;
-transition:.3s;
+border:1px solid #222;
+transition:.2s;
 }
-.card:hover{transform:scale(1.02)}
 
-.price-val{
-font-size:2rem;
-font-weight:850;
-text-align:left;
+.card:hover{
+transform:scale(1.02);
+border-color:#00ff88;
+}
+
+.card-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.card h3{font-size:18px}
+.symbol{font-size:13px;opacity:.6}
+
+.price-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
 margin-top:8px;
 }
 
-.chart-small{
-height:55px;
-margin-top:8px;
+.price{
+font-size:30px;
+font-weight:bold;
 }
 
-/* bottom nav */
-.bottom-nav{
+.arrow{
+font-size:22px;
+font-weight:bold;
+}
+
+.up{color:#00ff88}
+.down{color:#ff4444}
+.equal{color:#888}
+
+.bottom-bar{
 position:fixed;
-bottom:20px;
+bottom:15px;
 left:50%;
 transform:translateX(-50%);
-width:85%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:var(--nav);
-backdrop-filter:blur(20px);
-padding:14px 25px;
+background:#111;
+width:90%;
 border-radius:30px;
-border:1px solid var(--border);
-z-index:1000;
+display:flex;
+justify-content:space-around;
+padding:12px;
+border:1px solid #222;
 }
 
-/* modal */
-.full-modal{
+.bottom-bar button{
+background:none;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.chart-modal{
 position:fixed;
 inset:0;
-background:var(--bg);
+background:rgba(0,0,0,.9);
 display:none;
-flex-direction:column;
-padding:25px;
-z-index:2000;
+justify-content:center;
+align-items:center;
+z-index:999;
 }
-.full-modal.active{display:flex}
 
-button{
+.chart-box{
+width:90%;
+background:#111;
+padding:20px;
+border-radius:20px;
+}
+
+.close-btn{
+text-align:left;
 cursor:pointer;
-padding:12px;
-border-radius:12px;
-border:1px solid var(--border);
-background:var(--card);
-color:var(--text);
-margin-bottom:12px;
-font-family:inherit;
+margin-bottom:10px;
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-<div><img src="logo.png" class="main-logo"></div>
-<div class="date-time" id="dt"></div>
-<div class="brand">NERKHYAB<br>PRO</div>
+<header>
+<div class="logo">NERKHYAB PRO</div>
+
+<div class="time-box">
+<div class="time" id="clock">03:15 <span>AM</span></div>
+<div class="date">1404/12/4</div>
 </div>
 
-<div id="main-container" class="container"></div>
+<div>💲</div>
+</header>
 
-<div class="bottom-nav">
-<i class="fas fa-moon" onclick="toggleTheme()"></i>
-<span>لحظاتی پیش</span>
-<i class="fas fa-cog" onclick="openModal('settingsModal')"></i>
+<div class="container" id="cardContainer">
+
+<div class="card" onclick="openChart('USD')">
+<div class="card-top">
+<div>
+<h3>دالر هرات</h3>
+<div class="symbol">USD/AFN</div>
+</div>
+</div>
+<div class="price-row">
+<div class="price" id="priceUSD">63.45</div>
+<div class="arrow" id="arrowUSD"></div>
+</div>
 </div>
 
-<!-- Settings Modal -->
-<div id="settingsModal" class="full-modal">
-<div style="display:flex;justify-content:space-between;margin-bottom:20px">
-<b>تنظیمات</b>
-<i class="fas fa-times" onclick="closeModal('settingsModal')"></i>
+<div class="card" onclick="openChart('EUR')">
+<div class="card-top">
+<div>
+<h3>یورو هرات</h3>
+<div class="symbol">EUR/AFN</div>
+</div>
+</div>
+<div class="price-row">
+<div class="price" id="priceEUR">73.20</div>
+<div class="arrow" id="arrowEUR"></div>
+</div>
 </div>
 
-<button onclick="toggleViewMode()">تغییر حالت لیستی / جدولی</button>
-<button onclick="toggleTheme()">تغییر تم روشن / تاریک</button>
+</div>
 
+<div class="bottom-bar">
+<button onclick="toggleView()">🔄 حالت نمایش</button>
+<button onclick="toggleTheme()">🌙</button>
+</div>
+
+<div id="chartModal" class="chart-modal">
+<div class="chart-box">
+<div class="close-btn" onclick="closeChart()">✖ بستن</div>
+<canvas id="bigChart"></canvas>
+</div>
 </div>
 
 <script>
-const config=[
-{key:"دالر هرات",sub:"USD/AFN"},
-{key:"یورو هرات",sub:"EUR/AFN"},
-{key:"تومان چک",sub:"IRT/AFN"},
-{key:"تومان بانکی",sub:"IRR/AFN"},
-{key:"کلدار",sub:"PKR/AFN"}
-];
 
-/* ساعت */
-function updateDT(){
-const now=new Date();
-let time=now.toLocaleTimeString('en-GB',{
-hour:'2-digit',
-minute:'2-digit',
-hour12:true
-});
-time=time.replace("AM","<span class='ampm'>AM</span>")
-.replace("PM","<span class='ampm'>PM</span>");
-const j=jalaali.toJalaali(now);
-document.getElementById('dt').innerHTML=
-`<b>${time}</b><div class="date-line">${j.jy}/${j.jm}/${j.jd}</div>`;
+// قیمت امروز
+const currentPrices={
+USD:63.45,
+EUR:73.20
+};
+
+// قیمت 3 روز قبل
+const oldPrices={
+USD:62.80,
+EUR:74.10
+};
+
+function comparePrices(){
+for(let key in currentPrices){
+
+let current=currentPrices[key];
+let old=oldPrices[key];
+
+let arrow=document.getElementById("arrow"+key);
+
+if(current>old){
+arrow.innerHTML="↑";
+arrow.className="arrow up";
 }
-setInterval(updateDT,1000);
-updateDT();
-
-/* تم */
-function toggleTheme(){
-document.body.classList.toggle('light-mode');
-localStorage.setItem('theme',
-document.body.classList.contains('light-mode')?'light':'dark');
+else if(current<old){
+arrow.innerHTML="↓";
+arrow.className="arrow down";
 }
-
-/* حالت نمایش */
-function toggleViewMode(){
-const cont=document.getElementById('main-container');
-if(cont.classList.contains('grid-mode')){
-cont.classList.remove('grid-mode');
-cont.classList.add('list-mode');
-localStorage.setItem('viewMode','list');
-}else{
-cont.classList.remove('list-mode');
-cont.classList.add('grid-mode');
-localStorage.setItem('viewMode','grid');
+else{
+arrow.innerHTML="→";
+arrow.className="arrow equal";
+}
 }
 }
 
-/* مودال */
-function openModal(id){
-document.getElementById(id).classList.add('active');
-}
-function closeModal(id){
-document.getElementById(id).classList.remove('active');
-}
+comparePrices();
 
-/* بارگذاری داده */
-async function load(){
-try{
-const res=await fetch('last_rates.json');
-const data=await res.json();
-const rates=data?.rates||{};
-const cont=document.getElementById('main-container');
-cont.innerHTML='';
 
-config.forEach((item,index)=>{
-const rate=rates[item.key]||{current:"0",status:"same",percent:"0%"};
+let bigChart;
 
-const card=document.createElement('div');
-card.className='card';
-card.innerHTML=`
-<div style="display:flex;justify-content:space-between">
-<div style="font-weight:900;color:${rate.status==='up'?'var(--up)':rate.status==='down'?'var(--down)':'#aaa'}">
-${rate.percent}
-</div>
-<div>
-<b>${item.key}</b><br>
-<small>${item.sub}</small>
-</div>
-</div>
-<div class="price-val">${rate.current}</div>
-<div class="chart-small"><canvas id="chart${index}"></canvas></div>
-`;
-cont.appendChild(card);
+function openChart(type){
+document.getElementById("chartModal").style.display="flex";
+const ctx=document.getElementById("bigChart");
 
-new Chart(document.getElementById(`chart${index}`),{
+if(bigChart){bigChart.destroy();}
+
+bigChart=new Chart(ctx,{
 type:'line',
 data:{
-labels:[1,2,3,4,5,6,7],
+labels:['3 روز قبل','2 روز قبل','دیروز','امروز'],
 datasets:[{
-data:Array.from({length:7},()=>Math.random()*10+50),
-borderColor:rate.status==='down'?'#ff453a':'#32d74b',
-tension:.4,
-pointRadius:0
+data:[
+oldPrices[type]-0.5,
+oldPrices[type],
+currentPrices[type]-0.3,
+currentPrices[type]
+],
+borderColor:'#00ff88',
+borderWidth:3,
+tension:.4
 }]
 },
 options:{
 plugins:{legend:{display:false}},
-scales:{x:{display:false},y:{display:false}}
+scales:{x:{display:true},y:{display:false}}
 }
 });
-});
-}catch{
-document.getElementById('main-container').innerHTML=
-'<p style="text-align:center">خطا در دریافت اطلاعات</p>';
+}
+
+function closeChart(){
+document.getElementById("chartModal").style.display="none";
+}
+
+function toggleView(){
+document.getElementById("cardContainer").classList.toggle("grid");
+}
+
+function toggleTheme(){
+if(document.body.style.background=="white"){
+document.body.style.background="#000";
+document.body.style.color="#fff";
+}else{
+document.body.style.background="white";
+document.body.style.color="#000";
 }
 }
 
-/* شروع */
-window.addEventListener('DOMContentLoaded',()=>{
-if(localStorage.getItem('theme')==='light')
-document.body.classList.add('light-mode');
+function updateClock(){
+const now=new Date();
+let h=now.getHours();
+let m=now.getMinutes();
+let ampm=h>=12?"PM":"AM";
+h=h%12;
+h=h?h:12;
+m=m<10?"0"+m:m;
+document.getElementById("clock").innerHTML=
+h+":"+m+" <span>"+ampm+"</span>";
+}
+setInterval(updateClock,1000);
+updateClock();
 
-const savedView=localStorage.getItem('viewMode')||'list';
-document.getElementById('main-container')
-.classList.add(savedView+'-mode');
-
-load();
-setInterval(load,30000);
-});
 </script>
 
 </body>
-</html>
+  </html>
