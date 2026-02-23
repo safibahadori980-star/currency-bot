@@ -174,122 +174,123 @@
     </div>
 
     <script>
-        let currentLang = localStorage.getItem('lang') || 'fa';
+    let currentLang = localStorage.getItem('lang') || 'fa';
 
-        const i18n = {
-            fa: {
-                settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی",
-                langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market ( پایان معاملات امروز )"
-            },
-            en: {
-                settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode",
-                langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market"
-            }
-        };
-
-        function updateDT() {
-            const now = new Date();
-            const hh = String(now.getHours()).padStart(2, '0');
-            const mm = String(now.getMinutes()).padStart(2, '0');
-            const j = jalaali.toJalaali(now);
-            document.getElementById('dt').innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+    const i18n = {
+        fa: {
+            settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی",
+            langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market"
+        },
+        en: {
+            settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode",
+            langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market"
         }
-        updateDT(); setInterval(updateDT, 1000);
+    };
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+    function updateDT() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const j = jalaali.toJalaali(now);
+        const dtElement = document.getElementById('dt');
+        if(dtElement) dtElement.innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+    }
+    updateDT(); 
+    setInterval(updateDT, 1000);
 
-        async function load() {
-            try {
-                const res = await fetch('last_rates.json?v=' + Date.now());
-                const data = await res.json();
-                render(data);
-            } catch (e) {
-                render({rates: {"دالر هرات":{current:"---",status:"same",percent:"0%"}}});
-            }
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function toggleTheme() { document.body.classList.toggle('light-mode'); }
+
+    async function load() {
+        try {
+            const res = await fetch('last_rates.json?v=' + Date.now());
+            const data = await res.json();
+            render(data);
+        } catch (e) {
+            console.error("خطا در بارگذاری داده‌ها:", e);
+            // نمایش حالت پیش‌فرض در صورت خطا
+            render({rates: {}});
         }
+    }
 
-        function render(data) {
-            const container = document.getElementById('main-container');
-            container.innerHTML = '';
+    function render(data) {
+        const container = document.getElementById('main-container');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        const currentHour = new Date().getHours();
+        // طبق دستور شما: از ساعت 5 عصر (17) به بعد بازار بسته است
+        const isClosed = (currentHour >= 17 || currentHour < 8);
+        
+        const config = [
+            {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+            {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+            {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+            {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+            {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
+        ];
+
+        config.forEach(item => {
+            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "same", percent: "0%"};
+            const arrow = r.status === 'up' ? 'fa-arrow-up' : r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
             
-function render(data) {
-    const container = document.getElementById('main-container');
-    container.innerHTML = '';
-    
-    // دریافت ساعت فعلی سیستم (بین 0 تا 23)
-    const currentHour = new Date().getHours();
-    
-    // شرط: اگر ساعت بزرگتر مساوی 18 (6 عصر) "یا" کوچکتر از 8 صبح بود
-    const isClosed = (currentHour >= 18 || currentHour < 8);
-    
-    const config = [
-        {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
-        {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
-        {key:"تومان چک",sub:"IRT/AFN",icon:"https://flagcdn.com/w160/ir.png"},
-        {key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-        {key:"کلدار",sub:"PKR/AFN",icon:"https://flagcdn.com/w160/pk.png"}
-    ];
-
-    config.forEach(item => {
-        const r = data.rates[item.key] || {current: "---", status: "same", percent: "0%"};
-        const arrow = r.status === 'up' ? 'fa-arrow-up' : r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
-        const card = document.createElement('div');
-        card.className = `card ${r.status}`;
-        card.innerHTML = `
-            <div class="price-box">
-                <div class="status-badge">
-                    <span>${r.percent}</span>
-                    <div class="arrow-circle"><i class="fas ${arrow}"></i></div>
+            const card = document.createElement('div');
+            card.className = `card ${r.status}`;
+            card.innerHTML = `
+                <div class="price-box">
+                    <div class="status-badge">
+                        <span>${r.percent}</span>
+                        <div class="arrow-circle"><i class="fas ${arrow}"></i></div>
+                    </div>
+                    <div class="price-val">${r.current}</div>
                 </div>
-                <div class="price-val">${r.current}</div>
-            </div>
-            <div class="card-info">
-                <div style="text-align:right;">
-                    <b>${item.key}</b>
-                    <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                    ${isClosed ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                <div class="card-info">
+                    <div style="text-align:right;">
+                        <b>${item.key}</b>
+                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+                        ${isClosed ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                    </div>
+                    <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
                 </div>
-                <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
-            </div>
-        `;
-        container.appendChild(card);
-    });
-        }
-        function toggleLayout() {
-            const container = document.getElementById('main-container');
-            const isGrid = container.classList.toggle('grid-mode');
-            localStorage.setItem('isGridMode', isGrid);
-        }
-
-        function toggleLang() {
-            currentLang = currentLang === 'fa' ? 'en' : 'fa';
-            localStorage.setItem('lang', currentLang);
-            applyLang();
-        }
-
-        function applyLang() {
-            const lang = i18n[currentLang];
-            document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-            document.getElementById('lang-text').innerText = lang.langLabel;
-            document.getElementById('grid-label-text').innerText = lang.gridLabel;
-            document.getElementById('settings-title').innerText = lang.settings;
-            document.getElementById('manual-update-btn').innerText = lang.updateBtn;
-            document.getElementById('update-text').innerText = lang.lastUpdate;
-            load();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            applyLang();
-            const isGrid = localStorage.getItem('isGridMode') === 'true';
-            if (isGrid) {
-                document.getElementById('main-container').classList.add('grid-mode');
-                document.getElementById('layoutToggle').checked = true;
-            }
+            `;
+            container.appendChild(card);
         });
+    }
 
-        setInterval(load, 30000);
+    function toggleLayout() {
+        const container = document.getElementById('main-container');
+        const isGrid = container.classList.toggle('grid-mode');
+        localStorage.setItem('isGridMode', isGrid);
+    }
+
+    function toggleLang() {
+        currentLang = currentLang === 'fa' ? 'en' : 'fa';
+        localStorage.setItem('lang', currentLang);
+        applyLang();
+    }
+
+    function applyLang() {
+        const lang = i18n[currentLang];
+        document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+        document.getElementById('lang-text').innerText = lang.langLabel;
+        document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        document.getElementById('settings-title').innerText = lang.settings;
+        document.getElementById('manual-update-btn').innerText = lang.updateBtn;
+        document.getElementById('update-text').innerText = lang.lastUpdate;
+        load();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const isGrid = localStorage.getItem('isGridMode') === 'true';
+        if (isGrid) {
+            document.getElementById('main-container').classList.add('grid-mode');
+            document.getElementById('layoutToggle').checked = true;
+        }
+        applyLang();
+    });
+
+    setInterval(load, 30000);
     </script>
 </body>
 </html>
