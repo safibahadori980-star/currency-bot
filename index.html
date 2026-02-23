@@ -149,6 +149,34 @@
             padding:15px; border-radius:12px; border:1px solid var(--border);
             background:var(--card); color:var(--text); margin-bottom:10px; font-weight: bold;
         }
+        /* استایل دکمه لغزنده */
+.switch-wrapper {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--card); padding: 15px; border-radius: 15px;
+    margin-bottom: 15px; border: 1px solid var(--border);
+}
+.switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--green); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+/* تغییر چیدمان به حالت جدولی */
+.container.grid-mode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.grid-mode .card {
+    flex-direction: column-reverse;
+    text-align: center;
+    padding: 12px 10px;
+    gap: 8px;
+}
+.grid-mode .card-info { flex-direction: column-reverse; gap: 5px; }
+.grid-mode .price-val { font-size: 1.5rem; }
+.grid-mode .status-badge { justify-content: center; }
     </style>
 </head>
 
@@ -172,6 +200,13 @@
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
             <b style="font-size: 1.3rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
+        </div>
+        <div class="switch-wrapper">
+    <span style="font-weight: bold;">نمایش دو ستونه (جدولی)</span>
+    <label class="switch">
+        <input type="checkbox" id="layoutToggle" onclick="toggleLayout()">
+        <span class="slider"></span>
+    </label>
         </div>
         <button class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
     </div>
@@ -247,6 +282,10 @@
 
         load();
         setInterval(load, 30000);
+        function toggleLayout() {
+    const container = document.getElementById('main-container');
+    container.classList.toggle('grid-mode');
+            }
     </script>
 </body>
 </html>
