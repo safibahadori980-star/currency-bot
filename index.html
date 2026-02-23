@@ -66,7 +66,26 @@ body {
     font-family: 'Vazirmatn', sans-serif !important;
     }
 
+/* حالت صعودی (سبز) */
+.card-up {
+    border-left: 5px solid #00c853 !important;
+    border-bottom: 5px solid #00c853 !important;
+    transition: all 0.5s ease;
+}
+.card-up .price-text {
+    color: #00c853 !important;
+}
 
+/* حالت نزولی (قرمز) */
+.card-down {
+    border-left: 5px solid #ff5252 !important;
+    border-bottom: 5px solid #ff5252 !important;
+    transition: all 0.5s ease;
+}
+.card-down .price-text {
+    color: #ff5252 !important;
+    }
+    
 /* CARDS */
 .container {
     padding:15px 20px;
@@ -251,7 +270,30 @@ document.getElementById(id).classList.add('active');
 function closeModal(id){
 document.getElementById(id).classList.remove('active');
 }
+function updatePrice(cardId, newPrice) {
+    const cardElement = document.getElementById(cardId);
+    const priceElement = cardElement.querySelector('.price-text');
+    const oldPrice = parseFloat(priceElement.innerText);
 
+    // حذف کلاس‌های قبلی
+    cardElement.classList.remove('card-up', 'card-down');
+
+    if (newPrice > oldPrice) {
+        cardElement.classList.add('card-up');
+    } else if (newPrice < oldPrice) {
+        cardElement.classList.add('card-down');
+    }
+
+    // به‌روزرسانی عدد
+    priceElement.innerText = newPrice;
+
+    // بازگشت به حالت عادی بعد از ۳۰ ثانیه
+    setTimeout(() => {
+        cardElement.classList.remove('card-up', 'card-down');
+        priceElement.style.color = "white"; // یا رنگ پیش‌فرض شما
+    }, 30000); 
+                                               }
+                      
 /* تم */
 function toggleTheme(){
 document.body.classList.toggle('light-mode');
