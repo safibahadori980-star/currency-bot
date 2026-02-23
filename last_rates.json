@@ -5,40 +5,40 @@
                 63.2,
                 63.15
             ],
-            "status": "same",
-            "percent": "+0.00%",
-            "current": "65.60"
+            "status": "down",
+            "percent": "-3.05%",
+            "current": "63.60"
         },
         "تومان بانکی": {
             "history": [
                 0.39,
                 0.38
             ],
-            "status": "same",
-            "percent": "+0.00%",
-            "current": "0.34"
+            "status": "up",
+            "percent": "+11.76%",
+            "current": "0.38"
         },
         "تومان چک": {
             "history": [
                 0.48,
                 0.47
             ],
-            "status": "same",
-            "percent": "+0.00%",
-            "current": "0.51"
+            "status": "down",
+            "percent": "-5.88%",
+            "current": "0.48"
         },
         "کلدار": {
-            "current": "213.00",
-            "status": "same",
-            "percent": "+0.00%",
+            "current": "215.00",
+            "status": "up",
+            "percent": "+0.94%",
             "history": [
                 214.0
             ]
         },
         "یورو هرات": {
-            "current": "7.60",
-            "status": "same",
-            "percent": "+0.00%",
+            "current": "73.60",
+            "status": "up",
+            "percent": "+868.42%",
             "history": [
                 73.2
             ]
