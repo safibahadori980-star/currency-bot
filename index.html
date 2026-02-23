@@ -2,296 +2,280 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>NERKHYAB PRO</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:tahoma}
-body{background:#000;color:#fff}
-
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px;
-border-bottom:1px solid #222;
+:root{
+ --bg:#000;
+ --card:rgba(255,255,255,.08);
+ --text:#fff;
+ --border:rgba(255,255,255,.1);
+ --nav:rgba(28,28,30,.9);
 }
-
-.logo{font-size:18px;font-weight:bold}
-
-.time-box{text-align:center}
-.time{font-size:28px;font-weight:bold}
-.time span{font-size:12px;opacity:.7;margin-right:4px}
-.date{font-size:14px;opacity:.6}
-
-.container{
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:14px;
+body.light{
+ --bg:#f2f2f7;
+ --card:rgba(0,0,0,.05);
+ --text:#000;
+ --border:rgba(0,0,0,.1);
+ --nav:rgba(255,255,255,.9);
 }
-
-.container.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
+body{
+ margin:0;
+ font-family:'Vazirmatn',sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ transition:.3s;
 }
-
+.header{
+ height:80px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 20px;
+ border-bottom:1px solid var(--border);
+}
+.logo{width:55px;border-radius:12px}
+.date{text-align:center;font-weight:bold}
+.container{padding:15px 20px 100px;display:flex;flex-direction:column;gap:12px}
 .card{
-background:#111;
-border-radius:18px;
-padding:16px;
-min-height:120px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-cursor:pointer;
-border:1px solid #222;
-transition:.2s;
+ background:var(--card);
+ backdrop-filter:blur(15px);
+ border:1px solid var(--border);
+ border-radius:20px;
+ padding:16px 18px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ cursor:pointer;
+ transition:.2s;
 }
-
-.card:hover{
-transform:scale(1.02);
-border-color:#00ff88;
+.card:hover{transform:scale(1.02)}
+.card.up{border-right:5px solid #32d74b}
+.card.down{border-right:5px solid #ff453a}
+.price{font-size:1.8rem;font-weight:900;font-family:sans-serif}
+.sub{font-size:.75rem;opacity:.6}
+.percent{font-weight:bold;font-size:.85rem}
+.bottom{
+ position:fixed;
+ bottom:15px;
+ left:50%;
+ transform:translateX(-50%);
+ width:85%;
+ background:var(--nav);
+ backdrop-filter:blur(20px);
+ border-radius:30px;
+ padding:12px 20px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border:1px solid var(--border);
 }
-
-.card-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
+.modal{
+ position:fixed;
+ inset:0;
+ background:var(--bg);
+ display:none;
+ flex-direction:column;
+ padding:25px;
+ z-index:1000;
 }
-
-.card h3{font-size:18px}
-.symbol{font-size:13px;opacity:.6}
-
-.price-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-top:8px;
-}
-
-.price{
-font-size:30px;
-font-weight:bold;
-}
-
-.arrow{
-font-size:22px;
-font-weight:bold;
-}
-
-.up{color:#00ff88}
-.down{color:#ff4444}
-.equal{color:#888}
-
-.bottom-bar{
-position:fixed;
-bottom:15px;
-left:50%;
-transform:translateX(-50%);
-background:#111;
-width:90%;
-border-radius:30px;
-display:flex;
-justify-content:space-around;
-padding:12px;
-border:1px solid #222;
-}
-
-.bottom-bar button{
-background:none;
-border:none;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-.chart-modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.9);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:999;
-}
-
+.modal.active{display:flex}
 .chart-box{
-width:90%;
-background:#111;
-padding:20px;
-border-radius:20px;
+ height:260px;
+ background:var(--card);
+ border-radius:20px;
+ padding:15px;
+ margin-top:20px;
 }
-
-.close-btn{
-text-align:left;
-cursor:pointer;
-margin-bottom:10px;
+.skeleton{
+ height:75px;
+ border-radius:20px;
+ background:linear-gradient(90deg,#222,#333,#222);
+ animation:load 1.2s infinite;
+}
+@keyframes load{
+ 0%{background-position:-200px 0}
+ 100%{background-position:200px 0}
+}
+.fade{
+ animation:fade .3s ease;
+}
+@keyframes fade{
+ from{opacity:0;transform:translateY(5px)}
+ to{opacity:1;transform:none}
+}
+.error{
+ text-align:center;
+ opacity:.6;
+ margin-top:40px;
 }
 </style>
 </head>
 <body>
 
-<header>
-<div class="logo">NERKHYAB PRO</div>
-
-<div class="time-box">
-<div class="time" id="clock">03:15 <span>AM</span></div>
-<div class="date">1404/12/4</div>
+<div class="header">
+ <img src="logo.png" class="logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
+ <div class="date" id="dt"></div>
+ <div style="font-size:.7rem;font-weight:900">NERKHYAB<br>PRO</div>
 </div>
 
-<div>💲</div>
-</header>
+<div id="main" class="container"></div>
 
-<div class="container" id="cardContainer">
-
-<div class="card" onclick="openChart('USD')">
-<div class="card-top">
-<div>
-<h3>دالر هرات</h3>
-<div class="symbol">USD/AFN</div>
-</div>
-</div>
-<div class="price-row">
-<div class="price" id="priceUSD">63.45</div>
-<div class="arrow" id="arrowUSD"></div>
-</div>
+<div class="bottom">
+ <i class="fas fa-cog" onclick="openModal('settings')"></i>
+ <b>لحظاتی پیش</b>
+ <i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()"></i>
 </div>
 
-<div class="card" onclick="openChart('EUR')">
-<div class="card-top">
-<div>
-<h3>یورو هرات</h3>
-<div class="symbol">EUR/AFN</div>
-</div>
-</div>
-<div class="price-row">
-<div class="price" id="priceEUR">73.20</div>
-<div class="arrow" id="arrowEUR"></div>
-</div>
-</div>
-
-</div>
-
-<div class="bottom-bar">
-<button onclick="toggleView()">🔄 حالت نمایش</button>
-<button onclick="toggleTheme()">🌙</button>
-</div>
-
-<div id="chartModal" class="chart-modal">
-<div class="chart-box">
-<div class="close-btn" onclick="closeChart()">✖ بستن</div>
-<canvas id="bigChart"></canvas>
-</div>
+<div id="chartModal" class="modal">
+ <div style="display:flex;justify-content:space-between">
+  <b id="chartTitle">نمودار</b>
+  <i class="fas fa-times" onclick="closeModal('chartModal')"></i>
+ </div>
+ <div class="chart-box">
+  <canvas id="chart"></canvas>
+ </div>
 </div>
 
 <script>
-
-// قیمت امروز
-const currentPrices={
-USD:63.45,
-EUR:73.20
-};
-
-// قیمت 3 روز قبل
-const oldPrices={
-USD:62.80,
-EUR:74.10
-};
-
-function comparePrices(){
-for(let key in currentPrices){
-
-let current=currentPrices[key];
-let old=oldPrices[key];
-
-let arrow=document.getElementById("arrow"+key);
-
-if(current>old){
-arrow.innerHTML="↑";
-arrow.className="arrow up";
+function updateDT(){
+ const now=new Date();
+ const t=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+ const j=jalaali.toJalaali(now);
+ document.getElementById('dt').innerHTML=`${t}<div style="font-size:.8rem;opacity:.7">${j.jy}/${j.jm}/${j.jd}</div>`;
 }
-else if(current<old){
-arrow.innerHTML="↓";
-arrow.className="arrow down";
-}
-else{
-arrow.innerHTML="→";
-arrow.className="arrow equal";
-}
-}
-}
-
-comparePrices();
-
-
-let bigChart;
-
-function openChart(type){
-document.getElementById("chartModal").style.display="flex";
-const ctx=document.getElementById("bigChart");
-
-if(bigChart){bigChart.destroy();}
-
-bigChart=new Chart(ctx,{
-type:'line',
-data:{
-labels:['3 روز قبل','2 روز قبل','دیروز','امروز'],
-datasets:[{
-data:[
-oldPrices[type]-0.5,
-oldPrices[type],
-currentPrices[type]-0.3,
-currentPrices[type]
-],
-borderColor:'#00ff88',
-borderWidth:3,
-tension:.4
-}]
-},
-options:{
-plugins:{legend:{display:false}},
-scales:{x:{display:true},y:{display:false}}
-}
-});
-}
-
-function closeChart(){
-document.getElementById("chartModal").style.display="none";
-}
-
-function toggleView(){
-document.getElementById("cardContainer").classList.toggle("grid");
-}
+setInterval(updateDT,1000);updateDT();
 
 function toggleTheme(){
-if(document.body.style.background=="white"){
-document.body.style.background="#000";
-document.body.style.color="#fff";
-}else{
-document.body.style.background="white";
-document.body.style.color="#000";
-}
+ document.body.classList.toggle('light');
+ document.getElementById('themeIcon').className=
+ document.body.classList.contains('light')?'fas fa-sun':'fas fa-moon';
 }
 
-function updateClock(){
-const now=new Date();
-let h=now.getHours();
-let m=now.getMinutes();
-let ampm=h>=12?"PM":"AM";
-h=h%12;
-h=h?h:12;
-m=m<10?"0"+m:m;
-document.getElementById("clock").innerHTML=
-h+":"+m+" <span>"+ampm+"</span>";
-}
-setInterval(updateClock,1000);
-updateClock();
+function openModal(id){document.getElementById(id).classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
 
+const config=[
+ {key:"دالر هرات",sub:"USD/AFN"},
+ {key:"یورو هرات",sub:"EUR/AFN"},
+ {key:"تومان چک",sub:"IRT/AFN"},
+ {key:"تومان بانکی",sub:"IRR/AFN"},
+ {key:"کلدار",sub:"PKR/AFN"}
+];
+
+let chartInstance=null;
+
+function showChart(name,value,status){
+ openModal('chartModal');
+ document.getElementById('chartTitle').innerText=`نوسانات ${name}`;
+ const ctx=document.getElementById('chart').getContext('2d');
+ if(chartInstance)chartInstance.destroy();
+ const val=parseFloat(String(value).replace(/,/g,''));
+ const color=status==="down"?"#ff453a":"#32d74b";
+ chartInstance=new Chart(ctx,{
+  type:'line',
+  data:{
+   labels:['09','11','13','15','17'],
+   datasets:[{
+    data:[val*0.995,val*1.003,val*0.998,val*1.006,val],
+    borderColor:color,
+    borderWidth:3,
+    tension:.4,
+    fill:true,
+    backgroundColor:color+'22',
+    pointRadius:0
+   }]
+  },
+  options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   plugins:{legend:{display:false}},
+   scales:{x:{grid:{display:false}},y:{display:false}}
+  }
+ });
+}
+
+function showSkeleton(){
+ const main=document.getElementById('main');
+ main.innerHTML='';
+ for(let i=0;i<5;i++){
+  const s=document.createElement('div');
+  s.className='skeleton';
+  main.appendChild(s);
+ }
+}
+
+async function loadRates(){
+ showSkeleton();
+ try{
+  const res=await fetch('last_rates.json?v='+Date.now());
+  if(!res.ok)throw new Error();
+  const data=await res.json();
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  config.forEach(item=>{
+   const r=data.rates[item.key]||{current:"---",status:"same",percent:"0%"};
+   const card=document.createElement('div');
+   card.className=`card ${r.status} fade`;
+   card.onclick=()=>showChart(item.key,r.current,r.status);
+
+   const color=
+    r.status==="up"?"#32d74b":
+    r.status==="down"?"#ff453a":"#aaa";
+
+   if(r.status==="up"||r.status==="down")navigator.vibrate?.(50);
+
+   card.innerHTML=`
+    <div class="price">${r.current}</div>
+    <div style="text-align:right">
+     <div style="display:flex;gap:6px;align-items:center;justify-content:flex-end">
+      <span class="percent" style="color:${color}">${r.percent}</span>
+      <b>${item.key}</b>
+     </div>
+     <div class="sub">${item.sub}</div>
+    </div>
+   `;
+   main.appendChild(card);
+  });
+ }catch(e){
+  document.getElementById('main').innerHTML=
+  `<div class="error">اتصال برقرار نیست</div>`;
+ }
+}
+
+loadRates();
+setInterval(loadRates,30000);
 </script>
+<div id="settings" class="modal">
+  <div style="display:flex;justify-content:space-between;margin-bottom:25px">
+    <b>تنظیمات</b>
+    <i class="fas fa-times" onclick="closeModal('settings')"></i>
+  </div>
 
+  <button onclick="loadRates()" 
+    style="padding:12px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);width:100%;margin-bottom:12px">
+    بروزرسانی دستی
+  </button>
+
+  <button onclick="alert('NERKHYAB PRO\nDeveloped by Safi');" 
+    style="padding:12px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);width:100%;margin-bottom:12px">
+    درباره برنامه
+  </button>
+
+  <a href="https://www.instagram.com/safi.tech.ai" target="_blank"
+     style="display:block;text-align:center;padding:14px;border-radius:15px;
+     background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);
+     color:#fff;font-weight:bold;text-decoration:none;margin-top:20px">
+     Developer
+  </a>
+</div>
 </body>
-  </html>
+    </html>
