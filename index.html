@@ -59,7 +59,6 @@
 
         .price-box { display:flex; flex-direction:column; gap:5px; }
 
-        /* ظریف سازی بخش درصد طبق اشاره شما */
         .status-badge {
             display:flex; align-items:center; gap:4px; padding:2px 8px;
             border-radius:50px; font-size:0.7rem; font-weight:300; direction:ltr;
@@ -81,7 +80,6 @@
         .price-val { font-size:1.9rem; font-weight:900; }
         .card-info { display:flex; align-items:center; gap:12px; }
         
-        /* استایل متن پایان معاملات */
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
         .bottom-nav {
@@ -91,9 +89,7 @@
             justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
         }
 
-        /* انیمیشن چرخ‌دنده */
         .fa-cog { transition: transform 0.6s ease; cursor: pointer; }
-        .fa-cog:active { transform: rotate(90deg); }
 
         .full-modal {
             position:fixed; inset:0; background:var(--bg); display:none; 
@@ -107,13 +103,10 @@
             margin-bottom: 12px; border: 1px solid var(--border);
         }
         
-        /* دکمه زبان خنثی و شیک */
         .lang-btn {
             background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--border);
             padding: 6px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-family: sans-serif;
-            transition: 0.3s;
         }
-        .lang-btn:active { background: var(--green); color: #000; }
 
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -125,13 +118,16 @@
         .setting-btn {
             padding:15px; border-radius:12px; border:1px solid var(--border);
             background:var(--card); color:var(--text); margin-top:10px; font-weight: bold; cursor:pointer;
+            text-align: center; text-decoration: none; display: block;
+        }
+
+        .insta-btn {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white !important; border: none;
         }
 
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
-        .grid-mode .card-info { flex-direction: column-reverse; gap: 5px; }
-        .grid-mode .price-val { font-size: 1.5rem; }
-        .grid-mode .status-badge { justify-content: center; }
     </style>
 </head>
 
@@ -147,6 +143,9 @@
 
     <div class="bottom-nav">
         <i class="fas fa-cog" onclick="openModal('sMod')"></i>
+        <a href="https://instagram.com/Safiullah_Bahadari" target="_blank" style="color: inherit; text-decoration: none;">
+            <i class="fab fa-instagram" style="font-size: 1.5rem;"></i>
+        </a>
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
         <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
@@ -161,19 +160,7 @@
             <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
             <button onclick="toggleLang()" class="lang-btn">EN / FA</button>
         </div>
-<div id="aboutMod" class="full-modal">
-    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
-        <b style="font-size: 1.2rem;">درباره برنامه</b>
-        <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
-    </div>
-    <div style="line-height: 1.8; text-align: justify; font-size: 0.9rem; font-weight: 300;">
-        <b style="color: #d4af37;">منبع قیمت:</b><br>
-        قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت می‌شوند. نرخ ارزها در روزهای کاری، از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
-        <b style="color: #d4af37;">برنامه‌نویس و توسعه‌دهنده:</b><br>
-        صفی الله بهادری غوریانی.<br><br>
-        جهت ارتباط با برنامه‌نویس پروژه با کلیک بر روی علامت اینستاگرام در پایین همین صفحه در پیج سازنده این پروژه پیام بگذارید!
-    </div>
-</div>
+
         <div class="switch-wrapper">
             <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
             <label class="switch">
@@ -181,22 +168,35 @@
                 <span class="slider"></span>
             </label>
         </div>
-<button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
+
+        <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
         <button id="manual-update-btn" class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
+        
+        <a href="https://instagram.com/Safiullah_Bahadari" target="_blank" class="setting-btn insta-btn">
+            <i class="fab fa-instagram"></i> اینستاگرام سازنده
+        </a>
+    </div>
+
+    <div id="aboutMod" class="full-modal">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+            <b style="font-size: 1.2rem;">درباره برنامه</b>
+            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
+        </div>
+        <div style="line-height: 1.8; text-align: justify; font-size: 0.9rem; font-weight: 300;">
+            <b style="color: #d4af37;">منبع قیمت:</b><br>
+            قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت می‌شوند. نرخ ارزها در روزهای کاری، از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
+            <b style="color: #d4af37;">برنامه‌نویس و توسعه‌دهنده:</b><br>
+            صفی الله بهادری غوریانی.<br><br>
+            جهت ارتباط با برنامه‌نویس پروژه با کلیک بر روی علامت اینستاگرام در پایین همین صفحه در پیج سازنده این پروژه پیام بگذارید!
+        </div>
     </div>
 
     <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
 
     const i18n = {
-        fa: {
-            settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی",
-            langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market"
-        },
-        en: {
-            settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode",
-            langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market"
-        }
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش" },
+        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now" }
     };
 
     function updateDT() {
@@ -214,14 +214,17 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
+    function openAbout() {
+        closeModal('sMod');
+        openModal('aboutMod');
+    }
+
     async function load() {
         try {
             const res = await fetch('last_rates.json?v=' + Date.now());
             const data = await res.json();
             render(data);
         } catch (e) {
-            console.error("خطا در بارگذاری داده‌ها:", e);
-            // نمایش حالت پیش‌فرض در صورت خطا
             render({rates: {}});
         }
     }
@@ -232,7 +235,6 @@
         container.innerHTML = '';
         
         const currentHour = new Date().getHours();
-        // طبق دستور شما: از ساعت 5 عصر (17) به بعد بازار بسته است
         const isClosed = (currentHour >= 17 || currentHour < 8);
         
         const config = [
@@ -261,8 +263,7 @@
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-            
-${isClosed ? '<div class="market-closed">(پایان معاملات امروز)</div>' : ''}
+                        ${isClosed ? '<div class="market-closed">(پایان معاملات امروز)</div>' : ''}
                     </div>
                     <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
                 </div>
@@ -282,10 +283,7 @@ ${isClosed ? '<div class="market-closed">(پایان معاملات امروز)<
         localStorage.setItem('lang', currentLang);
         applyLang();
     }
-function openAbout() {
-    closeModal('sMod'); // بستن منوی تنظیمات
-    openModal('aboutMod'); // باز کردن پنجره درباره برنامه
-            }
+
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
@@ -309,4 +307,4 @@ function openAbout() {
     setInterval(load, 30000);
     </script>
 </body>
-</html>
+    </html>
