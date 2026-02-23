@@ -55,14 +55,31 @@ body {
     gap: 2px;  /* فاصله بیشتر بین ساعت و تاریخ */
 }
 
+.date-time {
+    text-align:center;
+    font-weight:normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+}
+
 .date-time b {
-    font-size:1.6rem; /* تنظیم اندازه فونت برای ساعت */
+    font-size:1.2rem;  /* اندازه ساعت */
 }
 
 .date-time span {
-    font-size:1rem; /* اندازه فونت تاریخ کمی کمتر از ساعت */
-    opacity:0.8; /* کمی شفافیت برای تاریخ */
+    font-size:1.2rem;  /* اندازه تاریخ بزرگ‌تر */
+    opacity:0.8;
 }
+
+.date-time .am {
+    font-size: 0.7rem;  /* کوچک‌تر کردن AM */
+    position: absolute;
+    left: 0;
+    margin-left: 5px;
+    }
 /* CARDS */
 .container {
     padding:15px 20px;
