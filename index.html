@@ -280,12 +280,22 @@ input:checked + .slider:before { transform: translateX(22px); }
             });
         }
 
-        load();
-        setInterval(load, 30000);
         function toggleLayout() {
     const container = document.getElementById('main-container');
-    container.classList.toggle('grid-mode');
-            }
+    const isGrid = container.classList.toggle('grid-mode');
+    // این خط باعث ذخیره شدن وضعیت می‌شود
+    localStorage.setItem('isGridMode', isGrid);
+}
+
+// این بخش را هم دقیقاً زیر تابع بالا اضافه کن تا هنگام رفرش، وضعیت را از حافظه بخواند
+window.addEventListener('DOMContentLoaded', () => {
+    const isGrid = localStorage.getItem('isGridMode') === 'true';
+    if (isGrid) {
+        document.getElementById('main-container').classList.add('grid-mode');
+        const toggleInput = document.getElementById('layoutToggle');
+        if (toggleInput) toggleInput.checked = true;
+    }
+});
     </script>
 </body>
 </html>
