@@ -69,14 +69,12 @@ body {
     align-items:center;
 }
 
-/* PRICE BOX */
 .price-box {
     display:flex;
     flex-direction:column;
     gap:5px;
 }
 
-/* BADGE */
 .status-badge {
     display:flex;
     align-items:center;
@@ -98,7 +96,6 @@ body {
     font-size:0.6rem;
 }
 
-/* COLORS */
 .up .status-badge {color:#32d74b;background:rgba(50,215,75,0.15);}
 .up .arrow-circle {background:#32d74b;color:#000;}
 
@@ -108,13 +105,11 @@ body {
 .same .status-badge {color:#aaa;background:rgba(142,142,147,0.1);}
 .same .arrow-circle {background:#aaa;color:#fff;}
 
-/* PRICE */
 .price-val {
     font-size:1.9rem;
     font-weight:900;
 }
 
-/* INFO */
 .card-info {
     display:flex;
     align-items:center;
@@ -137,6 +132,28 @@ body {
     align-items:center;
     border:1px solid var(--border);
 }
+
+/* MODAL */
+.full-modal {
+    position:fixed;
+    inset:0;
+    background:var(--bg);
+    display:none;
+    z-index:2000;
+    padding:25px;
+    flex-direction:column;
+}
+
+.full-modal.active {display:flex;}
+
+.setting-btn {
+    padding:12px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    margin-bottom:10px;
+}
 </style>
 </head>
 
@@ -151,96 +168,114 @@ body {
 <div id="main-container" class="container"></div>
 
 <div class="bottom-nav">
-    <i class="fas fa-cog"></i>
+    <i class="fas fa-cog" onclick="openModal('sMod')"></i>
     <span>لحظاتی پیش</span>
     <i class="fas fa-moon" onclick="toggleTheme()"></i>
+</div>
+
+<!-- MODAL -->
+<div id="sMod" class="full-modal">
+    <div style="display:flex;justify-content:space-between;">
+        <b>تنظیمات</b>
+        <i class="fas fa-times" onclick="closeModal('sMod')"></i>
+    </div>
+    <button class="setting-btn" onclick="location.reload()">بروزرسانی</button>
 </div>
 
 <script>
 
 /* زمان */
 function updateDT(){
-    const now = new Date();
-    const t = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
-    const j = jalaali.toJalaali(now);
-    document.getElementById('dt').innerHTML = `<b>${t}</b><span>${j.jy}/${j.jm}/${j.jd}</span>`;
+    const now=new Date();
+    const t=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    const j=jalaali.toJalaali(now);
+    document.getElementById('dt').innerHTML=`<b>${t}</b><span>${j.jy}/${j.jm}/${j.jd}</span>`;
 }
-setInterval(updateDT,1000);
-updateDT();
+setInterval(updateDT,1000);updateDT();
 
-/* دیتا پیشفرض (اگر JSON نبود) */
-const fallback = {
-    rates:{
-        "دالر هرات":{current:"63.45",status:"down",percent:"-1.55%"},
-        "یورو هرات":{current:"73.20",status:"down",percent:"-1.35%"},
-        "تومان چک":{current:"0.46",status:"down",percent:"-6.12%"},
-        "تومان بانکی":{current:"0.38",status:"up",percent:"+8.57%"}
-    }
+/* fallback */
+const fallback={
+rates:{
+"دالر هرات":{current:"63.45",status:"down",percent:"-1.55%"},
+"یورو هرات":{current:"73.20",status:"down",percent:"-1.35%"},
+"تومان چک":{current:"0.46",status:"down",percent:"-6.12%"},
+"تومان بانکی":{current:"0.38",status:"up",percent:"+8.57%"},
+"کلدار":{current:"0.23",status:"up",percent:"+1.42%"}
+}
 };
 
-const config = [
+const config=[
 {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
 {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
 {key:"تومان چک",sub:"IRT/AFN",icon:"https://flagcdn.com/w160/ir.png"},
-{key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"}
+{key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+{key:"کلدار",sub:"PKR/AFN",icon:"https://flagcdn.com/w160/pk.png"}
 ];
 
+/* مودال */
+function openModal(id){
+document.getElementById(id).classList.add('active');
+}
+function closeModal(id){
+document.getElementById(id).classList.remove('active');
+}
+
+/* تم */
+function toggleTheme(){
+document.body.classList.toggle('light-mode');
+}
+
+/* لود دیتا */
 async function load(){
 
-    let data;
+let data;
 
-    try {
-        const res = await fetch('last_rates.json?v='+Date.now());
-        data = await res.json();
-    } catch(e){
-        console.log("fallback فعال شد");
-        data = fallback;
-    }
+try{
+const res=await fetch('last_rates.json?v='+Date.now());
+data=await res.json();
+}catch{
+data=fallback;
+}
 
-    const container = document.getElementById('main-container');
-    container.innerHTML = '';
+const container=document.getElementById('main-container');
+container.innerHTML='';
 
-    config.forEach(item => {
+config.forEach(item=>{
+const r=data.rates[item.key]||{current:"---",status:"same",percent:"0%"};
 
-        const r = data.rates[item.key] || {current:"---",status:"same",percent:"0%"};
+const arrow=r.status==='up'?'fa-arrow-up':
+r.status==='down'?'fa-arrow-down':'fa-minus';
 
-        const arrow = r.status === 'up' ? 'fa-arrow-up' :
-                      r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
+const card=document.createElement('div');
+card.className=`card ${r.status}`;
 
-        const card = document.createElement('div');
-        card.className = `card ${r.status}`;
+card.innerHTML=`
+<div class="price-box">
+<div class="status-badge">
+<span>${r.percent}</span>
+<div class="arrow-circle">
+<i class="fas ${arrow}"></i>
+</div>
+</div>
+<div class="price-val">${r.current}</div>
+</div>
 
-        card.innerHTML = `
-            <div class="price-box">
-                <div class="status-badge">
-                    <span>${r.percent}</span>
-                    <div class="arrow-circle">
-                        <i class="fas ${arrow}"></i>
-                    </div>
-                </div>
-                <div class="price-val">${r.current}</div>
-            </div>
+<div class="card-info">
+<div style="text-align:right;">
+<b>${item.key}</b>
+<div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+</div>
+<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;">
+</div>
+`;
 
-            <div class="card-info">
-                <div style="text-align:right;">
-                    <b>${item.key}</b>
-                    <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                </div>
-                <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;">
-            </div>
-        `;
+container.appendChild(card);
+});
 
-        container.appendChild(card);
-    });
 }
 
 load();
 setInterval(load,30000);
-
-/* تم */
-function toggleTheme(){
-    document.body.classList.toggle('light-mode');
-}
 
 </script>
 
