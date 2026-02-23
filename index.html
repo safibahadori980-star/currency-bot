@@ -52,21 +52,23 @@
             align-items:center; transition: all 0.3s ease;
         }
 
-        .card.up { border-left: 5px solid var(--green) !important; border-bottom: 3px solid var(--green) !important; }
+        .card.up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.up .price-val { color: var(--green); }
-        .card.down { border-left: 5px solid var(--red) !important; border-bottom: 3px solid var(--red) !important; }
+        .card.down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
         .card.down .price-val { color: var(--red); }
 
         .price-box { display:flex; flex-direction:column; gap:5px; }
 
+        /* ظریف سازی بخش درصد طبق اشاره شما */
         .status-badge {
-            display:flex; align-items:center; gap:4px; padding:2px 6px;
-            border-radius:50px; font-size:0.65rem; font-weight:300; direction:ltr;
+            display:flex; align-items:center; gap:4px; padding:2px 8px;
+            border-radius:50px; font-size:0.7rem; font-weight:300; direction:ltr;
         }
+        .status-badge span { font-weight: 400; }
 
         .arrow-circle {
-            width:16px; height:16px; border-radius:50%;
-            display:flex; align-items:center; justify-content:center; font-size:0.6rem;
+            width:14px; height:14px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:0.5rem;
         }
 
         .up .status-badge {color:var(--green); background:rgba(0,200,83,0.15);}
@@ -78,7 +80,9 @@
 
         .price-val { font-size:1.9rem; font-weight:900; }
         .card-info { display:flex; align-items:center; gap:12px; }
-        .market-closed { color: #ff9f0a; font-size: 0.6rem; font-weight: 300; margin-top: 2px; }
+        
+        /* استایل متن پایان معاملات */
+        .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
         .bottom-nav {
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
@@ -87,19 +91,30 @@
             justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
         }
 
+        /* انیمیشن چرخ‌دنده */
+        .fa-cog { transition: transform 0.6s ease; cursor: pointer; }
+        .fa-cog:active { transform: rotate(90deg); }
+
         .full-modal {
             position:fixed; inset:0; background:var(--bg); display:none; 
             z-index:2000; padding:25px; flex-direction:column;
         }
         .full-modal.active {display:flex;}
         
-        /* اصلاح ساختار ردیف‌های تنظیمات */
         .switch-wrapper {
             display: flex; justify-content: space-between; align-items: center;
             background: var(--card); padding: 15px; border-radius: 15px;
-            margin-bottom: 15px; border: 1px solid var(--border);
+            margin-bottom: 12px; border: 1px solid var(--border);
         }
         
+        /* دکمه زبان خنثی و شیک */
+        .lang-btn {
+            background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--border);
+            padding: 6px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-family: sans-serif;
+            transition: 0.3s;
+        }
+        .lang-btn:active { background: var(--green); color: #000; }
+
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .4s; border-radius: 34px; }
@@ -109,12 +124,11 @@
 
         .setting-btn {
             padding:15px; border-radius:12px; border:1px solid var(--border);
-            background:var(--card); color:var(--text); margin-bottom:10px; font-weight: bold;
+            background:var(--card); color:var(--text); margin-top:10px; font-weight: bold; cursor:pointer;
         }
 
-        /* GRID MODE */
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 10px; gap: 8px; }
+        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .card-info { flex-direction: column-reverse; gap: 5px; }
         .grid-mode .price-val { font-size: 1.5rem; }
         .grid-mode .status-badge { justify-content: center; }
@@ -132,7 +146,7 @@
     <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
+        <i class="fas fa-cog" onclick="openModal('sMod')"></i>
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
         <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
@@ -145,7 +159,7 @@
 
         <div class="switch-wrapper">
             <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
-            <button onclick="toggleLang()" style="background:var(--green); color:#000; border:none; padding:5px 15px; border-radius:10px; font-weight:bold; cursor:pointer; font-family:sans-serif;">EN / FA</button>
+            <button onclick="toggleLang()" class="lang-btn">EN / FA</button>
         </div>
 
         <div class="switch-wrapper">
@@ -165,11 +179,11 @@
         const i18n = {
             fa: {
                 settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی",
-                langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "( پایان معاملات امروز )"
+                langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market ( پایان معاملات امروز )"
             },
             en: {
                 settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode",
-                langLabel: "Language: English", lastUpdate: "Just now", closed: "( Market Closed )"
+                langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market"
             }
         };
 
@@ -199,7 +213,10 @@
         function render(data) {
             const container = document.getElementById('main-container');
             container.innerHTML = '';
+            
+            // نمایش متن بازار بسته از ساعت 17:00 به بعد
             const isClosed = new Date().getHours() >= 17;
+            
             const config = [
                 {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
                 {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
@@ -269,4 +286,4 @@
         setInterval(load, 30000);
     </script>
 </body>
-            </html>
+</html>
