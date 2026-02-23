@@ -44,42 +44,34 @@ body {
 }
 
 .main-logo {width:50px;border-radius:12px;}
+<head>
+    <style>
+        .date-time {
+            text-align:center;
+            font-weight:normal;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;  /* برای استفاده از position:absolute */
+        }
 
-.date-time {
-    text-align:center;
-    font-weight:normal;  /* کاهش وزن فونت */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;  /* فاصله بیشتر بین ساعت و تاریخ */
-}
+        .date-time b {
+            font-size:1.6rem;  /* اندازه ساعت */
+        }
 
-.date-time {
-    text-align:center;
-    font-weight:normal;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-}
+        .date-time span {
+            font-size:1.2rem;  /* اندازه تاریخ بزرگ‌تر */
+            opacity:0.8;
+        }
 
-.date-time b {
-    font-size:1.2rem;  /* اندازه ساعت */
-}
+        .date-time .am {
+            font-size: 0.8rem;  /* کوچک‌تر کردن AM */
+            font-weight: normal;  /* کاهش وزن فونت AM */
+            position: absolute;
+            left: 0;  /* قرار دادن AM سمت چپ */
+            margin-left: 5px;  /* فاصله از چپ */
+        }
 
-.date-time span {
-    font-size:1.2rem;  /* اندازه تاریخ بزرگ‌تر */
-    opacity:0.8;
-}
-
-.date-time .am {
-    font-size: 0.7rem;  /* کوچک‌تر کردن AM */
-    position: absolute;
-    left: 0;
-    margin-left: 5px;
-    }
 /* CARDS */
 .container {
     padding:15px 20px;
@@ -197,7 +189,13 @@ body {
 </div>
 
 <div id="main-container" class="container"></div>
-
+<body>
+    <div class="date-time">
+        <span class="am">AM</span>  <!-- "AM" رو به سمت چپ منتقل کردیم -->
+        <b>06:44</b>  <!-- ساعت -->
+        <span>1404/12/4</span>  <!-- تاریخ -->
+    </div>
+</body>
 <div class="bottom-nav">
     <i class="fas fa-cog" onclick="openModal('sMod')"></i>
     <span>لحظاتی پیش</span>
