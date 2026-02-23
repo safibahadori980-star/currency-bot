@@ -6,16 +6,16 @@
                 63.15
             ],
             "status": "down",
-            "percent": "-1.55%",
-            "current": "63.45"
+            "percent": "-0.16%",
+            "current": "63.35"
         },
         "تومان بانکی": {
             "history": [
                 0.39,
                 0.38
             ],
-            "status": "up",
-            "percent": "+5.56%",
+            "status": "same",
+            "percent": "+0.00%",
             "current": "0.38"
         },
         "تومان چک": {
@@ -23,14 +23,14 @@
                 0.48,
                 0.47
             ],
-            "status": "down",
-            "percent": "-4.08%",
+            "status": "same",
+            "percent": "+0.00%",
             "current": "0.47"
         },
         "کلدار": {
             "current": "215.00",
-            "status": "up",
-            "percent": "+1.90%",
+            "status": "same",
+            "percent": "+0.00%",
             "history": [
                 214.0
             ]
