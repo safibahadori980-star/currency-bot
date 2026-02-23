@@ -40,8 +40,8 @@ transition:.3s;
 display:flex;
 justify-content:space-between;
 align-items:center;
-height:95px;
-padding:14px 25px;
+height:85px;
+padding:10px 20px;
 border-bottom:1px solid var(--border);
 }
 .main-logo{width:50px;border-radius:12px}
@@ -50,9 +50,9 @@ border-bottom:1px solid var(--border);
 text-align:center;
 }
 .date-time b{
-font-size:1.4rem;
+font-size:1.5rem;
 display:block;
-line-height:1;
+line-height:1.2;
 }
 .ampm{
 font-size:.6rem;
@@ -60,13 +60,13 @@ opacity:.7;
 margin-right:3px;
 }
 .date-line{
-font-size:1rem;
-opacity:.9;
-margin-top:3px;
+font-size:.85rem;
+opacity:.8;
+margin-top:2px;
 }
 
 .brand{
-font-size:.1rem;
+font-size:.8rem;
 font-weight:900;
 text-align:right;
 }
@@ -74,8 +74,8 @@ text-align:right;
 /* container modes */
 .container{
 display:grid;
-gap:14px;
-padding:18px 20px 120px;
+gap:12px;
+padding:16px 20px 120px;
 transition:.3s;
 }
 .container.list-mode{
@@ -90,9 +90,9 @@ grid-template-columns:repeat(2,1fr);
 background:var(--card);
 backdrop-filter:blur(15px);
 border:1px solid var(--border);
-border-radius:22px;
-padding:15px;
-min-height:120px;
+border-radius:20px;
+padding:16px;
+min-height:120px;   /* کمتر شد */
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -103,14 +103,14 @@ transition:.3s;
 
 .price-val{
 font-size:2.1rem;
-font-weight:850;
+font-weight:900;
 text-align:left;
-margin-top:10px;
+margin-top:8px;
 }
 
 .chart-small{
-height:60px;
-margin-top:10px;
+height:55px;
+margin-top:8px;
 }
 
 /* bottom nav */
@@ -166,7 +166,7 @@ font-family:inherit;
 <div id="main-container" class="container"></div>
 
 <div class="bottom-nav">
-<i class="fas fa-moon" id="themeIcon" onclick="toggleTheme()"></i>
+<i class="fas fa-moon" onclick="toggleTheme()"></i>
 <span>لحظاتی پیش</span>
 <i class="fas fa-cog" onclick="openModal('settingsModal')"></i>
 </div>
@@ -296,10 +296,8 @@ if(localStorage.getItem('theme')==='light')
 document.body.classList.add('light-mode');
 
 const savedView=localStorage.getItem('viewMode')||'list';
-
-document.getElementById('dt').innerHTML=
-`<b>${time}</b><div class="date-line">${j.jy}/${j.jm}/${j.jd}</div>`;
-               }
+document.getElementById('main-container')
+.classList.add(savedView+'-mode');
 
 load();
 setInterval(load,30000);
