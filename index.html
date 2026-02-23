@@ -29,83 +29,39 @@
         }
 
         body {
-            margin:0;
-            background:var(--bg);
-            color:var(--text);
-            font-family:'Vazirmatn', sans-serif;
-            overflow-x: hidden;
+            margin:0; background:var(--bg); color:var(--text);
+            font-family:'Vazirmatn', sans-serif; overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* HEADER - فیکس شده در یک خط */
         .header { 
-            padding: 10px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            height: 70px; 
-            border-bottom: 1px solid var(--border); 
-            background: var(--bg);
+            padding: 10px 20px; display: flex; justify-content: space-between; 
+            align-items: center; height: 70px; border-bottom: 1px solid var(--border); background: var(--bg);
         }
 
         .main-logo { width:50px; border-radius:12px; }
-
-        .date-time { 
-            display: flex; 
-            flex-direction: row-reverse; 
-            align-items: center;
-            gap: 10px; 
-            white-space: nowrap; 
-        }
-
+        .date-time { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; white-space: nowrap; }
         .date-time b { font-size: 1.2rem; font-weight: 900; }
         .date-time span { font-size: 0.95rem; opacity: 0.8; }
 
-        /* CARDS - با حاشیه رنگی فعال */
-        .container {
-            padding:15px 20px 100px;
-            display:flex;
-            flex-direction:column;
-            gap:12px;
-        }
+        .container { padding:15px 20px 100px; display:flex; flex-direction:column; gap:12px; }
 
         .card {
-            background:var(--card);
-            backdrop-filter:blur(15px);
-            border:1px solid var(--border);
-            border-radius:20px;
-            padding:14px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            transition: all 0.3s ease;
+            background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
+            border-radius:20px; padding:14px; display:flex; justify-content:space-between;
+            align-items:center; transition: all 0.3s ease;
         }
 
-        /* اعمال حاشیه سبز برای صعودی */
-        .card.up {
-            border-left: 5px solid var(--green) !important;
-            border-bottom: 3px solid var(--green) !important;
-        }
+        .card.up { border-left: 5px solid var(--green) !important; border-bottom: 3px solid var(--green) !important; }
         .card.up .price-val { color: var(--green); }
-
-        /* اعمال حاشیه قرمز برای نزولی */
-        .card.down {
-            border-left: 5px solid var(--red) !important;
-            border-bottom: 3px solid var(--red) !important;
-        }
+        .card.down { border-left: 5px solid var(--red) !important; border-bottom: 3px solid var(--red) !important; }
         .card.down .price-val { color: var(--red); }
 
         .price-box { display:flex; flex-direction:column; gap:5px; }
 
         .status-badge {
-            display:flex;
-            align-items:center;
-            gap:4px;
-            padding:2px 6px;
-            border-radius:50px;
-            font-size:0.65rem;
-            font-weight:300;
-            direction:ltr;
+            display:flex; align-items:center; gap:4px; padding:2px 6px;
+            border-radius:50px; font-size:0.65rem; font-weight:300; direction:ltr;
         }
 
         .arrow-circle {
@@ -115,68 +71,53 @@
 
         .up .status-badge {color:var(--green); background:rgba(0,200,83,0.15);}
         .up .arrow-circle {background:var(--green); color:#000;}
-
         .down .status-badge {color:var(--red); background:rgba(255,82,82,0.15);}
         .down .arrow-circle {background:var(--red); color:#fff;}
-
         .same .status-badge {color:#aaa; background:rgba(142,142,147,0.1);}
         .same .arrow-circle {background:#aaa; color:#fff;}
 
         .price-val { font-size:1.9rem; font-weight:900; }
-
         .card-info { display:flex; align-items:center; gap:12px; }
         .market-closed { color: #ff9f0a; font-size: 0.6rem; font-weight: 300; margin-top: 2px; }
 
-        /* NAV */
         .bottom-nav {
-            position:fixed;
-            bottom:15px; left:50%; transform:translateX(-50%);
-            width:85%; background:var(--nav);
-            backdrop-filter:blur(20px); border-radius:30px;
-            padding:12px 20px; display:flex;
-            justify-content:space-between; align-items:center;
-            border:1px solid var(--border); z-index: 1000;
+            position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
+            width:85%; background:var(--nav); backdrop-filter:blur(20px); 
+            border-radius:30px; padding:12px 20px; display:flex;
+            justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
         }
 
-        /* MODAL */
         .full-modal {
-            position:fixed; inset:0; background:var(--bg);
-            display:none; z-index:2000; padding:25px;
-            flex-direction:column;
+            position:fixed; inset:0; background:var(--bg); display:none; 
+            z-index:2000; padding:25px; flex-direction:column;
         }
         .full-modal.active {display:flex;}
+        
+        /* اصلاح ساختار ردیف‌های تنظیمات */
+        .switch-wrapper {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--card); padding: 15px; border-radius: 15px;
+            margin-bottom: 15px; border: 1px solid var(--border);
+        }
+        
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--green); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
         .setting-btn {
             padding:15px; border-radius:12px; border:1px solid var(--border);
             background:var(--card); color:var(--text); margin-bottom:10px; font-weight: bold;
         }
-        /* استایل دکمه لغزنده */
-.switch-wrapper {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--card); padding: 15px; border-radius: 15px;
-    margin-bottom: 15px; border: 1px solid var(--border);
-}
-.switch { position: relative; display: inline-block; width: 44px; height: 22px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .4s; border-radius: 34px; }
-.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: var(--green); }
-input:checked + .slider:before { transform: translateX(22px); }
 
-/* تغییر چیدمان به حالت جدولی */
-.container.grid-mode {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-.grid-mode .card {
-    flex-direction: column-reverse;
-    text-align: center;
-    padding: 12px 10px;
-    gap: 8px;
-}
-.grid-mode .card-info { flex-direction: column-reverse; gap: 5px; }
-.grid-mode .price-val { font-size: 1.5rem; }
-.grid-mode .status-badge { justify-content: center; }
+        /* GRID MODE */
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 10px; gap: 8px; }
+        .grid-mode .card-info { flex-direction: column-reverse; gap: 5px; }
+        .grid-mode .price-val { font-size: 1.5rem; }
+        .grid-mode .status-badge { justify-content: center; }
     </style>
 </head>
 
@@ -198,43 +139,48 @@ input:checked + .slider:before { transform: translateX(22px); }
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-            <b style="font-size: 1.3rem;">تنظیمات</b>
+            <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
+
         <div class="switch-wrapper">
-    <span style="font-weight: bold;">حالت جدولی</span>      
-    <label class="switch">
+            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
+            <button onclick="toggleLang()" style="background:var(--green); color:#000; border:none; padding:5px 15px; border-radius:10px; font-weight:bold; cursor:pointer; font-family:sans-serif;">EN / FA</button>
+        </div>
+
         <div class="switch-wrapper">
-    <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
-    <button onclick="toggleLang()" style="background:var(--green); color:#000; border:none; padding:5px 15px; border-radius:10px; font-weight:bold; cursor:pointer;">EN / FA</button>
+            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
+            <label class="switch">
+                <input type="checkbox" id="layoutToggle" onclick="toggleLayout()">
+                <span class="slider"></span>
+            </label>
         </div>
-        <input type="checkbox" id="layoutToggle" onclick="toggleLayout()">
-        <span class="slider"></span>
-    </label>
-        </div>
-        <button class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
+
+        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
     </div>
 
     <script>
+        let currentLang = localStorage.getItem('lang') || 'fa';
+
+        const i18n = {
+            fa: {
+                settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی",
+                langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "( پایان معاملات امروز )"
+            },
+            en: {
+                settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode",
+                langLabel: "Language: English", lastUpdate: "Just now", closed: "( Market Closed )"
+            }
+        };
+
         function updateDT() {
             const now = new Date();
             const hh = String(now.getHours()).padStart(2, '0');
             const mm = String(now.getMinutes()).padStart(2, '0');
-            const timeStr = hh + ":" + mm;
             const j = jalaali.toJalaali(now);
-            const dateStr = `${j.jy}/${j.jm}/${j.jd}`;
-            document.getElementById('dt').innerHTML = `<b>${timeStr}</b> <span>${dateStr}</span>`;
+            document.getElementById('dt').innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
         }
-        updateDT();
-        setInterval(updateDT, 1000);
-
-        const config = [
-            {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
-            {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
-            {key:"تومان چک",sub:"IRT/AFN",icon:"https://flagcdn.com/w160/ir.png"},
-            {key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-            {key:"کلدار",sub:"PKR/AFN",icon:"https://flagcdn.com/w160/pk.png"}
-        ];
+        updateDT(); setInterval(updateDT, 1000);
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -246,7 +192,6 @@ input:checked + .slider:before { transform: translateX(22px); }
                 const data = await res.json();
                 render(data);
             } catch (e) {
-                // نمایش دیتای پیش‌فرض در صورت نبود فایل
                 render({rates: {"دالر هرات":{current:"---",status:"same",percent:"0%"}}});
             }
         }
@@ -255,14 +200,19 @@ input:checked + .slider:before { transform: translateX(22px); }
             const container = document.getElementById('main-container');
             container.innerHTML = '';
             const isClosed = new Date().getHours() >= 17;
+            const config = [
+                {key:"دالر هرات",sub:"USD/AFN",icon:"https://flagcdn.com/w160/us.png"},
+                {key:"یورو هرات",sub:"EUR/AFN",icon:"https://flagcdn.com/w160/eu.png"},
+                {key:"تومان چک",sub:"IRT/AFN",icon:"https://flagcdn.com/w160/ir.png"},
+                {key:"تومان بانکی",sub:"IRR/AFN",icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+                {key:"کلدار",sub:"PKR/AFN",icon:"https://flagcdn.com/w160/pk.png"}
+            ];
 
             config.forEach(item => {
                 const r = data.rates[item.key] || {current: "---", status: "same", percent: "0%"};
                 const arrow = r.status === 'up' ? 'fa-arrow-up' : r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
-                
                 const card = document.createElement('div');
-                card.className = `card ${r.status}`; // اینجا کلاس up یا down اضافه می‌شود
-
+                card.className = `card ${r.status}`;
                 card.innerHTML = `
                     <div class="price-box">
                         <div class="status-badge">
@@ -275,7 +225,7 @@ input:checked + .slider:before { transform: translateX(22px); }
                         <div style="text-align:right;">
                             <b>${item.key}</b>
                             <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                            ${isClosed ? '<div class="market-closed"> ( پایان معاملات امروز )</div>' : ''}
+                            ${isClosed ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
                         </div>
                         <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
                     </div>
@@ -285,71 +235,38 @@ input:checked + .slider:before { transform: translateX(22px); }
         }
 
         function toggleLayout() {
-    const container = document.getElementById('main-container');
-    const isGrid = container.classList.toggle('grid-mode');
-    // این خط باعث ذخیره شدن وضعیت می‌شود
-    localStorage.setItem('isGridMode', isGrid);
-}
+            const container = document.getElementById('main-container');
+            const isGrid = container.classList.toggle('grid-mode');
+            localStorage.setItem('isGridMode', isGrid);
+        }
 
-// این بخش را هم دقیقاً زیر تابع بالا اضافه کن تا هنگام رفرش، وضعیت را از حافظه بخواند
-window.addEventListener('DOMContentLoaded', () => {
-    const isGrid = localStorage.getItem('isGridMode') === 'true';
-    if (isGrid) {
-        document.getElementById('main-container').classList.add('grid-mode');
-        const toggleInput = document.getElementById('layoutToggle');
-        if (toggleInput) toggleInput.checked = true;
-    }
-});
-        load();
-setInterval(load, 30000);
-        let currentLang = localStorage.getItem('lang') || 'fa';
+        function toggleLang() {
+            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            localStorage.setItem('lang', currentLang);
+            applyLang();
+        }
 
-const i18n = {
-    fa: {
-        title: "نرخ‌یاب پرو",
-        settings: "تنظیمات",
-        updateBtn: "بروزرسانی دستی",
-        gridLabel: "نمایش دو ستونه (جدولی)",
-        langLabel: "زبان: فارسی",
-        lastUpdate: "لحظاتی پیش",
-        closed: "( پایان معاملات امروز )"
-    },
-    en: {
-        title: "NERKHYAB PRO",
-        settings: "Settings",
-        updateBtn: "Manual Update",
-        gridLabel: "Grid Layout (2 Columns)",
-        langLabel: "Language: English",
-        lastUpdate: "Just now",
-        closed: "( Market Closed )"
-    }
-};
+        function applyLang() {
+            const lang = i18n[currentLang];
+            document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            document.getElementById('lang-text').innerText = lang.langLabel;
+            document.getElementById('grid-label-text').innerText = lang.gridLabel;
+            document.getElementById('settings-title').innerText = lang.settings;
+            document.getElementById('manual-update-btn').innerText = lang.updateBtn;
+            document.getElementById('update-text').innerText = lang.lastUpdate;
+            load();
+        }
 
-function toggleLang() {
-    currentLang = currentLang === 'fa' ? 'en' : 'fa';
-    localStorage.setItem('lang', currentLang);
-    applyLang();
-}
+        window.addEventListener('DOMContentLoaded', () => {
+            applyLang();
+            const isGrid = localStorage.getItem('isGridMode') === 'true';
+            if (isGrid) {
+                document.getElementById('main-container').classList.add('grid-mode');
+                document.getElementById('layoutToggle').checked = true;
+            }
+        });
 
-function applyLang() {
-    const lang = i18n[currentLang];
-    document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-    
-    // بروزرسانی متون ثابت
-    document.getElementById('lang-text').innerText = lang.langLabel;
-    document.querySelector('.full-modal b').innerText = lang.settings;
-    document.querySelector('.setting-btn').innerText = lang.updateBtn;
-    document.getElementById('update-text').innerText = lang.lastUpdate;
-    
-    // تغییر فونت بر اساس زبان (اختیاری)
-    document.body.style.fontFamily = currentLang === 'fa' ? "'Vazirmatn', sans-serif" : "sans-serif";
-    
-    // رندر مجدد کارت‌ها برای اعمال زبان جدید در متون داخل کارت
-    load(); 
-}
-
-// این خط را داخل window.addEventListener('DOMContentLoaded'...) اضافه کن:
-applyLang();
+        setInterval(load, 30000);
     </script>
 </body>
-</html>
+            </html>
