@@ -125,7 +125,7 @@
         .price-val { font-size:1.9rem; font-weight:900; }
 
         .card-info { display:flex; align-items:center; gap:12px; }
-        .market-closed { color: #ff9f0a; font-size: 0.7rem; font-weight: bold; margin-top: 2px; }
+        .market-closed { color: #ff9f0a; font-size: 0.6rem; font-weight: 300; margin-top: 2px; }
 
         /* NAV */
         .bottom-nav {
@@ -236,7 +236,7 @@
                         <div style="text-align:right;">
                             <b>${item.key}</b>
                             <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                            ${isClosed ? '<div class="market-closed">Closed Market (بازار بسته شد)</div>' : ''}
+                            ${isClosed ? '<div class="market-closed"> ( پایان معاملات امروز )</div>' : ''}
                         </div>
                         <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
                     </div>
