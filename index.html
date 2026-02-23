@@ -33,36 +33,38 @@ body {
     font-family:'Vazirmatn';
 }
 
-/* HEADER */
-.header {
-    height:90px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 20px;
-    border-bottom:1px solid var(--border);
-}
+.header { 
+    padding: 10px 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    height: 70px; /* کاهش ارتفاع برای فیکس شدن بهتر */
+    border-bottom: 1px solid var(--border); 
+    }
 
 .main-logo {width:50px;border-radius:12px;}
 <head>
     <style>
-        .date-time {
-            text-align:center;
-            font-weight:normal;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;  /* برای استفاده از position:absolute */
-        }
 
-        .date-time b {
-            font-size:1.3rem;  /* اندازه ساعت */
-        }
+.date-time { 
+    text-align: center; 
+    display: flex; 
+    flex-direction: row-reverse; /* قرار دادن ساعت و تاریخ در کنار هم */
+    align-items: center;
+    gap: 10px; /* فاصله بین ساعت و تاریخ */
+    white-space: nowrap; /* جلوگیری از شکستن خط */
+}
 
-        .date-time span {
-            font-size:1.1rem;  /* اندازه تاریخ بزرگ‌تر */
-            opacity:1;
-        }
+.date-time b { 
+    font-size: 1.2rem; 
+    font-family: 'Vazirmatn', sans-serif !important; 
+}
+
+.date-time span { 
+    font-size: 1rem; 
+    opacity: 0.8; 
+    font-family: 'Vazirmatn', sans-serif !important;
+    }
 
 
 /* CARDS */
@@ -205,14 +207,23 @@ body {
 
 <script>
 
-/* زمان */
-function updateDT(){
-    const now=new Date();
-    const t=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
-    const j=jalaali.toJalaali(now);
-    document.getElementById('dt').innerHTML=`<b>${t}</b><span>${j.jy}/${j.jm}/${j.jd}</span>`;
+function updateDT() {
+    const now = new Date();
+    
+    // تنظیم ساعت به صورت 24 ساعته و بدون AM/PM
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const timeStr = hh + ":" + mm;
+
+    const j = jalaali.toJalaali(now);
+    const dateStr = `${j.jy}/${j.jm}/${j.jd}`;
+
+    // نمایش هر دو در یک خط
+    document.getElementById('dt').innerHTML = `<b>${timeStr}</b> <span>${dateStr}</span>`;
 }
-setInterval(updateDT,1000);updateDT();
+// اجرای بلافاصله و تنظیم اینتروال
+updateDT();
+setInterval(updateDT, 1000);
 
 /* fallback */
 const fallback={
