@@ -161,7 +161,19 @@
             <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
             <button onclick="toggleLang()" class="lang-btn">EN / FA</button>
         </div>
-
+<div id="aboutMod" class="full-modal">
+    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+        <b style="font-size: 1.2rem;">درباره برنامه</b>
+        <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
+    </div>
+    <div style="line-height: 1.8; text-align: justify; font-size: 0.9rem; font-weight: 300;">
+        <b style="color: #d4af37;">منبع قیمت:</b><br>
+        قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت می‌شوند. نرخ ارزها در روزهای کاری، از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
+        <b style="color: #d4af37;">برنامه‌نویس و توسعه‌دهنده:</b><br>
+        صفی الله بهادری غوریانی.<br><br>
+        جهت ارتباط با برنامه‌نویس پروژه با کلیک بر روی علامت اینستاگرام در پایین همین صفحه در پیج سازنده این پروژه پیام بگذارید!
+    </div>
+</div>
         <div class="switch-wrapper">
             <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
             <label class="switch">
@@ -169,7 +181,7 @@
                 <span class="slider"></span>
             </label>
         </div>
-
+<button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
         <button id="manual-update-btn" class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
     </div>
 
@@ -270,7 +282,10 @@ ${isClosed ? '<div class="market-closed">(پایان معاملات امروز)<
         localStorage.setItem('lang', currentLang);
         applyLang();
     }
-
+function openAbout() {
+    closeModal('sMod'); // بستن منوی تنظیمات
+    openModal('aboutMod'); // باز کردن پنجره درباره برنامه
+            }
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
