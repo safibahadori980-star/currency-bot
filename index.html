@@ -39,26 +39,26 @@
             align-items: center; height: 70px; border-bottom: 1px solid var(--border); background: var(--bg);
         }
 
-        .main-logo { width:50px; border-radius:12px; }
+        .main-logo { width:45px; border-radius:10px; }
         .date-time { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; white-space: nowrap; }
-        .date-time b { font-size: 1.2rem; font-weight: 900; }
-        .date-time span { font-size: 0.95rem; opacity: 0.8; }
+        .date-time b { font-size: 1.1rem; font-weight: 900; }
+        .date-time span { font-size: 0.85rem; opacity: 0.7; }
 
         .container { padding:15px 20px 100px; display:flex; flex-direction:column; gap:12px; }
 
         .card {
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
             border-radius:20px; padding:14px; display:flex; justify-content:space-between;
-            align-items:center; transition: all 0.3s ease;
+            align-items:center; transition: all 0.3s ease; position: relative;
         }
 
-        /* استایل‌های رنگی فقط برای زمان باز بودن بازار */
+        /* استایل‌های رنگی دور کارت فقط برای ساعت بازار */
         .card.up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.up .price-val { color: var(--green); }
         .card.down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
         .card.down .price-val { color: var(--red); }
 
-        /* استایل بازار بسته (سفید شدن دور کارت و قیمت) */
+        /* وقتی بازار بسته است دور کارت ساده بماند */
         .card.market-closed-style { border: 1px solid var(--border) !important; }
         .card.market-closed-style .price-val { color: var(--text) !important; }
 
@@ -66,7 +66,7 @@
 
         .status-badge {
             display:flex; align-items:center; gap:4px; padding:2px 8px;
-            border-radius:50px; font-size:0.7rem; font-weight:300; direction:ltr;
+            border-radius:50px; font-size:0.65rem; direction:ltr;
         }
 
         .arrow-circle {
@@ -74,65 +74,69 @@
             display:flex; align-items:center; justify-content:center; font-size:0.5rem;
         }
 
-        /* رنگ‌بندی فلش‌ها (همیشه ثابت می‌ماند) */
-        .badge-up { color:var(--green) !important; background:rgba(0,200,83,0.15) !important; }
+        /* رنگ‌بندی فلش‌ها (همیشه ثابت) */
+        .badge-up { color:var(--green) !important; background:rgba(0,200,83,0.12) !important; }
         .badge-up .arrow-circle { background:var(--green); color:#000; }
-        .badge-down { color:var(--red) !important; background:rgba(255,82,82,0.15) !important; }
+        .badge-down { color:var(--red) !important; background:rgba(255,82,82,0.12) !important; }
         .badge-down .arrow-circle { background:var(--red); color:#fff; }
 
-        .price-val { font-size:1.9rem; font-weight:900; transition: color 0.3s; }
-        .card-info { display:flex; align-items:center; gap:12px; }
+        .price-val { font-size:1.8rem; font-weight:900; }
+        .card-info { display:flex; align-items:center; gap:10px; }
+        
+        /* اصلاح متن پایان معاملات - بسیار ظریف و نارنجی */
+        .market-closed-text { 
+            color: #ff9f0a; 
+            font-size: 0.6rem; 
+            font-weight: 300; 
+            margin-top: 1px;
+            display: block;
+        }
 
         .bottom-nav {
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
-            width:85%; background:var(--nav); backdrop-filter:blur(20px); 
+            width:85%; background:var(--nav); backdrop-filter:blur(25px); 
             border-radius:30px; padding:12px 20px; display:flex;
             justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
         }
 
-        #update-text { color: #ffffff !important; font-weight: 300 !important; font-size: 0.85rem; opacity: 0.8; }
+        #update-text { color: #fff; font-weight: 300; font-size: 0.8rem; opacity: 0.7; }
 
         .full-modal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             display: flex; opacity: 0; visibility: hidden;
-            transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px); transition: all 0.4s ease;
             z-index: 2000; padding: 25px; flex-direction: column;
         }
         .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
 
         .setting-btn {
-            padding: 15px; border-radius: 12px; border: 1px solid var(--border);
-            background: var(--card); color: var(--text); margin-top: 10px;
+            padding: 14px; border-radius: 12px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05); color: var(--text); margin-top: 10px;
             cursor: pointer; text-align: center; text-decoration: none; display: block;
-            font-family: 'Vazirmatn', sans-serif !important; font-weight: 500; font-size: 0.95rem;
+            font-family: 'Vazirmatn', sans-serif; font-size: 0.9rem;
         }
 
-        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white !important; border: none; }
-        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
+        .insta-btn { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white !important; border: none; }
         
         .switch-wrapper {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--card); padding: 15px; border-radius: 15px;
-            margin-bottom: 12px; border: 1px solid var(--border);
+            background: var(--card); padding: 14px; border-radius: 15px;
+            margin-bottom: 10px; border: 1px solid var(--border);
         }
-        .lang-btn { background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--border); padding: 6px 14px; border-radius: 10px; cursor: pointer; }
-        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--green); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; }
+        .grid-mode .market-closed-text { font-size: 0.55rem; }
     </style>
 </head>
 
 <body>
 
     <div class="header">
-        <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
+        <img src="https://img.icons8.com/fluency/96/money-box.png" class="main-logo">
         <div class="date-time" id="dt"></div>
-        <div style="font-weight:900; line-height: 1.2; font-size: 0.8rem; text-align: left;">NERKHYAB<br>PRO</div>
+        <div style="font-weight:900; line-height: 1.1; font-size: 0.75rem;">NERKHYAB<br>PRO</div>
     </div>
 
     <div id="main-container" class="container"></div>
@@ -145,19 +149,16 @@
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-            <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
-            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
+            <b id="settings-title" style="font-size: 1.2rem;">تنظیمات</b>
+            <i class="fas fa-times" style="font-size: 1.4rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
         <div class="switch-wrapper">
-            <span id="lang-text" style="font-weight: bold;">زبان: فارسی</span>
-            <button onclick="toggleLang()" class="lang-btn">EN / FA</button>
+            <span id="lang-text">زبان: فارسی</span>
+            <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid var(--border); padding:5px 12px; border-radius:8px; cursor:pointer;">EN / FA</button>
         </div>
         <div class="switch-wrapper">
-            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
-            <label class="switch">
-                <input type="checkbox" id="layoutToggle" onclick="toggleLayout()">
-                <span class="slider"></span>
-            </label>
+            <span id="grid-label-text">حالت جدولی</span>      
+            <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
         </div>
         <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
         <button id="manual-update-btn" class="setting-btn" onclick="location.reload()">بروزرسانی قیمت‌ها</button>
@@ -167,25 +168,27 @@
     </div>
 
     <div id="aboutMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
             <b style="font-size: 1.2rem;">درباره برنامه</b>
-            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
+            <i class="fas fa-times" style="font-size: 1.4rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
         </div>
-        <div style="line-height: 1.8; text-align: justify; font-size: 0.9rem; font-weight: 300;">
-            <b style="color: #d4af37;">منبع قیمت:</b> صرافان هرات<br>
-            <b style="color: #d4af37;">ساعت کاری:</b> ۸ صبح تا ۶ عصر<br>
-            <b style="color: #d4af37;">برنامه‌نویس:</b> صفی الله بهادری غوریانی
+        <div style="line-height: 2; font-size: 0.95rem; font-weight: 300;">
+            <p><b style="color: #d4af37;">منبع قیمت:</b> صرافان هرات</p>
+            <p><b style="color: #d4af37;">ساعت کاری:</b> ۸ صبح تا ۶ عصر</p>
+            <p><b style="color: #d4af37;">برنامه‌نویس:</b> صفی الله بهادری غوریانی</p>
         </div>
     </div>
 
     <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
+
+    // لیست آیکون‌های معتبر از سرور خارجی برای اطمینان از نمایش
     const items = [
-        { key: "دالر هرات", sub: "Herat Dollar", icon: "https://img.icons8.com/fluency/96/usa-flag.png" },
-        { key: "تومان چک", sub: "Toman Cheque", icon: "https://img.icons8.com/fluency/96/iran-flag.png" },
-        { key: "تومان بانکی", sub: "Toman Bank", icon: "https://img.icons8.com/color/96/bank.png" },
-        { key: "کلدار", sub: "Pakistani Rupee", icon: "https://img.icons8.com/fluency/96/pakistan-flag.png" },
-        { key: "یورو هرات", sub: "Euro Herat", icon: "https://img.icons8.com/fluency/96/european-union-flag.png" }
+        { key: "دالر هرات", sub: "USD/AFN", icon: "https://img.icons8.com/fluency/96/usa-flag.png" },
+        { key: "تومان چک", sub: "IRT/AFN", icon: "https://img.icons8.com/fluency/96/iran-flag.png" },
+        { key: "تومان بانکی", sub: "IRR/AFN", icon: "https://img.icons8.com/color/96/bank.png" },
+        { key: "کلدار", sub: "PKR/AFN", icon: "https://img.icons8.com/fluency/96/pakistan-flag.png" },
+        { key: "یورو هرات", sub: "EUR/AFN", icon: "https://img.icons8.com/fluency/96/european-union-flag.png" }
     ];
 
     const i18n = {
@@ -198,8 +201,7 @@
         const hh = String(now.getHours()).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const j = jalaali.toJalaali(now);
-        const dtElement = document.getElementById('dt');
-        if(dtElement) dtElement.innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        document.getElementById('dt').innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
     }
     updateDT(); setInterval(updateDT, 1000);
 
@@ -213,12 +215,11 @@
             const res = await fetch('last_rates.json?v=' + Date.now());
             const data = await res.json();
             render(data);
-        } catch (e) { console.error("Load Error"); }
+        } catch (e) { console.error("Data Load Error"); }
     }
 
     function render(data) {
         const container = document.getElementById('main-container');
-        if (!container) return;
         container.innerHTML = '';
         
         const now = new Date();
@@ -227,30 +228,26 @@
 
         items.forEach(item => {
             const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", percent: "0.00%", status: "up"};
-            
             const isNeg = r.percent.includes('-');
             const badgeClass = isNeg ? 'badge-down' : 'badge-up';
-            const icon = isNeg ? 'fa-arrow-down' : 'fa-arrow-up';
-
-            // اگر بازار بسته باشد، کلاس رنگی کارت را نمی‌دهیم
+            const iconArrow = isNeg ? 'fa-arrow-down' : 'fa-arrow-up';
             const cardVisualClass = isMarketOpen ? r.status : 'market-closed-style';
 
             const card = document.createElement('div');
             card.className = `card ${cardVisualClass}`;
-            
             card.innerHTML = `
                 <div class="price-box">
                     <div class="status-badge ${badgeClass}">
                         <span>${r.percent}</span>
-                        <div class="arrow-circle"><i class="fas ${icon}"></i></div>
+                        <div class="arrow-circle"><i class="fas ${iconArrow}"></i></div>
                     </div>
                     <div class="price-val">${r.current}</div>
                 </div>
                 <div class="card-info">
                     <div style="text-align:right;">
-                        <b>${item.key}</b>
-                        <div style="font-size:0.7rem; opacity:0.6;">${item.sub}</div>
-                        ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                        <b style="font-size:0.95rem;">${item.key}</b>
+                        <div style="font-size:0.65rem; opacity:0.6;">${item.sub}</div>
+                        ${!isMarketOpen ? `<span class="market-closed-text">${i18n[currentLang].closed}</span>` : ''}
                     </div>
                     <img src="${item.icon}" style="width:38px; height:38px; border-radius:8px; object-fit:cover;">
                 </div>
@@ -260,9 +257,8 @@
     }
 
     function toggleLayout() {
-        const container = document.getElementById('main-container');
-        const isGrid = container.classList.toggle('grid-mode');
-        localStorage.setItem('isGridMode', isGrid);
+        document.getElementById('main-container').classList.toggle('grid-mode');
+        localStorage.setItem('isGridMode', document.getElementById('main-container').classList.contains('grid-mode'));
     }
 
     function toggleLang() {
@@ -283,8 +279,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        const isGrid = localStorage.getItem('isGridMode') === 'true';
-        if (isGrid) {
+        if (localStorage.getItem('isGridMode') === 'true') {
             document.getElementById('main-container').classList.add('grid-mode');
             document.getElementById('layoutToggle').checked = true;
         }
@@ -294,4 +289,4 @@
     setInterval(load, 30000);
     </script>
 </body>
-        </html>
+    </html>
