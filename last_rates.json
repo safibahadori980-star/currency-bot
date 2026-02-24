@@ -5,9 +5,9 @@
                 63.2,
                 63.15
             ],
-            "status": "same",
-            "percent": "+0.00%",
-            "current": "63.60"
+            "status": "up",
+            "percent": "+0.08%",
+            "current": "63.65"
         },
         "تومان بانکی": {
             "history": [
@@ -28,17 +28,17 @@
             "current": "0.48"
         },
         "کلدار": {
-            "current": "214.00",
-            "status": "same",
-            "percent": "+0.00%",
+            "current": "215.00",
+            "status": "up",
+            "percent": "+0.47%",
             "history": [
                 214.0
             ]
         },
         "یورو هرات": {
-            "current": "73.20",
-            "status": "same",
-            "percent": "+0.00%",
+            "current": "73.50",
+            "status": "up",
+            "percent": "+0.41%",
             "history": [
                 73.2
             ]
