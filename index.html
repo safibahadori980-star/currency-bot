@@ -270,49 +270,48 @@ body.light-mode .full-modal {
         } catch (e) {
             render({rates: {}});
         }
-    }
+    }function render(data) {
+    const container = document.getElementById('rates-container');
+    container.innerHTML = '';
+    
+    // تشخیص باز یا بسته بودن بازار برای استایل‌دهی
+    const now = new Date();
+    const hour = now.getHours();
+    const isMarketOpen = hour >= 8 && hour < 18; // از ۸ صبح تا ۶ عصر
 
-    function render(data) {
-        const container = document.getElementById('main-container');
-        if (!container) return;
-        container.innerHTML = '';
+    items.forEach(item => {
+        const r = data.rates[item.key] || {current: "---", percent: "0.00%", status: "up"};
         
-        const currentHour = new Date().getHours();
-        const isClosed = (currentHour >= 19 || currentHour < 5);
-        
-        const config = [
-            {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-            {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-            {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-            {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-            {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
-        ];
+        // ۱. منطق رنگ فلش (همیشه رنگی بر اساس مثبت/منفی بودن درصد)
+        const isNeg = r.percent.includes('-');
+        const colorClass = isNeg ? 'down' : 'up';
+        const icon = isNeg ? 'fa-arrow-down' : 'fa-arrow-up';
 
-        config.forEach(item => {
-            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "same", percent: "0%"};
-            const arrow = r.status === 'up' ? 'fa-arrow-up' : r.status === 'down' ? 'fa-arrow-down' : 'fa-minus';
-            
-            const card = document.createElement('div');
-            card.className = `card ${r.status}`;
-            card.innerHTML = `
-                <div class="price-box">
-                    <div class="status-badge">
-                        <span>${r.percent}</span>
-                        <div class="arrow-circle"><i class="fas ${arrow}"></i></div>
-                    </div>
-                    <div class="price-val">${r.current}</div>
+        // ۲. منطق رنگ دور کارت و عدد نرخ (فقط در زمان باز بودن بازار)
+        // اگر بازار بسته باشد، کلاس رنگی اعمال نمی‌شود تا سفید بماند
+        const visualStatusClass = isMarketOpen ? r.status : 'market-closed-style';
+
+        const card = document.createElement('div');
+        card.className = `card ${visualStatusClass}`; 
+        
+        card.innerHTML = `
+            <div class="price-box">
+                <div class="status-badge ${colorClass}"> <span>${r.percent}</span>
+                    <div class="arrow-circle"><i class="fas ${icon}"></i></div>
                 </div>
-                <div class="card-info">
-                    <div style="text-align:right;">
-                        <b>${item.key}</b>
-                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                        ${isClosed ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
-                    </div>
-                    <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
+                <div class="price-val">${r.current}</div> </div>
+            <div class="card-info">
+                <div style="text-align:right;">
+                    <b>${item.key}</b>
+                    <div style="font-size:0.7rem; opacity:0.6;">${item.sub}</div>
+                    ${!isMarketOpen ? `<div style="color:#d4af37; font-size:0.65rem; margin-top:2px;">(پایان معاملات امروز)</div>` : ''}
                 </div>
-            `;
-            container.appendChild(card);
-        });
+                <img src="${item.icon}" style="width:38px; height:38px; border-radius:8px;">
+            </div>
+        `;
+        container.appendChild(card);
+    });
+        }
     }
 
     function toggleLayout() {
