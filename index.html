@@ -93,10 +93,43 @@
         .fa-cog:hover { transform: rotate(90deg); }
 
         .full-modal {
-            position:fixed; inset:0; background:var(--bg); display:none; 
-            z-index:2000; padding:25px; flex-direction:column;
-        }
-        .full-modal.active {display:flex;}
+    position: fixed;
+    inset: 0;
+    /* پس‌زمینه نیمه‌شفاف */
+    background: rgba(0, 0, 0, 0.4); 
+    /* افکت تاری پشت شیشه */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    display: flex; /* تغییر از none به flex برای انیمیشن */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px); /* کمی جابه‌جایی برای انیمیشن ورود */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    z-index: 2000; 
+    padding: 25px; 
+    flex-direction: column;
+}
+
+/* وقتی منو فعال می‌شود */
+.full-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* برای هماهنگی دکمه‌ها با تم شیشه‌ای */
+.switch-wrapper, .setting-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* حالت روشن شیشه‌ای */
+body.light-mode .full-modal {
+    background: rgba(242, 242, 247, 0.7);
+}
         
         .switch-wrapper {
             display: flex; justify-content: space-between; align-items: center;
