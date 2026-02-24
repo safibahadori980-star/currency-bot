@@ -193,7 +193,7 @@
     let currentLang = localStorage.getItem('lang') || 'fa';
 
     const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market (پایان معاملات)" },
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "  (پایان معاملات امروز)" },
         en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market" }
     };
 
@@ -228,7 +228,7 @@
         container.innerHTML = '';
         
         const currentHour = new Date().getHours();
-        const isClosed = (currentHour >= 18 || currentHour < 8);
+        const isClosed = (currentHour >= 19 || currentHour < 5);
         
         const config = [
             {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
