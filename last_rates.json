@@ -5,9 +5,9 @@
                 63.2,
                 63.15
             ],
-            "status": "up",
-            "percent": "+0.08%",
-            "current": "63.75"
+            "status": "down",
+            "percent": "-0.08%",
+            "current": "63.70"
         },
         "تومان بانکی": {
             "history": [
@@ -28,9 +28,9 @@
             "current": "0.48"
         },
         "کلدار": {
-            "current": "215.00",
-            "status": "same",
-            "percent": "+0.00%",
+            "current": "214.50",
+            "status": "down",
+            "percent": "-0.23%",
             "history": [
                 214.0
             ]
