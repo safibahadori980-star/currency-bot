@@ -19,12 +19,7 @@
             --green: #00c853;
             --red: #ff5252;
         }
-#update-text {
-    color: #ffffff !important;
-    font-weight: 300 !important; /* عدد کمتر یعنی فونت نازک‌تر */
-    letter-spacing: 0.5px;
-    opacity: 0.8; /* کمی شفافیت برای نازک‌تر دیده شدن */
-}
+
         body.light-mode {
             --bg:#f2f2f7;
             --card:rgba(0,0,0,0.05);
@@ -57,10 +52,15 @@
             align-items:center; transition: all 0.3s ease;
         }
 
+        /* استایل‌های رنگی فقط برای زمان باز بودن بازار */
         .card.up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.up .price-val { color: var(--green); }
         .card.down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
         .card.down .price-val { color: var(--red); }
+
+        /* استایل بازار بسته (سفید شدن دور کارت و قیمت) */
+        .card.market-closed-style { border: 1px solid var(--border) !important; }
+        .card.market-closed-style .price-val { color: var(--text) !important; }
 
         .price-box { display:flex; flex-direction:column; gap:5px; }
 
@@ -68,24 +68,20 @@
             display:flex; align-items:center; gap:4px; padding:2px 8px;
             border-radius:50px; font-size:0.7rem; font-weight:300; direction:ltr;
         }
-        .status-badge span { font-weight: 400; }
 
         .arrow-circle {
             width:14px; height:14px; border-radius:50%;
             display:flex; align-items:center; justify-content:center; font-size:0.5rem;
         }
 
-        .up .status-badge {color:var(--green); background:rgba(0,200,83,0.15);}
-        .up .arrow-circle {background:var(--green); color:#000;}
-        .down .status-badge {color:var(--red); background:rgba(255,82,82,0.15);}
-        .down .arrow-circle {background:var(--red); color:#fff;}
-        .same .status-badge {color:#aaa; background:rgba(142,142,147,0.1);}
-        .same .arrow-circle {background:#aaa; color:#fff;}
+        /* رنگ‌بندی فلش‌ها (همیشه ثابت می‌ماند) */
+        .badge-up { color:var(--green) !important; background:rgba(0,200,83,0.15) !important; }
+        .badge-up .arrow-circle { background:var(--green); color:#000; }
+        .badge-down { color:var(--red) !important; background:rgba(255,82,82,0.15) !important; }
+        .badge-down .arrow-circle { background:var(--red); color:#fff; }
 
-        .price-val { font-size:1.9rem; font-weight:900; }
+        .price-val { font-size:1.9rem; font-weight:900; transition: color 0.3s; }
         .card-info { display:flex; align-items:center; gap:12px; }
-        
-        .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
         .bottom-nav {
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
@@ -94,91 +90,40 @@
             justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
         }
 
-        .fa-cog { transition: transform 0.6s ease; cursor: pointer; }
-        .fa-cog:hover { transform: rotate(90deg); }
+        #update-text { color: #ffffff !important; font-weight: 300 !important; font-size: 0.85rem; opacity: 0.8; }
 
         .full-modal {
-    position: fixed;
-    inset: 0;
-    /* پس‌زمینه نیمه‌شفاف */
-    background: rgba(0, 0, 0, 0.4); 
-    /* افکت تاری پشت شیشه */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    
-    display: flex; /* تغییر از none به flex برای انیمیشن */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px); /* کمی جابه‌جایی برای انیمیشن ورود */
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    z-index: 2000; 
-    padding: 25px; 
-    flex-direction: column;
-}
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000; padding: 25px; flex-direction: column;
+        }
+        .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
 
-/* وقتی منو فعال می‌شود */
-.full-modal.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+        .setting-btn {
+            padding: 15px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--card); color: var(--text); margin-top: 10px;
+            cursor: pointer; text-align: center; text-decoration: none; display: block;
+            font-family: 'Vazirmatn', sans-serif !important; font-weight: 500; font-size: 0.95rem;
+        }
 
-/* برای هماهنگی دکمه‌ها با تم شیشه‌ای */
-.switch-wrapper, .setting-btn {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px);
-}
-
-/* حالت روشن شیشه‌ای */
-body.light-mode .full-modal {
-    background: rgba(242, 242, 247, 0.7);
-}
+        .insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white !important; border: none; }
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         
         .switch-wrapper {
             display: flex; justify-content: space-between; align-items: center;
             background: var(--card); padding: 15px; border-radius: 15px;
             margin-bottom: 12px; border: 1px solid var(--border);
         }
-        
-        .lang-btn {
-            background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--border);
-            padding: 6px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-family: sans-serif;
-        }
-
+        .lang-btn { background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid var(--border); padding: 6px 14px; border-radius: 10px; cursor: pointer; }
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--green); }
         input:checked + .slider:before { transform: translateX(22px); }
-
-        .setting-btn {
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    margin-top: 10px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: block;
-    
-    /* اضافه کردن این خطوط برای ست شدن فونت */
-    font-family: 'Vazirmatn', sans-serif !important;
-    font-weight: 500; /* یا 400 برای کمی نازک‌تر شدن */
-    font-size: 0.95rem;
-                 }
-
-        .insta-btn {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: white !important; border: none;
-        }
-
-        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
     </style>
 </head>
 
@@ -193,8 +138,8 @@ body.light-mode .full-modal {
     <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" onclick="openModal('sMod')"></i>
-        <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
+        <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
+        <span id="update-text">لحظاتی پیش</span>
         <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
     </div>
 
@@ -203,12 +148,10 @@ body.light-mode .full-modal {
             <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
-
         <div class="switch-wrapper">
-            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
+            <span id="lang-text" style="font-weight: bold;">زبان: فارسی</span>
             <button onclick="toggleLang()" class="lang-btn">EN / FA</button>
         </div>
-
         <div class="switch-wrapper">
             <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
             <label class="switch">
@@ -216,11 +159,9 @@ body.light-mode .full-modal {
                 <span class="slider"></span>
             </label>
         </div>
-
         <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
-        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
-        
-        <a href="https://www.instagram.com/safi.tech.ai?igsh=MXJydDR0aWJjazVtOA==" target="_blank" class="setting-btn insta-btn">
+        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()">بروزرسانی قیمت‌ها</button>
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
             <i class="fab fa-instagram"></i> اینستاگرام سازنده
         </a>
     </div>
@@ -231,20 +172,25 @@ body.light-mode .full-modal {
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
         </div>
         <div style="line-height: 1.8; text-align: justify; font-size: 0.9rem; font-weight: 300;">
-            <b style="color: #d4af37;">منبع قیمت:</b><br>
- قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند<br><br>
-            <b style="color: #d4af37;">برنامه‌نویس:</b><br>
-            صفی الله بهادری غوریانی.<br><br>
-            جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
+            <b style="color: #d4af37;">منبع قیمت:</b> صرافان هرات<br>
+            <b style="color: #d4af37;">ساعت کاری:</b> ۸ صبح تا ۶ عصر<br>
+            <b style="color: #d4af37;">برنامه‌نویس:</b> صفی الله بهادری غوریانی
         </div>
     </div>
 
     <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
+    const items = [
+        { key: "دالر هرات", sub: "Herat Dollar", icon: "https://img.icons8.com/fluency/96/usa-flag.png" },
+        { key: "تومان چک", sub: "Toman Cheque", icon: "https://img.icons8.com/fluency/96/iran-flag.png" },
+        { key: "تومان بانکی", sub: "Toman Bank", icon: "https://img.icons8.com/color/96/bank.png" },
+        { key: "کلدار", sub: "Pakistani Rupee", icon: "https://img.icons8.com/fluency/96/pakistan-flag.png" },
+        { key: "یورو هرات", sub: "Euro Herat", icon: "https://img.icons8.com/fluency/96/european-union-flag.png" }
+    ];
 
     const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "  (پایان معاملات امروز)" },
-        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market" }
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "(پایان معاملات امروز)" },
+        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "(Market Closed)" }
     };
 
     function updateDT() {
@@ -267,51 +213,50 @@ body.light-mode .full-modal {
             const res = await fetch('last_rates.json?v=' + Date.now());
             const data = await res.json();
             render(data);
-        } catch (e) {
-            render({rates: {}});
-        }
-    }function render(data) {
-    const container = document.getElementById('rates-container');
-    container.innerHTML = '';
-    
-    // تشخیص باز یا بسته بودن بازار برای استایل‌دهی
-    const now = new Date();
-    const hour = now.getHours();
-    const isMarketOpen = hour >= 8 && hour < 18; // از ۸ صبح تا ۶ عصر
+        } catch (e) { console.error("Load Error"); }
+    }
 
-    items.forEach(item => {
-        const r = data.rates[item.key] || {current: "---", percent: "0.00%", status: "up"};
+    function render(data) {
+        const container = document.getElementById('main-container');
+        if (!container) return;
+        container.innerHTML = '';
         
-        // ۱. منطق رنگ فلش (همیشه رنگی بر اساس مثبت/منفی بودن درصد)
-        const isNeg = r.percent.includes('-');
-        const colorClass = isNeg ? 'down' : 'up';
-        const icon = isNeg ? 'fa-arrow-down' : 'fa-arrow-up';
+        const now = new Date();
+        const hour = now.getHours();
+        const isMarketOpen = hour >= 8 && hour < 18;
 
-        // ۲. منطق رنگ دور کارت و عدد نرخ (فقط در زمان باز بودن بازار)
-        // اگر بازار بسته باشد، کلاس رنگی اعمال نمی‌شود تا سفید بماند
-        const visualStatusClass = isMarketOpen ? r.status : 'market-closed-style';
+        items.forEach(item => {
+            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", percent: "0.00%", status: "up"};
+            
+            const isNeg = r.percent.includes('-');
+            const badgeClass = isNeg ? 'badge-down' : 'badge-up';
+            const icon = isNeg ? 'fa-arrow-down' : 'fa-arrow-up';
 
-        const card = document.createElement('div');
-        card.className = `card ${visualStatusClass}`; 
-        
-        card.innerHTML = `
-            <div class="price-box">
-                <div class="status-badge ${colorClass}"> <span>${r.percent}</span>
-                    <div class="arrow-circle"><i class="fas ${icon}"></i></div>
+            // اگر بازار بسته باشد، کلاس رنگی کارت را نمی‌دهیم
+            const cardVisualClass = isMarketOpen ? r.status : 'market-closed-style';
+
+            const card = document.createElement('div');
+            card.className = `card ${cardVisualClass}`;
+            
+            card.innerHTML = `
+                <div class="price-box">
+                    <div class="status-badge ${badgeClass}">
+                        <span>${r.percent}</span>
+                        <div class="arrow-circle"><i class="fas ${icon}"></i></div>
+                    </div>
+                    <div class="price-val">${r.current}</div>
                 </div>
-                <div class="price-val">${r.current}</div> </div>
-            <div class="card-info">
-                <div style="text-align:right;">
-                    <b>${item.key}</b>
-                    <div style="font-size:0.7rem; opacity:0.6;">${item.sub}</div>
-                    ${!isMarketOpen ? `<div style="color:#d4af37; font-size:0.65rem; margin-top:2px;">(پایان معاملات امروز)</div>` : ''}
+                <div class="card-info">
+                    <div style="text-align:right;">
+                        <b>${item.key}</b>
+                        <div style="font-size:0.7rem; opacity:0.6;">${item.sub}</div>
+                        ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                    </div>
+                    <img src="${item.icon}" style="width:38px; height:38px; border-radius:8px; object-fit:cover;">
                 </div>
-                <img src="${item.icon}" style="width:38px; height:38px; border-radius:8px;">
-            </div>
-        `;
-        container.appendChild(card);
-    });
-        
+            `;
+            container.appendChild(card);
+        });
     }
 
     function toggleLayout() {
@@ -349,4 +294,4 @@ body.light-mode .full-modal {
     setInterval(load, 30000);
     </script>
 </body>
-    </html>
+        </html>
