@@ -57,7 +57,6 @@
             align-items:center; transition: all 0.3s ease;
         }
 
-        /* استایل‌های رنگی دور کارت و عدد قیمت (فقط ۸ صبح تا ۶ عصر) */
         .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.active-up .price-val { color: var(--green); }
         .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
@@ -65,7 +64,6 @@
 
         .price-box { display:flex; flex-direction:column; gap:5px; }
 
-        /* حذف کامل هاله و رنگ پس‌زمینه از درصد و فلش */
         .status-badge {
             display:flex; align-items:center; gap:4px; padding:0;
             background:transparent !important; font-size:0.75rem; direction:ltr;
@@ -76,7 +74,6 @@
             display:flex; align-items:center; justify-content:center; font-size:0.65rem;
         }
 
-        /* رنگ‌بندی متن درصد و آیکون فلش (همیشه ۲۴ ساعته فعال) */
         .text-up { color: var(--green) !important; }
         .text-down { color: var(--red) !important; }
 
@@ -101,6 +98,12 @@
         }
         .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
 
+        .switch-wrapper {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px;
+            margin-bottom: 12px; border: 1px solid var(--border);
+        }
+
         .setting-btn {
             padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08);
             margin-top: 10px; cursor: pointer; text-align: center; border: 1px solid var(--border);
@@ -112,6 +115,9 @@
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
             color: white !important; border: none !important;
         }
+
+        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
     </style>
 </head>
 
@@ -136,6 +142,17 @@
             <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
+
+        <div class="switch-wrapper">
+            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
+            <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); padding:6px 14px; border-radius:10px; cursor:pointer;">EN / FA</button>
+        </div>
+
+        <div class="switch-wrapper">
+            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
+            <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
+        </div>
+
         <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
         <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
         <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
@@ -158,7 +175,7 @@
     </div>
 
     <script>
-    let currentLang = 'fa';
+    let currentLang = localStorage.getItem('lang') || 'fa';
     const itemsList = [
         {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
         {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
@@ -166,6 +183,11 @@
         {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
         {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
     ];
+
+    const i18n = {
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "(پایان معاملات امروز)" },
+        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "(Market Closed)" }
+    };
 
     function updateDT() {
         const now = new Date();
@@ -218,7 +240,7 @@
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                        ${!isMarketOpen ? `<div class="market-closed">(پایان معاملات امروز)</div>` : ''}
+                        ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
                     </div>
                     <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
                 </div>
@@ -227,8 +249,36 @@
         });
     }
 
-    window.addEventListener('DOMContentLoaded', load);
+    function toggleLayout() {
+        const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
+        localStorage.setItem('isGridMode', isGrid);
+    }
+
+    function toggleLang() {
+        currentLang = currentLang === 'fa' ? 'en' : 'fa';
+        localStorage.setItem('lang', currentLang);
+        applyLang();
+    }
+
+    function applyLang() {
+        const lang = i18n[currentLang];
+        document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+        document.getElementById('lang-text').innerText = lang.langLabel;
+        document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        document.getElementById('settings-title').innerText = lang.settings;
+        document.getElementById('manual-update-btn').innerText = lang.updateBtn;
+        document.getElementById('update-text').innerText = lang.lastUpdate;
+        load();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('isGridMode') === 'true') {
+            document.getElementById('main-container').classList.add('grid-mode');
+            document.getElementById('layoutToggle').checked = true;
+        }
+        applyLang();
+    });
     setInterval(load, 30000);
     </script>
 </body>
-</html>
+    </html>
