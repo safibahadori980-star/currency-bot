@@ -174,8 +174,10 @@
         </div>
     </div>
 
-    <script>
+<script>
     let currentLang = localStorage.getItem('lang') || 'fa';
+    
+    // ۱. لیست کارت‌های اصلی
     const itemsList = [
         {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
         {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
@@ -184,10 +186,24 @@
         {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
     ];
 
+    // ۲. متغیر اختصاصی برای کارت ششم (دلار تهران)
+    let tehranData = { current: "---", percent: "0.00%", status: "up" };
+
     const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "(پایان معاملات امروز)" },
-        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "(Market Closed)" }
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market" },
+        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market" }
     };
+
+    // تابع استخراج عدد از پیام تلگرام (Regex)
+    function extractTehranPrice(message) {
+        const regex = /دلار تهران ⛳️\s*:\s*([\d,]+)/;
+        const match = message.match(regex);
+        if (match) {
+            tehranData.current = match[1];
+            // اینجا می‌توانید منطق تغییر درصد یا وضعیت صعودی/نزولی را هم اضافه کنید
+            renderManual(); 
+        }
+    }
 
     function updateDT() {
         const now = new Date();
@@ -212,43 +228,64 @@
     }
 
     function render(data) {
+        window.lastData = data; // ذخیره برای رندر مجدد
+        renderManual();
+    }
+
+    function renderManual() {
+        const data = window.lastData;
+        if (!data) return;
         const container = document.getElementById('main-container');
-        if (!container) return;
         container.innerHTML = '';
         
         const now = new Date();
         const hour = now.getHours();
-        const isMarketOpen = (hour >= 5 && hour < 19);
+        // اصلاح شرط بازار طبق دستور شما: ۵ عصر به بعد بسته است
+        const isMarketOpen = (hour >= 8 && hour < 17);
         
+        // رندر ۵ کارت اول
         itemsList.forEach(item => {
             const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%"};
-            const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
-            const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
-            const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
-
-            const card = document.createElement('div');
-            card.className = `card ${cardEffect}`;
-            card.innerHTML = `
-                <div class="price-box">
-                    <div class="status-badge ${colorClass}">
-                        <span>${r.percent}</span>
-                        <div class="arrow-circle"><i class="fas ${arrowIcon}"></i></div>
-                    </div>
-                    <div class="price-val">${r.current}</div>
-                </div>
-                <div class="card-info">
-                    <div style="text-align:right;">
-                        <b>${item.key}</b>
-                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                        ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
-                    </div>
-                    <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover;">
-                </div>
-            `;
-            container.appendChild(card);
+            container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
+
+        // ۳. اضافه کردن کارت ششم (دلار تهران) به صورت دستی
+        const tehranItem = {
+            key: "دلار تهران", 
+            sub: "USD/IRT", 
+            icon: "https://flagcdn.com/w160/ir.png" // می‌توانید اینجا آیکون ترکیبی بگذارید
+        };
+        container.appendChild(createCardHTML(tehranItem, tehranData, isMarketOpen));
     }
 
+    function createCardHTML(item, r, isMarketOpen) {
+        const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
+        const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
+        const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
+        
+        const card = document.createElement('div');
+        card.className = `card ${cardEffect}`;
+        card.innerHTML = `
+            <div class="price-box">
+                <div class="status-badge ${colorClass}">
+                    <span>${r.percent}</span>
+                    <div class="arrow-circle"><i class="fas ${arrowIcon}"></i></div>
+                </div>
+                <div class="price-val">${r.current}</div>
+            </div>
+            <div class="card-info">
+                <div style="text-align:right;">
+                    <b>${item.key}</b>
+                    <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+                    ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                </div>
+                <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">
+            </div>
+        `;
+        return card;
+    }
+
+    // توابع لایه بندی و زبان (بدون تغییر)
     function toggleLayout() {
         const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
         localStorage.setItem('isGridMode', isGrid);
@@ -263,22 +300,22 @@
     function applyLang() {
         const lang = i18n[currentLang];
         document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        document.getElementById('lang-text').innerText = lang.langLabel;
-        document.getElementById('grid-label-text').innerText = lang.gridLabel;
-        document.getElementById('settings-title').innerText = lang.settings;
-        document.getElementById('manual-update-btn').innerText = lang.updateBtn;
-        document.getElementById('update-text').innerText = lang.lastUpdate;
+        if(document.getElementById('lang-text')) document.getElementById('lang-text').innerText = lang.langLabel;
+        if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
+        if(document.getElementById('settings-title')) document.getElementById('settings-title').innerText = lang.settings;
+        if(document.getElementById('manual-update-btn')) document.getElementById('manual-update-btn').innerText = lang.updateBtn;
+        if(document.getElementById('update-text')) document.getElementById('update-text').innerText = lang.lastUpdate;
         load();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
         if (localStorage.getItem('isGridMode') === 'true') {
             document.getElementById('main-container').classList.add('grid-mode');
-            document.getElementById('layoutToggle').checked = true;
+            if(document.getElementById('layoutToggle')) document.getElementById('layoutToggle').checked = true;
         }
         applyLang();
     });
     setInterval(load, 30000);
-    </script>
+        </script>
 </body>
     </html>
