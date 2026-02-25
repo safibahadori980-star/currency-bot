@@ -176,25 +176,21 @@
 
 <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
-// ۱. لیست را به این شکل اصلاح کن (خط ۱۸۰ اسکرین‌شات)
-const itemsList = [
-    {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-    {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-    {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-    {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-    {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
-    {key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
-];
 
-// ۲. در تابع createCardHTML (خط ۲۶۱ اسکرین‌شات) 
-// بخش مربوط به نمایش آیکون ترکیبی را طبق کدی که قبلاً دادم جایگزین کن
-
+    // ۱. لیست نهایی کارت‌ها (دلار تهران به صورت خودکار در این لیست قرار دارد)
+    const itemsList = [
+        {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+        {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+        {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+        {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+        {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
+        {key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
+    ];
 
     const i18n = {
         fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market" },
         en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market" }
     };
-
 
     function updateDT() {
         const now = new Date();
@@ -219,7 +215,7 @@ const itemsList = [
     }
 
     function render(data) {
-        window.lastData = data; // ذخیره برای رندر مجدد
+        window.lastData = data;
         renderManual();
     }
 
@@ -231,24 +227,31 @@ const itemsList = [
         
         const now = new Date();
         const hour = now.getHours();
-        // اصلاح شرط بازار طبق دستور شما: ۵ عصر به بعد بسته است
+        // ۵ عصر به بعد بازار بسته است
         const isMarketOpen = (hour >= 8 && hour < 17);
         
-        // رندر ۵ کارت اول
         itemsList.forEach(item => {
             const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%"};
             container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
-
-        
-        container.appendChild(createCardHTML(tehranItem, tehranData, isMarketOpen));
     }
 
+    // تابع اصلاح شده با پشتیبانی از آیکون ترکیبی (ایران/آمریکا)
     function createCardHTML(item, r, isMarketOpen) {
         const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
         const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
         const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
         
+        // هندل کردن آیکون
+        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
+        if (item.icon === "custom-mix") {
+            iconHtml = `
+                <div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border)">
+                    <img src="https://flagcdn.com/w160/us.png" style="position:absolute; left:0; width:20px; height:40px; object-fit:cover;">
+                    <img src="https://flagcdn.com/w160/ir.png" style="position:absolute; right:0; width:20px; height:40px; object-fit:cover;">
+                </div>`;
+        }
+
         const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
         card.innerHTML = `
@@ -265,13 +268,12 @@ const itemsList = [
                     <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
                     ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
                 </div>
-                <img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">
+                ${iconHtml}
             </div>
         `;
         return card;
     }
 
-    // توابع لایه بندی و زبان (بدون تغییر)
     function toggleLayout() {
         const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
         localStorage.setItem('isGridMode', isGrid);
@@ -302,6 +304,6 @@ const itemsList = [
         applyLang();
     });
     setInterval(load, 30000);
-        </script>
+</script>
 </body>
     </html>
