@@ -218,7 +218,7 @@
         
         const now = new Date();
         const hour = now.getHours();
-        const isMarketOpen = (hour >= 8 && hour < 18);
+        const isMarketOpen = (hour >= 5 && hour < 19);
         
         itemsList.forEach(item => {
             const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%"};
