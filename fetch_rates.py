@@ -4,7 +4,7 @@ import json
 import os
 from datetime import datetime
 
-# منابع دیتای ما
+# منابع دیتا
 CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
 CHANNEL_TEHRAN = "https://t.me/s/dollarsbze"
 
@@ -26,11 +26,9 @@ def load_old():
     return {"rates": {}}
 
 def get_rates():
-    # ۱. دریافت پیام‌ها از هر دو کانال
     messages_herat = get_messages(CHANNEL_HERAT)
     messages_tehran = get_messages(CHANNEL_TEHRAN)
     
-    # ۲. لیست ارزهای هرات (منبع اول)
     found_prices = {
         "دالر هرات": "63.20",
         "یورو هرات": "73.20",
@@ -39,58 +37,58 @@ def get_rates():
         "کلدار": "214.00"
     }
 
-    # استخراج دیتای هرات
+    # ۱. استخراج دیتای هرات (طبق روال قبل)
     for msg in reversed(messages_herat):
         for key in found_prices.keys():
             search_key = key.split()[0] 
             if search_key in msg:
-                # همان منطق قبلی شما برای هرات
                 pattern = rf"{search_key}.*?(\d+[.,]\d+)"
                 match = re.search(pattern, msg)
                 if match:
                     found_prices[key] = match.group(1).replace(',', '.')
 
-    # ۳. استخراج اختصاصی دلار تهران (منبع دوم)
-    tehran_price = "---"
-    #Regex اختصاصی برای مدل: دلار تهران ⛳️ : 165,920
+    # ۲. استخراج هوشمند دلار تهران (اصلاح شده)
+    # این الگو هم عدد را می‌گیرد و هم کلمات بعد از آن را مدیریت می‌کند
     tehran_pattern = r"دلار تهران ⛳️\s*:\s*([\d,]+)"
     
     for msg in reversed(messages_tehran):
         match = re.search(tehran_pattern, msg)
         if match:
-            # حذف کاما برای تبدیل به عدد (مثل 165,920 -> 165920)
-            tehran_price = match.group(1).replace(',', '')
-            break
-    
-    # اضافه کردن تهران به لیست نهایی
-    if tehran_price != "---":
-        found_prices["دلار تهران"] = tehran_price
+            raw_val = match.group(1).replace(',', '')
+            if raw_val.isdigit():
+                found_prices["دلار تهران"] = raw_val
+                break
 
     old_data = load_old()
     new_rates = {}
 
     for key, current_price in found_prices.items():
-        if current_price == "---": continue
+        # دریافت مقدار قبلی
+        old_item = old_data.get("rates", {}).get(key, {})
+        old_val_str = str(old_item.get("current", "0")).replace(',', '')
         
-        old_val = old_data.get("rates", {}).get(key, {}).get("current", "0")
+        try:
+            nv = float(current_price)
+            ov = float(old_val_str) if old_val_str != "---" else nv
+        except:
+            continue
         
-        # تبدیل به عدد برای محاسبات
-        nv = float(current_price.replace(',', ''))
-        ov = float(str(old_val).replace(',', '')) if old_val != "---" else nv
-        
+        # تعیین وضعیت صعودی/نزولی
         status = "up" if nv > ov else ("down" if nv < ov else "same")
         
+        # محاسبه درصد تغییرات
         percent = "0.00%"
         if ov != 0:
             diff = ((nv - ov) / ov) * 100
             percent = f"{diff:+.2f}%"
 
-        history = old_data.get("rates", {}).get(key, {}).get("history", [])
+        # مدیریت تاریخچه برای نمودار
+        history = old_item.get("history", [])
         if not history or history[-1] != nv:
             history.append(nv)
             if len(history) > 20: history.pop(0)
 
-        # فرمت نمایش برای تهران (با کاما) و بقیه (ساده)
+        # فرمت نمایش (تهران با جداکننده هزارگان، بقیه معمولی)
         display_price = f"{int(nv):,}" if key == "دلار تهران" else current_price
 
         new_rates[key] = {
@@ -106,4 +104,4 @@ if __name__ == "__main__":
     data = get_rates()
     with open("last_rates.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    print("بروزرسانی با موفقیت انجام شد.")
+    print("بروزرسانی دیتابیس با موفقیت انجام شد.")
