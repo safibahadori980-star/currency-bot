@@ -176,34 +176,25 @@
 
 <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
-    
-    // ۱. لیست کارت‌های اصلی
-    const itemsList = [
-        {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-        {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-        {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-        {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-        {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"}
-    ];
+// ۱. لیست را به این شکل اصلاح کن (خط ۱۸۰ اسکرین‌شات)
+const itemsList = [
+    {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+    {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+    {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+    {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+    {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
+    {key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
+];
 
-    // ۲. متغیر اختصاصی برای کارت ششم (دلار تهران)
-    let tehranData = { current: "---", percent: "0.00%", status: "up" };
+// ۲. در تابع createCardHTML (خط ۲۶۱ اسکرین‌شات) 
+// بخش مربوط به نمایش آیکون ترکیبی را طبق کدی که قبلاً دادم جایگزین کن
+
 
     const i18n = {
         fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market" },
         en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market" }
     };
 
-    // تابع استخراج عدد از پیام تلگرام (Regex)
-    function extractTehranPrice(message) {
-        const regex = /دلار تهران ⛳️\s*:\s*([\d,]+)/;
-        const match = message.match(regex);
-        if (match) {
-            tehranData.current = match[1];
-            // اینجا می‌توانید منطق تغییر درصد یا وضعیت صعودی/نزولی را هم اضافه کنید
-            renderManual(); 
-        }
-    }
 
     function updateDT() {
         const now = new Date();
@@ -249,12 +240,7 @@
             container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
 
-        // ۳. اضافه کردن کارت ششم (دلار تهران) به صورت دستی
-        const tehranItem = {
-            key: "دلار تهران", 
-            sub: "USD/IRT", 
-            icon: "https://flagcdn.com/w160/ir.png" // می‌توانید اینجا آیکون ترکیبی بگذارید
-        };
+        
         container.appendChild(createCardHTML(tehranItem, tehranData, isMarketOpen));
     }
 
