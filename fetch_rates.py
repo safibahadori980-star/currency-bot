@@ -2,28 +2,22 @@ import requests
 import re
 import json
 import os
+from datetime import datetime
 
-CHANNEL = "https://t.me/s/NerkhYab_Khorasan"
+# منابع دیتای ما
+CHANNEL_HERAT = "https://t.me/s/NerkhYab_Khorasan"
+CHANNEL_TEHRAN = "https://t.me/s/dollarsbze"
 
 def clean_html(raw):
     return re.sub(r'<.*?>', '', raw)
 
-def get_last_messages():
+def get_messages(url):
     try:
-        res = requests.get(CHANNEL, timeout=20)
+        res = requests.get(url, timeout=20)
         messages = re.findall(r'<div class="tgme_widget_message_text.*?>(.*?)</div>', res.text, re.S)
-        # چک کردن ۵۰ پیام آخر برای اطمینان بیشتر
-        return [clean_html(m) for m in messages[-50:]]
+        return [clean_html(m) for m in messages[-30:]]
     except:
         return []
-
-def extract_price(text, keyword):
-    # جستجوی هوشمند برای عدد بعد از کلمه کلیدی (فروش)
-    pattern = rf"{keyword}.*?(\d+[.,]\d+)"
-    match = re.search(pattern, text)
-    if match:
-        return match.group(1).replace(',', '.')
-    return None
 
 def load_old():
     if os.path.exists("last_rates.json"):
@@ -32,9 +26,11 @@ def load_old():
     return {"rates": {}}
 
 def get_rates():
-    messages = get_last_messages()
+    # ۱. دریافت پیام‌ها از هر دو کانال
+    messages_herat = get_messages(CHANNEL_HERAT)
+    messages_tehran = get_messages(CHANNEL_TEHRAN)
     
-    # مقادیر پیش‌فرض دقیقاً طبق خواسته شما
+    # ۲. لیست ارزهای هرات (منبع اول)
     found_prices = {
         "دالر هرات": "63.20",
         "یورو هرات": "73.20",
@@ -43,40 +39,62 @@ def get_rates():
         "کلدار": "214.00"
     }
 
-    # جستجو در پیام‌ها (از جدید به قدیم)
-    for msg in reversed(messages):
+    # استخراج دیتای هرات
+    for msg in reversed(messages_herat):
         for key in found_prices.keys():
-            # جستجوی کلمه کلیدی ساده شده (مثلاً فقط 'یورو' یا 'کلدار')
             search_key = key.split()[0] 
             if search_key in msg:
-                price = extract_price(msg, search_key)
-                if price:
-                    found_prices[key] = price
+                # همان منطق قبلی شما برای هرات
+                pattern = rf"{search_key}.*?(\d+[.,]\d+)"
+                match = re.search(pattern, msg)
+                if match:
+                    found_prices[key] = match.group(1).replace(',', '.')
+
+    # ۳. استخراج اختصاصی دلار تهران (منبع دوم)
+    tehran_price = "---"
+    #Regex اختصاصی برای مدل: دلار تهران ⛳️ : 165,920
+    tehran_pattern = r"دلار تهران ⛳️\s*:\s*([\d,]+)"
+    
+    for msg in reversed(messages_tehran):
+        match = re.search(tehran_pattern, msg)
+        if match:
+            # حذف کاما برای تبدیل به عدد (مثل 165,920 -> 165920)
+            tehran_price = match.group(1).replace(',', '')
+            break
+    
+    # اضافه کردن تهران به لیست نهایی
+    if tehran_price != "---":
+        found_prices["دلار تهران"] = tehran_price
 
     old_data = load_old()
     new_rates = {}
 
     for key, current_price in found_prices.items():
+        if current_price == "---": continue
+        
         old_val = old_data.get("rates", {}).get(key, {}).get("current", "0")
         
-        # محاسبه وضعیت (بالا/پایین)
-        nv, ov = float(current_price), float(old_val) if old_val != "---" else float(current_price)
+        # تبدیل به عدد برای محاسبات
+        nv = float(current_price.replace(',', ''))
+        ov = float(str(old_val).replace(',', '')) if old_val != "---" else nv
+        
         status = "up" if nv > ov else ("down" if nv < ov else "same")
         
-        # محاسبه درصد
         percent = "0.00%"
         if ov != 0:
             diff = ((nv - ov) / ov) * 100
             percent = f"{diff:+.2f}%"
 
-        # آپدیت تاریخچه
         history = old_data.get("rates", {}).get(key, {}).get("history", [])
         if not history or history[-1] != nv:
             history.append(nv)
             if len(history) > 20: history.pop(0)
 
+        # فرمت نمایش برای تهران (با کاما) و بقیه (ساده)
+        display_price = f"{int(nv):,}" if key == "دلار تهران" else current_price
+
         new_rates[key] = {
-            "current": current_price,
+            "current": display_price,
             "status": status,
             "percent": percent,
             "history": history
