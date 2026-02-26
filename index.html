@@ -21,12 +21,6 @@
             --green: #00c853;
             --red: #ff5252;
         }
-        #update-text {
-            color: #ffffff !important;
-            font-weight: 300 !important;
-            letter-spacing: 0.5px;
-            opacity: 0.8;
-        }
         body.light-mode {
             --bg:#f2f2f7;
             --card:rgba(0,0,0,0.05);
@@ -47,9 +41,8 @@
         }
 
         .main-logo { width:50px; border-radius:12px; }
-        .date-time { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; white-space: nowrap; }
+        .date-time { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; }
         .date-time b { font-size: 1.2rem; font-weight: 900; }
-        .date-time span { font-size: 0.95rem; opacity: 0.8; }
 
         .container { padding:15px 20px 100px; display:flex; flex-direction:column; gap:12px; }
 
@@ -57,99 +50,56 @@
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
         }
 
         .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
 
-        .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
-        .card.active-up .price-val { color: var(--green); }
-        .card.active-down { border-left: 4px solid var(--red) !important; border-bottom: 2px solid var(--red) !important; }
-        .card.active-down .price-val { color: var(--red); }
-
-        .price-box { display:flex; flex-direction:column; gap:3px; }
-
-        .status-badge {
-            display:flex; align-items:center; gap:4px; padding:0;
-            background:transparent !important; font-size:0.70rem; direction:ltr;
-        }
+        /* اصلاح جایگاه فلش و قیمت */
+        .price-box { display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1; }
         
-        .arrow-circle {
-            background:transparent !important;
-            display:flex; align-items:center; justify-content:center; font-size:0.65rem;
+        .status-badge {
+            display: flex; align-items: center; gap: 4px; padding: 0;
+            font-size: 0.75rem; direction: ltr; font-weight: bold;
+            margin-bottom: -4px; /* کشیدن فلش به سمت بالا */
         }
+
+        .price-val { font-size: 1.9rem; font-weight: 900; line-height: 1.1; transition: color 0.3s; }
+
+        .card.active-up { border-left: 4px solid var(--green) !important; }
+        .card.active-up .price-val { color: var(--green); }
+        .card.active-down { border-left: 4px solid var(--red) !important; }
+        .card.active-down .price-val { color: var(--red); }
 
         .text-up { color: var(--green) !important; }
         .text-down { color: var(--red) !important; }
 
-        .price-val { font-size:1.9rem; font-weight:900; transition: color 0.3s; }
         .card-info { display:flex; align-items:center; gap:10px; }
-        
-        .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
+        .market-closed { color: #ff9f0a; font-size: 0.65rem; margin-top: 4px; }
 
+        /* استایل نمودار حرفه‌ای */
         .chart-wrapper {
             max-height: 0; overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255, 255, 255, 0.03);
+            transition: max-height 0.5s ease;
+            background: rgba(255, 255, 255, 0.02);
         }
-        .card.expanded .chart-wrapper { max-height: 200px; padding: 10px; border-top: 1px solid var(--border); }
-        .chart-container { width: 100%; height: 160px; position: relative; }
-
-        /* استایل جدید برای دسته جابجایی در گوشه */
-        .drag-handle {
-            color: var(--text);
-            opacity: 0.2;
-            padding: 10px 5px;
-            cursor: grab;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        .drag-handle:active { cursor: grabbing; opacity: 0.6; }
-
-        .sortable-ghost { opacity: 0.1 !important; background: var(--green) !important; }
-        .sortable-fallback { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-
-        .bottom-nav {
-            position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
-            width:85%; background:var(--nav); backdrop-filter:blur(20px); 
-            border-radius:30px; padding:12px 20px; display:flex;
-            justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000;
+        .card.expanded .chart-wrapper { max-height: 220px; padding: 10px; border-top: 1px solid var(--border); }
+        
+        .chart-stats {
+            display: flex; justify-content: space-between; 
+            padding: 0 10px 8px; font-size: 0.75rem; opacity: 0.8;
+            border-bottom: 1px dashed var(--border); margin-bottom: 8px;
         }
 
-        .full-modal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: flex; opacity: 0; visibility: hidden;
-            transform: translateY(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 2000; padding: 25px; flex-direction: column;
-        }
+        .chart-container { width: 100%; height: 150px; position: relative; }
+        .drag-handle { color: var(--text); opacity: 0.2; padding: 10px 5px; cursor: grab; }
+
+        /* استایل Bottom Nav و غیره ثابت بماند */
+        .bottom-nav { position:fixed; bottom:15px; left:50%; transform:translateX(-50%); width:85%; background:var(--nav); backdrop-filter:blur(20px); border-radius:30px; padding:12px 20px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border); z-index: 1000; }
+        .full-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px); display: flex; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.4s ease; z-index: 2000; padding: 25px; flex-direction: column; }
         .full-modal.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .switch-wrapper {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px;
-            margin-bottom: 12px; border: 1px solid var(--border);
-        }
-
-        .setting-btn {
-            padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08);
-            margin-top: 10px; cursor: pointer; text-align: center; border: 1px solid var(--border);
-            text-decoration: none; display: block;
-            font-family: 'Vazirmatn', sans-serif !important; font-size: 0.95rem;
-        }
-
-        .insta-btn {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
-            color: white !important; border: none !important;
-        }
-
-        .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
-        .grid-mode .chart-wrapper { display: none; }
-        .grid-mode .drag-handle { display: none; }
+        .switch-wrapper { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 15px; margin-bottom: 12px; }
+        .setting-btn { padding: 15px; border-radius: 12px; color: var(--text); background: rgba(255, 255, 255, 0.08); margin-top: 10px; text-align: center; border: 1px solid var(--border); text-decoration: none; display: block; }
+        .insta-btn { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888) !important; color: white !important; }
     </style>
 </head>
 
@@ -158,54 +108,33 @@
     <div class="header">
         <img src="logo.png" class="main-logo" onerror="this.src='https://img.icons8.com/fluency/96/money-box.png'">
         <div class="date-time" id="dt"></div>
-        <div style="font-weight:900; line-height: 1.2; font-size: 0.8rem; text-align: left;">NERKHYAB<br>PRO</div>
+        <div style="font-weight:900; line-height: 1.2; font-size: 0.8rem;">NERKHYAB<br>PRO</div>
     </div>
 
     <div id="main-container" class="container"></div>
 
     <div class="bottom-nav">
-        <i class="fas fa-cog" style="cursor:pointer;" onclick="openModal('sMod')"></i>
+        <i class="fas fa-cog" onclick="openModal('sMod')"></i>
         <span id="update-text" style="font-weight: 800; color: #d4af37;">لحظاتی پیش</span>
-        <i class="fas fa-moon" style="cursor:pointer;" onclick="toggleTheme()"></i>
+        <i class="fas fa-moon" onclick="toggleTheme()"></i>
     </div>
 
     <div id="sMod" class="full-modal">
         <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-            <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
-            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
+            <b id="settings-title">تنظیمات</b>
+            <i class="fas fa-times" onclick="closeModal('sMod')"></i>
         </div>
         <div class="switch-wrapper">
-            <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
-            <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); padding:6px 14px; border-radius:10px; cursor:pointer;">EN / FA</button>
+            <span>زبان / Language</span>
+            <button onclick="toggleLang()">FA / EN</button>
         </div>
-        <div class="switch-wrapper">
-            <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
-            <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
-        </div>
-        <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
-        <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
-        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
-            <i class="fab fa-instagram"></i> اینستاگرام سازنده
-        </a>
-    </div>
-
-    <div id="aboutMod" class="full-modal">
-        <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 25px;">
-            <b style="font-size: 1.2rem;">درباره برنامه</b>
-            <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('aboutMod')"></i>
-        </div>
-        <div style="line-height: 2; text-align: justify; font-size: 0.95rem; font-weight: 300;">
-            <b style="color: #d4af37;">منبع قیمت:</b><br>
-            قیمت‌های نمایش داده‌شده در اپلیکیشن از منابع معتبر اتحادیه صرافان هرات دریافت و همه روزه از ساعت ۸ صبح تا ۶ عصر بصورت مرتب به‌روزرسانی می‌شوند.<br><br>
-            <b style="color: #d4af37;">برنامه‌نویس:</b><br>
-            صفی الله بهادری غوریانی.<br><br>
-            جهت ارتباط با برنامه‌نویس پروژه در منوی تنظیمات با کلیک بر روی دکمه (اینستاگرام سازنده) پیام بگذارید.
-        </div>
+        <button class="setting-btn" onclick="location.reload()">بروزرسانی دستی</button>
+        <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">اینستاگرام سازنده</a>
     </div>
 
 <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
-    let chartObjects = {}; 
+    let chartObjects = {};
 
     const itemsList = [
         {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
@@ -216,25 +145,16 @@
         {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
     ];
 
-    const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Market Closed" },
-        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Market Closed" }
-    };
-
     function updateDT() {
         const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
         const j = jalaali.toJalaali(now);
-        const dtEl = document.getElementById('dt');
-        if(dtEl) dtEl.innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        document.getElementById('dt').innerHTML = `<b>${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
     }
     updateDT(); setInterval(updateDT, 1000);
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function toggleTheme() { document.body.classList.toggle('light-mode'); }
-    function openAbout() { closeModal('sMod'); openModal('aboutMod'); }
 
     async function load() {
         try {
@@ -245,105 +165,68 @@
     }
 
     function render(data) {
-        window.lastData = data;
-        renderManual();
-    }
-
-    function renderManual() {
-        const data = window.lastData;
-        if (!data) return;
         const container = document.getElementById('main-container');
         container.innerHTML = '';
-        
-        const now = new Date();
-        const hour = now.getHours();
-        const isMarketOpen = (hour >= 7 && hour < 18);
-        
-        let order = JSON.parse(localStorage.getItem('cards-order'));
-        let sortedList = [...itemsList];
-        
-        if (order) {
-            sortedList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
-        }
+        const isMarketOpen = (new Date().getHours() >= 7 && new Date().getHours() < 18);
 
-        sortedList.forEach(item => {
-            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%", history: []};
+        itemsList.forEach(item => {
+            const r = data.rates[item.key] || {current:"---", status:"up", percent:"0.00%", history:[]};
             container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
-
-        initSortable(); 
-    }
-
-    function initSortable() {
-        const grid = document.getElementById('main-container');
-        new Sortable(grid, {
-            handle: '.drag-handle',
-            animation: 150,
-            forceFallback: true,
-            onStart: function() {
-                if (window.navigator.vibrate) window.navigator.vibrate(40);
-            },
-            onEnd: function() {
-                const newOrder = Array.from(grid.children).map(card => card.dataset.id);
-                localStorage.setItem('cards-order', JSON.stringify(newOrder));
-            }
-        });
+        
+        new Sortable(container, { handle: '.drag-handle', animation: 150 });
     }
 
     function createCardHTML(item, r, isMarketOpen) {
         const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
         const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
-        const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
         const themeColor = r.status === 'down' ? '#ff5252' : '#00c853';
 
-        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
+        let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;border:1px solid var(--border)">`;
         if (item.icon === "custom-mix") {
-            iconHtml = `
-                <div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
-                    <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;">
-                    <img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
-                </div>`;
+            iconHtml = `<div style="display:flex; width:40px; height:40px; border-radius:10px; overflow:hidden; border:1px solid var(--border)">
+                <img src="https://flagcdn.com/w160/us.png" style="width:20px;height:40px;object-fit:cover;">
+                <img src="https://flagcdn.com/w160/ir.png" style="width:20px;height:40px;object-fit:cover;">
+            </div>`;
         }
 
         const card = document.createElement('div');
-        card.className = `card ${cardEffect}`;
-        card.setAttribute('data-id', item.id);
+        card.className = `card ${isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : ''}`;
         
         card.onclick = (e) => {
             if (e.target.closest('.drag-handle')) return;
-            if (document.getElementById('main-container').classList.contains('grid-mode')) return;
-            
             const wasExpanded = card.classList.contains('expanded');
             document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
             if (!wasExpanded) {
                 card.classList.add('expanded');
-                setTimeout(() => renderSmoothChart(item.id, r.history, themeColor), 100);
+                setTimeout(() => renderProChart(item.id, r.history, themeColor), 100);
             }
         };
-card.innerHTML = `
+
+        card.innerHTML = `
             <div class="card-main-row">
-                <div class="drag-handle" style="margin-left: 10px; order: -1;">
-                    <i class="fas fa-grip-vertical"></i>
-                </div>
-                
-                <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
-                    <div class="status-badge ${colorClass}" style="font-size: 0.7rem; margin-bottom: -2px; direction: ltr; font-weight: bold;">
+                <div class="drag-handle" style="margin-left: 10px;"><i class="fas fa-grip-vertical"></i></div>
+                <div class="price-box">
+                    <div class="status-badge ${colorClass}">
                         <span>${r.percent}</span>
                         <i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
                     </div>
-                    <div class="price-val" style="line-height: 1; font-size: 1.8rem;">${r.current}</div>
+                    <div class="price-val">${r.current}</div>
                 </div>
-
                 <div class="card-info">
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                        ${!isMarketOpen ? `<div class="market-closed" style="color: #ff9f0a; font-size: 0.65rem;">Closed Market</div>` : ''}
+                        ${!isMarketOpen ? `<div class="market-closed">Closed Market</div>` : ''}
                     </div>
                     ${iconHtml}
                 </div>
             </div>
             <div class="chart-wrapper">
+                <div class="chart-stats">
+                    <span>کف: <b id="min-${item.id}">---</b></span>
+                    <span>سقف: <b id="max-${item.id}">---</b></span>
+                </div>
                 <div class="chart-container">
                     <canvas id="chart-${item.id}"></canvas>
                 </div>
@@ -352,17 +235,20 @@ card.innerHTML = `
         return card;
     }
 
-    function renderSmoothChart(id, history, color) {
-        const canvasId = `chart-${id}`;
-        const canvas = document.getElementById(canvasId);
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
+    function renderProChart(id, history, color) {
+        if (!history || history.length === 0) return;
+        
+        // محاسبه سقف و کف
+        document.getElementById(`max-${id}`).innerText = Math.max(...history).toLocaleString();
+        document.getElementById(`min-${id}`).innerText = Math.min(...history).toLocaleString();
 
+        const canvasId = `chart-${id}`;
+        const ctx = document.getElementById(canvasId).getContext('2d');
         if (chartObjects[canvasId]) chartObjects[canvasId].destroy();
 
-        const gradient = ctx.createLinearGradient(0, 0, 0, 160);
-        gradient.addColorStop(0, color + '55');
-        gradient.addColorStop(1, color + '00');
+        const grad = ctx.createLinearGradient(0, 0, 0, 150);
+        grad.addColorStop(0, color + '66');
+        grad.addColorStop(1, color + '00');
 
         chartObjects[canvasId] = new Chart(ctx, {
             type: 'line',
@@ -371,66 +257,30 @@ card.innerHTML = `
                 datasets: [{
                     data: history,
                     borderColor: color,
-                    borderWidth: 2,
+                    borderWidth: 2.5,
                     fill: true,
-                    backgroundColor: gradient,
-                    tension: 0.4, 
+                    backgroundColor: grad,
+                    tension: 0.4, // انحنای نرم
                     pointRadius: 0
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
                     x: { display: false },
-                    y: {
-                        display: true,
-                        position: 'right',
-                        grid: { display: false },
-                        ticks: {
-                            color: 'rgba(255,255,255,0.4)',
-                            font: { size: 9 },
-                            maxTicksLimit: 5,
-                            callback: function(value) { return value.toLocaleString(); }
-                        }
+                    y: { 
+                        position: 'right', 
+                        grid: { display: false }, // حذف خطوط شبکه
+                        ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 } } 
                     }
                 }
             }
         });
     }
 
-    function toggleLayout() {
-        const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
-        localStorage.setItem('isGridMode', isGrid);
-        renderManual();
-    }
-
-    function toggleLang() {
-        currentLang = currentLang === 'fa' ? 'en' : 'fa';
-        localStorage.setItem('lang', currentLang);
-        applyLang();
-    }
-
-    function applyLang() {
-        const lang = i18n[currentLang];
-        document.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
-        if(document.getElementById('lang-text')) document.getElementById('lang-text').innerText = lang.langLabel;
-        if(document.getElementById('grid-label-text')) document.getElementById('grid-label-text').innerText = lang.gridLabel;
-        if(document.getElementById('settings-title')) document.getElementById('settings-title').innerText = lang.settings;
-        if(document.getElementById('manual-update-btn')) document.getElementById('manual-update-btn').innerText = lang.updateBtn;
-        if(document.getElementById('update-text')) document.getElementById('update-text').innerText = lang.lastUpdate;
-        load();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        if (localStorage.getItem('isGridMode') === 'true') {
-            document.getElementById('main-container').classList.add('grid-mode');
-            if(document.getElementById('layoutToggle')) document.getElementById('layoutToggle').checked = true;
-        }
-        applyLang();
-    });
+    load();
     setInterval(load, 30000);
 </script>
 </body>
-    </html>
+</html>
