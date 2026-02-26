@@ -257,7 +257,7 @@
         
         const now = new Date();
         const hour = now.getHours();
-        const isMarketOpen = (hour >= 8 && hour < 17);
+        const isMarketOpen = (hour >= 7 && hour < 18);
         
         let order = JSON.parse(localStorage.getItem('cards-order'));
         let sortedList = [...itemsList];
@@ -327,18 +327,18 @@ card.innerHTML = `
                 </div>
                 
                 <div style="display: flex; flex-direction: column; align-items: flex-start; flex-grow: 1;">
-                    <div class="status-badge ${colorClass}" style="font-size: 0.75rem; margin-bottom: -5px; direction: ltr;">
+                    <div class="status-badge ${colorClass}" style="font-size: 0.7rem; margin-bottom: -2px; direction: ltr; font-weight: bold;">
                         <span>${r.percent}</span>
-                        <i class="fas ${arrowIcon}"></i>
+                        <i class="fas ${arrowIcon}" style="font-size: 0.6rem;"></i>
                     </div>
-                    <div class="price-val" style="line-height: 1.1;">${r.current}</div>
+                    <div class="price-val" style="line-height: 1; font-size: 1.8rem;">${r.current}</div>
                 </div>
 
                 <div class="card-info">
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                        ${!isMarketOpen ? `<div class="market-closed">Closed Market</div>` : ''}
+                        ${!isMarketOpen ? `<div class="market-closed" style="color: #ff9f0a; font-size: 0.65rem;">Closed Market</div>` : ''}
                     </div>
                     ${iconHtml}
                 </div>
