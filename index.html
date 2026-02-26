@@ -265,22 +265,20 @@
     const grid = document.getElementById('main-container');
     new Sortable(grid, {
         animation: 150,
-        delay: 800, // زمان را از ۳ ثانیه به ۸۰۰ میلی‌ثانیه کاهش دادم تا سریع‌تر عمل کند
+        delay: 600, // زمان به ۶۰۰ میلی‌ثانیه کاهش یافت (کمی بیش از نیم ثانیه)
         delayOnTouchOnly: true,
-        touchStartThreshold: 5, // اجازه لرزش دست تا ۵ پیکسل را می‌دهد تا لغو نشود
+        touchStartThreshold: 10, // حساسیت حرکت انگشت
         ghostClass: 'sortable-ghost',
         onStart: function() {
-            // ایجاد یک لرزش خفیف در موبایل (اگر پشتیبانی شود)
-            if (window.navigator.vibrate) window.navigator.vibrate(50);
-            document.body.style.overflow = 'hidden'; // جلوگیری از اسکرول هنگام جابجایی
+            // ایجاد لرزش حس خوب "کنده شدن" کارت را می‌دهد
+            if (window.navigator.vibrate) window.navigator.vibrate(40);
         },
         onEnd: function() {
-            document.body.style.overflow = 'auto'; // برگرداندن اسکرول
             const newOrder = Array.from(grid.children).map(card => card.dataset.id);
             localStorage.setItem('cards-order', JSON.stringify(newOrder));
         }
     });
-        }
+    }
 
     function createCardHTML(item, r, isMarketOpen) {
         const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
