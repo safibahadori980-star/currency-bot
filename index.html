@@ -97,19 +97,17 @@
         .card.expanded .chart-wrapper { max-height: 200px; padding: 10px; border-top: 1px solid var(--border); }
         .chart-container { width: 100%; height: 160px; position: relative; }
 
+        /* استایل جدید برای دسته جابجایی در گوشه */
         .drag-handle {
             color: var(--text);
             opacity: 0.2;
-            padding: 15px 5px; /* فضای لمس بیشتر */
+            padding: 10px 5px;
             cursor: grab;
             display: flex;
             align-items: center;
             font-size: 1.1rem;
         }
-        .drag-handle:active { cursor: grabbing; opacity: 0.5; }
-        
-        /* جلوگیری از تداخل کلیک در گرید مود */
-        .grid-mode .drag-handle { display: none; }
+        .drag-handle:active { cursor: grabbing; opacity: 0.6; }
 
         .sortable-ghost { opacity: 0.1 !important; background: var(--green) !important; }
         .sortable-fallback { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
@@ -151,7 +149,7 @@
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .chart-wrapper { display: none; }
-        .grid-mode .drag-handle { display: none; } /* مخفی کردن دسته در حالت جدولی */
+        .grid-mode .drag-handle { display: none; }
     </style>
 </head>
 
@@ -279,7 +277,7 @@
     function initSortable() {
         const grid = document.getElementById('main-container');
         new Sortable(grid, {
-            handle: '.drag-handle', // جابجایی فقط با دسته
+            handle: '.drag-handle',
             animation: 150,
             forceFallback: true,
             onStart: function() {
@@ -312,7 +310,6 @@
         card.setAttribute('data-id', item.id);
         
         card.onclick = (e) => {
-            // اگر کاربر روی دسته کلیک کرد، نمودار باز نشود
             if (e.target.closest('.drag-handle')) return;
             if (document.getElementById('main-container').classList.contains('grid-mode')) return;
             
@@ -353,6 +350,8 @@
                 </div>
             </div>
         `;
+        return card;
+    }
 
     function renderSmoothChart(id, history, color) {
         const canvasId = `chart-${id}`;
@@ -435,4 +434,4 @@
     setInterval(load, 30000);
 </script>
 </body>
-    </html>
+            </html>
