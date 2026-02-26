@@ -9,6 +9,7 @@
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <style>
         :root {
@@ -56,7 +57,11 @@
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
+            user-select: none; /* برای جابجایی بهتر */
         }
+
+        /* استایل حالت جابجایی */
+        .sortable-ghost { opacity: 0.3; transform: scale(0.95); }
 
         .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
 
@@ -85,7 +90,6 @@
         
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
-        /* استایل جدید نمودار */
         .chart-wrapper {
             max-height: 0; overflow: hidden;
             transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -130,7 +134,7 @@
 
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
-        .grid-mode .chart-wrapper { display: none; } /* نمودار در حالت جدولی نمایش داده نشود */
+        .grid-mode .chart-wrapper { display: none; }
     </style>
 </head>
 
@@ -186,20 +190,21 @@
 
 <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
-    let chartObjects = {}; // برای مدیریت و جلوگیری از تداخل نمودارها
+    let chartObjects = {}; 
 
+    // لیست آیتم ها با شناسه یکتا برای جابجایی
     const itemsList = [
-        {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
-        {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
-        {key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
-        {key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
-        {key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
-        {key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
+        {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
+        {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
+        {id: "toman-check", key:"تومان چک", sub:"IRT/AFN", icon:"https://flagcdn.com/w160/ir.png"},
+        {id: "toman-bank", key:"تومان بانکی", sub:"IRR/AFN", icon:"https://img.icons8.com/fluency/48/bank-card-back-side.png"},
+        {id: "kaldar", key:"کلدار", sub:"PKR/AFN", icon:"https://flagcdn.com/w160/pk.png"},
+        {id: "tehran-dollar", key:"دلار تهران", sub:"USD/IRT", icon:"custom-mix"} 
     ];
 
     const i18n = {
-        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Closed Market" },
-        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Closed Market" }
+        fa: { settings: "تنظیمات", updateBtn: "بروزرسانی دستی", gridLabel: "حالت جدولی", langLabel: "زبان: فارسی", lastUpdate: "لحظاتی پیش", closed: "Market Closed" },
+        en: { settings: "Settings", updateBtn: "Manual Update", gridLabel: "Grid Mode", langLabel: "Language: English", lastUpdate: "Just now", closed: "Market Closed" }
     };
 
     function updateDT() {
@@ -234,16 +239,39 @@
         const data = window.lastData;
         if (!data) return;
         const container = document.getElementById('main-container');
-        const isGrid = container.classList.contains('grid-mode');
-        
         container.innerHTML = '';
+        
         const now = new Date();
         const hour = now.getHours();
         const isMarketOpen = (hour >= 8 && hour < 17);
         
-        itemsList.forEach(item => {
+        // خواندن ترتیب از LocalStorage
+        let order = JSON.parse(localStorage.getItem('cards-order'));
+        let sortedList = [...itemsList];
+        
+        if (order) {
+            sortedList.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+        }
+
+        sortedList.forEach(item => {
             const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%", history: []};
             container.appendChild(createCardHTML(item, r, isMarketOpen));
+        });
+
+        initSortable(); // فعال سازی قابلیت جابجایی بعد از رندر
+    }
+
+    function initSortable() {
+        const grid = document.getElementById('main-container');
+        new Sortable(grid, {
+            animation: 150,
+            delay: 3000, // ۳ ثانیه نگه داشتن برای جابجایی
+            delayOnTouchOnly: true,
+            ghostClass: 'sortable-ghost',
+            onEnd: function() {
+                const newOrder = Array.from(grid.children).map(card => card.dataset.id);
+                localStorage.setItem('cards-order', JSON.stringify(newOrder));
+            }
         });
     }
 
@@ -256,23 +284,23 @@
         let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
         if (item.icon === "custom-mix") {
             iconHtml = `
-                <div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border)">
-                    <img src="https://flagcdn.com/w160/us.png" style="position:absolute; left:0; width:20px; height:40px; object-fit:cover;">
-                    <img src="https://flagcdn.com/w160/ir.png" style="position:absolute; right:0; width:20px; height:40px; object-fit:cover;">
+                <div style="position:relative; width:40px; height:40px; border-radius:10px; overflow:hidden; border: 1px solid var(--border); display:flex;">
+                    <img src="https://flagcdn.com/w160/us.png" style="width:20px; height:40px; object-fit:cover;">
+                    <img src="https://flagcdn.com/w160/ir.png" style="width:20px; height:40px; object-fit:cover;">
                 </div>`;
         }
 
         const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
+        card.setAttribute('data-id', item.id); // برای سیستم جابجایی
         
-        // هندل کردن کلیک برای باز شدن نمودار
         card.onclick = (e) => {
             if (document.getElementById('main-container').classList.contains('grid-mode')) return;
             const wasExpanded = card.classList.contains('expanded');
             document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
             if (!wasExpanded) {
                 card.classList.add('expanded');
-                setTimeout(() => renderSmoothChart(item.key, r.history, themeColor), 100);
+                setTimeout(() => renderSmoothChart(item.id, r.history, themeColor), 100);
             }
         };
 
@@ -296,17 +324,18 @@
             </div>
             <div class="chart-wrapper">
                 <div class="chart-container">
-                    <canvas id="chart-${item.key}"></canvas>
+                    <canvas id="chart-${item.id}"></canvas>
                 </div>
             </div>
         `;
         return card;
     }
 
-    // تابع رسم نمودار منحنی (Smooth Area Chart) با اعداد کناری
-    function renderSmoothChart(key, history, color) {
-        const canvasId = `chart-${key}`;
-        const ctx = document.getElementById(canvasId).getContext('2d');
+    function renderSmoothChart(id, history, color) {
+        const canvasId = `chart-${id}`;
+        const canvas = document.getElementById(canvasId);
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
 
         if (chartObjects[canvasId]) chartObjects[canvasId].destroy();
 
@@ -324,7 +353,7 @@
                     borderWidth: 2,
                     fill: true,
                     backgroundColor: gradient,
-                    tension: 0.4, // این خط باعث Smooth شدن (منحنی شدن) خطوط می‌شود
+                    tension: 0.4, 
                     pointRadius: 0
                 }]
             },
@@ -336,7 +365,7 @@
                     x: { display: false },
                     y: {
                         display: true,
-                        position: 'right', // اعداد در سمت راست
+                        position: 'right',
                         grid: { display: false },
                         ticks: {
                             color: 'rgba(255,255,255,0.4)',
@@ -353,7 +382,7 @@
     function toggleLayout() {
         const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
         localStorage.setItem('isGridMode', isGrid);
-        renderManual(); // رندر مجدد برای اعمال تغییرات کلاس‌ها
+        renderManual();
     }
 
     function toggleLang() {
@@ -383,4 +412,4 @@
     setInterval(load, 30000);
 </script>
 </body>
-                </html>
+        </html>
