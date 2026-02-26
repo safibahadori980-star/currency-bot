@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/jalaali-js/dist/jalaali.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -53,9 +54,11 @@
 
         .card {
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
-            border-radius:20px; padding:14px; display:flex; justify-content:space-between;
-            align-items:center; transition: all 0.3s ease;
+            border-radius:20px; padding:0; display:flex; flex-direction:column;
+            transition: all 0.3s ease; cursor: pointer; overflow: hidden;
         }
+
+        .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
 
         .card.active-up { border-left: 4px solid var(--green) !important; border-bottom: 2px solid var(--green) !important; }
         .card.active-up .price-val { color: var(--green); }
@@ -81,6 +84,15 @@
         .card-info { display:flex; align-items:center; gap:12px; }
         
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
+
+        /* استایل جدید نمودار */
+        .chart-wrapper {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .card.expanded .chart-wrapper { max-height: 200px; padding: 10px; border-top: 1px solid var(--border); }
+        .chart-container { width: 100%; height: 160px; position: relative; }
 
         .bottom-nav {
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
@@ -117,7 +129,8 @@
         }
 
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-mode .card { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
+        .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
+        .grid-mode .chart-wrapper { display: none; } /* نمودار در حالت جدولی نمایش داده نشود */
     </style>
 </head>
 
@@ -142,17 +155,14 @@
             <b id="settings-title" style="font-size: 1.3rem;">تنظیمات</b>
             <i class="fas fa-times" style="font-size: 1.5rem; cursor:pointer;" onclick="closeModal('sMod')"></i>
         </div>
-
         <div class="switch-wrapper">
             <span id="lang-text" style="font-weight: bold;">Language: Persian</span>
             <button onclick="toggleLang()" style="background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); padding:6px 14px; border-radius:10px; cursor:pointer;">EN / FA</button>
         </div>
-
         <div class="switch-wrapper">
             <span id="grid-label-text" style="font-weight: bold;">حالت جدولی</span>      
             <input type="checkbox" id="layoutToggle" onclick="toggleLayout()" style="width:20px; height:20px; cursor:pointer;">
         </div>
-
         <button class="setting-btn" onclick="openAbout()">درباره برنامه</button>
         <button id="manual-update-btn" class="setting-btn" onclick="location.reload()"> بروزرسانی قیمت‌ها</button>
         <a href="https://www.instagram.com/safi.tech.ai" target="_blank" class="setting-btn insta-btn">
@@ -176,8 +186,8 @@
 
 <script>
     let currentLang = localStorage.getItem('lang') || 'fa';
+    let chartObjects = {}; // برای مدیریت و جلوگیری از تداخل نمودارها
 
-    // ۱. لیست نهایی کارت‌ها (دلار تهران به صورت خودکار در این لیست قرار دارد)
     const itemsList = [
         {key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
         {key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
@@ -197,7 +207,8 @@
         const hh = String(now.getHours()).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const j = jalaali.toJalaali(now);
-        document.getElementById('dt').innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
+        const dtEl = document.getElementById('dt');
+        if(dtEl) dtEl.innerHTML = `<b>${hh}:${mm}</b> <span>${j.jy}/${j.jm}/${j.jd}</span>`;
     }
     updateDT(); setInterval(updateDT, 1000);
 
@@ -223,26 +234,25 @@
         const data = window.lastData;
         if (!data) return;
         const container = document.getElementById('main-container');
-        container.innerHTML = '';
+        const isGrid = container.classList.contains('grid-mode');
         
+        container.innerHTML = '';
         const now = new Date();
         const hour = now.getHours();
-        // ۵ عصر به بعد بازار بسته است
         const isMarketOpen = (hour >= 8 && hour < 17);
         
         itemsList.forEach(item => {
-            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%"};
+            const r = (data.rates && data.rates[item.key]) ? data.rates[item.key] : {current: "---", status: "up", percent: "0.00%", history: []};
             container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
     }
 
-    // تابع اصلاح شده با پشتیبانی از آیکون ترکیبی (ایران/آمریکا)
     function createCardHTML(item, r, isMarketOpen) {
         const colorClass = r.status === 'down' ? 'text-down' : 'text-up';
         const arrowIcon = r.status === 'down' ? 'fa-arrow-down' : 'fa-arrow-up';
         const cardEffect = isMarketOpen ? (r.status === 'down' ? 'active-down' : 'active-up') : '';
-        
-        // هندل کردن آیکون
+        const themeColor = r.status === 'down' ? '#ff5252' : '#00c853';
+
         let iconHtml = `<img src="${item.icon}" style="width:40px;height:40px;border-radius:10px;object-fit:cover; border: 1px solid var(--border)">`;
         if (item.icon === "custom-mix") {
             iconHtml = `
@@ -254,29 +264,96 @@
 
         const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
+        
+        // هندل کردن کلیک برای باز شدن نمودار
+        card.onclick = (e) => {
+            if (document.getElementById('main-container').classList.contains('grid-mode')) return;
+            const wasExpanded = card.classList.contains('expanded');
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
+            if (!wasExpanded) {
+                card.classList.add('expanded');
+                setTimeout(() => renderSmoothChart(item.key, r.history, themeColor), 100);
+            }
+        };
+
         card.innerHTML = `
-            <div class="price-box">
-                <div class="status-badge ${colorClass}">
-                    <span>${r.percent}</span>
-                    <div class="arrow-circle"><i class="fas ${arrowIcon}"></i></div>
+            <div class="card-main-row">
+                <div class="price-box">
+                    <div class="status-badge ${colorClass}">
+                        <span>${r.percent}</span>
+                        <div class="arrow-circle"><i class="fas ${arrowIcon}"></i></div>
+                    </div>
+                    <div class="price-val">${r.current}</div>
                 </div>
-                <div class="price-val">${r.current}</div>
+                <div class="card-info">
+                    <div style="text-align:right;">
+                        <b>${item.key}</b>
+                        <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
+                        ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+                    </div>
+                    ${iconHtml}
+                </div>
             </div>
-            <div class="card-info">
-                <div style="text-align:right;">
-                    <b>${item.key}</b>
-                    <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
-                    ${!isMarketOpen ? `<div class="market-closed">${i18n[currentLang].closed}</div>` : ''}
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="chart-${item.key}"></canvas>
                 </div>
-                ${iconHtml}
             </div>
         `;
         return card;
     }
 
+    // تابع رسم نمودار منحنی (Smooth Area Chart) با اعداد کناری
+    function renderSmoothChart(key, history, color) {
+        const canvasId = `chart-${key}`;
+        const ctx = document.getElementById(canvasId).getContext('2d');
+
+        if (chartObjects[canvasId]) chartObjects[canvasId].destroy();
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, color + '55');
+        gradient.addColorStop(1, color + '00');
+
+        chartObjects[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: history.map((_, i) => i),
+                datasets: [{
+                    data: history,
+                    borderColor: color,
+                    borderWidth: 2,
+                    fill: true,
+                    backgroundColor: gradient,
+                    tension: 0.4, // این خط باعث Smooth شدن (منحنی شدن) خطوط می‌شود
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: {
+                        display: true,
+                        position: 'right', // اعداد در سمت راست
+                        grid: { display: false },
+                        ticks: {
+                            color: 'rgba(255,255,255,0.4)',
+                            font: { size: 9 },
+                            maxTicksLimit: 5,
+                            callback: function(value) { return value.toLocaleString(); }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     function toggleLayout() {
         const isGrid = document.getElementById('main-container').classList.toggle('grid-mode');
         localStorage.setItem('isGridMode', isGrid);
+        renderManual(); // رندر مجدد برای اعمال تغییرات کلاس‌ها
     }
 
     function toggleLang() {
@@ -306,4 +383,4 @@
     setInterval(load, 30000);
 </script>
 </body>
-    </html>
+                </html>
