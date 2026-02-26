@@ -135,6 +135,19 @@
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .chart-wrapper { display: none; }
+
+        .card {
+    /* اضافه کردن این خطوط */
+    -webkit-touch-callout: none; /* جلوگیری از باز شدن منوی کپی در آیفون */
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: panned-x; /* اجازه اسکرول افقی نمی‌دهد اما اجازه جابجایی عمودی را مدیریت می‌کند */
+}
+
+.sortable-ghost {
+    opacity: 0.1 !important; /* وقتی کنده شد، جای قبلی‌اش خیلی کمرنگ شود */
+    background: var(--green) !important;
+                            }
     </style>
 </head>
 
@@ -265,13 +278,14 @@
     const grid = document.getElementById('main-container');
     new Sortable(grid, {
         animation: 150,
-        delay: 600, // زمان به ۶۰۰ میلی‌ثانیه کاهش یافت (کمی بیش از نیم ثانیه)
+        delay: 500, // نیم ثانیه
         delayOnTouchOnly: true,
-        touchStartThreshold: 10, // حساسیت حرکت انگشت
+        touchStartThreshold: 3, 
+        forceFallback: true, // شبیه‌سازی جابجایی برای جلوگیری از تداخل با اسکرول مرورگر
+        fallbackTolerance: 3,
         ghostClass: 'sortable-ghost',
         onStart: function() {
-            // ایجاد لرزش حس خوب "کنده شدن" کارت را می‌دهد
-            if (window.navigator.vibrate) window.navigator.vibrate(40);
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
         },
         onEnd: function() {
             const newOrder = Array.from(grid.children).map(card => card.dataset.id);
