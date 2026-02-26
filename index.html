@@ -57,11 +57,10 @@
             background:var(--card); backdrop-filter:blur(15px); border:1px solid var(--border);
             border-radius:20px; padding:0; display:flex; flex-direction:column;
             transition: all 0.3s ease; cursor: pointer; overflow: hidden;
-            user-select: none; /* برای جابجایی بهتر */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
-
-        /* استایل حالت جابجایی */
-        .sortable-ghost { opacity: 0.3; transform: scale(0.95); }
 
         .card-main-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; width: 100%; box-sizing: border-box; }
 
@@ -86,7 +85,7 @@
         .text-down { color: var(--red) !important; }
 
         .price-val { font-size:1.9rem; font-weight:900; transition: color 0.3s; }
-        .card-info { display:flex; align-items:center; gap:12px; }
+        .card-info { display:flex; align-items:center; gap:10px; }
         
         .market-closed { color: #ff9f0a; font-size: 0.65rem; font-weight: 400; margin-top: 4px; }
 
@@ -97,6 +96,20 @@
         }
         .card.expanded .chart-wrapper { max-height: 200px; padding: 10px; border-top: 1px solid var(--border); }
         .chart-container { width: 100%; height: 160px; position: relative; }
+
+        /* استایل دسته جابجایی */
+        .drag-handle {
+            color: var(--text);
+            opacity: 0.3;
+            padding: 10px 5px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+        }
+        .drag-handle:active { cursor: grabbing; }
+
+        .sortable-ghost { opacity: 0.1 !important; background: var(--green) !important; }
+        .sortable-fallback { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
         .bottom-nav {
             position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
@@ -135,19 +148,7 @@
         .container.grid-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .grid-mode .card-main-row { flex-direction: column-reverse; text-align: center; padding: 12px 8px; gap: 8px; }
         .grid-mode .chart-wrapper { display: none; }
-
-        .card {
-    /* اضافه کردن این خطوط */
-    -webkit-touch-callout: none; /* جلوگیری از باز شدن منوی کپی در آیفون */
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: panned-x; /* اجازه اسکرول افقی نمی‌دهد اما اجازه جابجایی عمودی را مدیریت می‌کند */
-}
-
-.sortable-ghost {
-    opacity: 0.1 !important; /* وقتی کنده شد، جای قبلی‌اش خیلی کمرنگ شود */
-    background: var(--green) !important;
-                            }
+        .grid-mode .drag-handle { display: none; } /* مخفی کردن دسته در حالت جدولی */
     </style>
 </head>
 
@@ -205,7 +206,6 @@
     let currentLang = localStorage.getItem('lang') || 'fa';
     let chartObjects = {}; 
 
-    // لیست آیتم ها با شناسه یکتا برای جابجایی
     const itemsList = [
         {id: "usd-herat", key:"دالر هرات", sub:"USD/AFN", icon:"https://flagcdn.com/w160/us.png"},
         {id: "eur-herat", key:"یورو هرات", sub:"EUR/AFN", icon:"https://flagcdn.com/w160/eu.png"},
@@ -258,7 +258,6 @@
         const hour = now.getHours();
         const isMarketOpen = (hour >= 8 && hour < 17);
         
-        // خواندن ترتیب از LocalStorage
         let order = JSON.parse(localStorage.getItem('cards-order'));
         let sortedList = [...itemsList];
         
@@ -271,27 +270,23 @@
             container.appendChild(createCardHTML(item, r, isMarketOpen));
         });
 
-        initSortable(); // فعال سازی قابلیت جابجایی بعد از رندر
+        initSortable(); 
     }
 
     function initSortable() {
-    const grid = document.getElementById('main-container');
-    new Sortable(grid, {
-        animation: 150,
-        delay: 500, // نیم ثانیه
-        delayOnTouchOnly: true,
-        touchStartThreshold: 3, 
-        forceFallback: true, // شبیه‌سازی جابجایی برای جلوگیری از تداخل با اسکرول مرورگر
-        fallbackTolerance: 3,
-        ghostClass: 'sortable-ghost',
-        onStart: function() {
-            if (window.navigator.vibrate) window.navigator.vibrate(50);
-        },
-        onEnd: function() {
-            const newOrder = Array.from(grid.children).map(card => card.dataset.id);
-            localStorage.setItem('cards-order', JSON.stringify(newOrder));
-        }
-    });
+        const grid = document.getElementById('main-container');
+        new Sortable(grid, {
+            handle: '.drag-handle', // جابجایی فقط با دسته
+            animation: 150,
+            forceFallback: true,
+            onStart: function() {
+                if (window.navigator.vibrate) window.navigator.vibrate(40);
+            },
+            onEnd: function() {
+                const newOrder = Array.from(grid.children).map(card => card.dataset.id);
+                localStorage.setItem('cards-order', JSON.stringify(newOrder));
+            }
+        });
     }
 
     function createCardHTML(item, r, isMarketOpen) {
@@ -311,10 +306,13 @@
 
         const card = document.createElement('div');
         card.className = `card ${cardEffect}`;
-        card.setAttribute('data-id', item.id); // برای سیستم جابجایی
+        card.setAttribute('data-id', item.id);
         
         card.onclick = (e) => {
+            // اگر کاربر روی دسته کلیک کرد، نمودار باز نشود
+            if (e.target.closest('.drag-handle')) return;
             if (document.getElementById('main-container').classList.contains('grid-mode')) return;
+            
             const wasExpanded = card.classList.contains('expanded');
             document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded'));
             if (!wasExpanded) {
@@ -333,6 +331,10 @@
                     <div class="price-val">${r.current}</div>
                 </div>
                 <div class="card-info">
+                    <div class="drag-handle">
+                        <i class="fas fa-ellipsis-v"></i>
+                        <i class="fas fa-ellipsis-v" style="margin-right:2px"></i>
+                    </div>
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
@@ -431,4 +433,4 @@
     setInterval(load, 30000);
 </script>
 </body>
-        </html>
+    </html>
