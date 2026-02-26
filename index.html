@@ -97,16 +97,19 @@
         .card.expanded .chart-wrapper { max-height: 200px; padding: 10px; border-top: 1px solid var(--border); }
         .chart-container { width: 100%; height: 160px; position: relative; }
 
-        /* استایل دسته جابجایی */
         .drag-handle {
             color: var(--text);
-            opacity: 0.3;
-            padding: 10px 5px;
+            opacity: 0.2;
+            padding: 15px 5px; /* فضای لمس بیشتر */
             cursor: grab;
             display: flex;
             align-items: center;
+            font-size: 1.1rem;
         }
-        .drag-handle:active { cursor: grabbing; }
+        .drag-handle:active { cursor: grabbing; opacity: 0.5; }
+        
+        /* جلوگیری از تداخل کلیک در گرید مود */
+        .grid-mode .drag-handle { display: none; }
 
         .sortable-ghost { opacity: 0.1 !important; background: var(--green) !important; }
         .sortable-fallback { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
@@ -323,18 +326,19 @@
 
         card.innerHTML = `
             <div class="card-main-row">
-                <div class="price-box">
+                <div class="drag-handle" style="margin-left: 10px; order: -1;">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
+                
+                <div class="price-box" style="flex-grow: 1;">
                     <div class="status-badge ${colorClass}">
                         <span>${r.percent}</span>
                         <div class="arrow-circle"><i class="fas ${arrowIcon}"></i></div>
                     </div>
                     <div class="price-val">${r.current}</div>
                 </div>
+
                 <div class="card-info">
-                    <div class="drag-handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v" style="margin-right:2px"></i>
-                    </div>
                     <div style="text-align:right;">
                         <b>${item.key}</b>
                         <div style="font-size:0.75rem;opacity:0.6;">${item.sub}</div>
@@ -349,8 +353,6 @@
                 </div>
             </div>
         `;
-        return card;
-    }
 
     function renderSmoothChart(id, history, color) {
         const canvasId = `chart-${id}`;
